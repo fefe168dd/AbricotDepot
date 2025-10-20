@@ -2,6 +2,21 @@ networks:
   verger.net:
     driver: bridge
 services:
+  web:
+    image: canals/php:latest
+    ports:
+      - "40069:80"
+    volumes:
+      - app/public:/var/www/html
+      - app/src:/var/www/src
+    working_dir: /var/www/src
+    networks:
+      - verger.net
+    depends_on:
+      - abridepoauth.db
+      - abridepooutil.db
+      - abridepopanier.db
+      - abridepostock.db
   apicot:
     build:
       context: build
