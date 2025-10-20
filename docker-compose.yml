@@ -1,4 +1,67 @@
 networks:
-  my_network:
+  verger.net:
     driver: bridge
 services:
+  APIcot:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: api_abricodepot
+    ports:
+      - "6080:80"
+    depends_on:
+      - abridepoauth.db
+      - abridepoOutil.db
+      - abridepoPanier.db
+      - abridepoStock.db
+    networks:
+      - verger.net
+    command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"
+  abridepoauth.db:
+    image: 'postgres:latest'
+    env_file: ./abridepoauth.env
+    ports:
+      - "5432:5432"
+    networks:
+      - verger.net
+    container_name: db_abricodepot
+    volumes:
+      - ./sql:/var/sql:
+  abridepoOutil.db:
+    image: 'postgres:latest'
+    env_file: ./abridepoOutil.env
+    ports:
+      - "5433:5432"
+    container_name: db_abrioutil
+    volumes:
+      - ./sql:/var/sql:
+    networks:
+      - verger.net
+
+    abridepoPanier.db:
+      image: 'postgres:latest'
+      env_file: ./abridepopanier.env
+      ports:
+        - "5434:5432"
+      container_name: db_abriPanier
+      volumes:
+        - ./sql:/var/sql:
+      networks:
+        - verger.net
+  abridepoStock.db:
+    image: 'postgres:latest'
+    env_file: ./abridepoStock.env
+    ports:
+      - "5435:5432"
+    container_name: db_abriStock
+    volumes:
+      - ./sql:/var/sql:
+    networks:
+      - verger.net
+
+  adminer:
+    image: adminer
+    ports:
+      - '8080:8080'
+    networks:
+      - verger.net
