@@ -21,9 +21,9 @@
   },
   "autoload": {
     "psr-4" : {
-      "toubilib\\api\\" : "./src/api",
-      "toubilib\\core\\" : "./src/application_core",
-      "toubilib\\infra\\" : "./src/infrastructure"
+      "abricotdepot\\api\\" : "./src/api",
+      "abricotdepot\\core\\" : "./src/application_core",
+      "abricotdepot\\infra\\" : "./src/infrastructure"
     }
   }
 }
