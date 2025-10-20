@@ -2,18 +2,18 @@ networks:
   verger.net:
     driver: bridge
 services:
-  APIcot:
+  apicot:
     build:
-      context: .
-      dockerfile: Dockerfile.api
-    container_name: api_abricodepot
+      context: build
+      dockerfile: 8.4-cli.Dockerfile
+    container_name: apicot
     ports:
       - "6080:80"
     depends_on:
       - abridepoauth.db
-      - abridepoOutil.db
-      - abridepoPanier.db
-      - abridepoStock.db
+      - abridepooutil.db
+      - abridepopanier.db
+      - abridepostock.db
     networks:
       - verger.net
     command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"
@@ -24,38 +24,38 @@ services:
       - "5432:5432"
     networks:
       - verger.net
-    container_name: db_abricodepot
+    container_name: db_abridepoauth
     volumes:
-      - ./sql:/var/sql:
-  abridepoOutil.db:
+      - ./sql:/var/sql
+  abridepooutil.db:
     image: 'postgres:latest'
-    env_file: ./abridepoOutil.env
+    env_file: ./abridepooutil.env
     ports:
       - "5433:5432"
-    container_name: db_abrioutil
+    container_name: db_abridepooutil
     volumes:
-      - ./sql:/var/sql:
+      - ./sql:/var/sql
     networks:
       - verger.net
 
-    abridepoPanier.db:
-      image: 'postgres:latest'
-      env_file: ./abridepopanier.env
-      ports:
-        - "5434:5432"
-      container_name: db_abriPanier
-      volumes:
-        - ./sql:/var/sql:
-      networks:
-        - verger.net
-  abridepoStock.db:
+  abridepopanier.db:
     image: 'postgres:latest'
-    env_file: ./abridepoStock.env
+    env_file: ./abridepopanier.env
+    ports:
+      - "5434:5432"
+    container_name: db_abridepopanier
+    volumes:
+      - ./sql:/var/sql
+    networks:
+      - verger.net
+  abridepostock.db:
+    image: 'postgres:latest'
+    env_file: ./abridepostock.env
     ports:
       - "5435:5432"
-    container_name: db_abriStock
+    container_name: db_abridepostock
     volumes:
-      - ./sql:/var/sql:
+      - ./sql:/var/sql
     networks:
       - verger.net
 
