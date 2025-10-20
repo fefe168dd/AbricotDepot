@@ -1,0 +1,87 @@
+@use "Article" as * ;
+@use "Mixin" as *;
+
+.article {
+  @include taille(1 , 0 , 2 , 2% , 40%) ;
+  @include img(15em) ;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+h1 {
+  text-align: center;
+}
+
+nav {
+  background-color: black;
+  color : white ;
+  border-radius: 1em;
+
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(5 , 20%);
+  grid-column-gap: 2em;
+  padding: 1em;
+  align-items: center;
+
+  .logo {
+    display: none;
+  }
+
+}
+
+
+
+.Articles {
+  @include row
+}
+
+@media (min-width: 25em) {
+
+
+  body {
+    display: grid;
+    grid-template-rows: 3rem 3rem 1fr;
+    grid-template-columns: 10rem 1fr;
+
+    nav {
+      grid-row: 1/4;
+      grid-column: 1/2;
+
+      .menu {
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: repeat(5 , 5em);
+        padding: 1em;
+
+        .logo {
+          display: block;
+          @include img(7em);
+        }
+      }
+
+    }
+
+    h1 {
+      grid-row: 1/2;
+      grid-column: 2/3;
+    }
+
+    .tri {
+      grid-row: 2/3;
+      grid-column: 2/3;
+    }
+
+    .Articles {
+      grid-row: 3/4;
+      grid-column: 2/3;
+    }
+
+  }
+
+}

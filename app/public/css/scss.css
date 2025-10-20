@@ -1,0 +1,92 @@
+.article {
+  width: 40%;
+  margin-left: 2%;
+  width: 15em;
+  box-sizing: border-box;
+}
+.article img {
+  width: 100%;
+}
+.article h3 {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+h1 {
+  text-align: center;
+}
+
+nav {
+  background-color: black;
+  color: white;
+  border-radius: 1em;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(5, 20%);
+  grid-column-gap: 2em;
+  padding: 1em;
+  align-items: center;
+}
+.menu .logo {
+  display: none;
+}
+
+.Articles {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 25em) {
+  body {
+    display: grid;
+    grid-template-rows: 3rem 3rem 1fr;
+    grid-template-columns: 10rem 1fr;
+  }
+  body nav {
+    grid-row: 1/4;
+    grid-column: 1/2;
+  }
+  body nav .menu {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(5, 5em);
+    padding: 1em;
+  }
+  body nav .menu .logo {
+    display: block;
+    width: 7em;
+    box-sizing: border-box;
+  }
+  body nav .menu .logo img {
+    width: 100%;
+  }
+  body nav .menu .logo h3 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-size: 2em;
+    font-weight: bold;
+  }
+  body h1 {
+    grid-row: 1/2;
+    grid-column: 2/3;
+  }
+  body .tri {
+    grid-row: 2/3;
+    grid-column: 2/3;
+  }
+  body .Articles {
+    grid-row: 3/4;
+    grid-column: 2/3;
+  }
+}
+
+/*# sourceMappingURL=scss.css.map */

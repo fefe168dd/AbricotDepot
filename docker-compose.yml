@@ -72,7 +72,17 @@ services:
       - ./sql:/var/sql
     networks:
       - verger.net
-
+  abrideporeservation.db:
+    image: 'postgres:latest'
+    env_file: ./abridepoReservation.env
+    ports:
+      - "5436:5432"
+    container_name: db_abrideporeservation
+    volumes:
+      - ./sql:/var/sql
+    networks:
+      - verger.net
+  
   adminer:
     image: adminer
     ports:
