@@ -7,9 +7,8 @@ services:
     ports:
       - "40069:80"
     volumes:
-      - app/public:/var/www/html
-      - app/src:/var/www/src
-    working_dir: /var/www/src
+      - ./app/:/var/www/
+      - ./apache.conf:/etc/apache2/sites-enabled/000-default.conf
     networks:
       - verger.net
     depends_on:

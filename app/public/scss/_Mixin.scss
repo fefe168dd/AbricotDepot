@@ -1,0 +1,29 @@
+@mixin taille($taille , $décalage , $nbColonne, $tailleGoutière, $tailleColonne) {
+
+    width: $tailleColonne * $taille + $tailleGoutière * ($taille - 1);
+  @if $décalage==0 {
+    margin-left: $tailleGoutière;
+  }@else {
+    margin-left: $tailleColonne * $décalage + $tailleGoutière * ($décalage - 1);
+  }
+
+}
+
+@mixin col {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  box-sizing: border-box;
+}
+
+@mixin row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@mixin backColor($color) {
+  background-color: $color;
+}
+
+@mixin textColor($color) {
+  color: $color;
+}
