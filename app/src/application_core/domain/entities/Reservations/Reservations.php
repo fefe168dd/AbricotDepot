@@ -2,7 +2,7 @@
 namespace App\core\domain\entities\Reservations;
 use DateTime;
 
-class Reservations
+class Reservation
 {
     private string $id;
     private string $userId;
