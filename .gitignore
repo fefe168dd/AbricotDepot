@@ -3,3 +3,5 @@ abridepoOutil.env
 abridepoPanier.env
 abridepoStock.env
 abridepoReservation.env
+composer.lock
+vendor/
