@@ -37,4 +37,5 @@ class PDOReservationRepository implements ReservationRepository
         $stmt->bindParam(':date_fin', $reservation->getDateFin()->format('Y-m-d H:i:s'));
         $stmt->execute();
     }
+    //TODO: Ajouter d'autres méthodes par ID outil ou utilisateur si nécessaire
 }
