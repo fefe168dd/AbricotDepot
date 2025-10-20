@@ -1,0 +1,4 @@
+networks:
+  my_network:
+    driver: bridge
+services:
