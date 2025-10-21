@@ -1,0 +1,27 @@
+@use 'sass:color';
+
+@mixin articleDetaille($largeur) {
+  border-radius: 1em;
+  width: $largeur;
+  box-sizing: border-box;
+  margin-left: 2%;
+  margin-top : 2% ;
+  padding: 1%;
+
+  img {
+    width: 100%;
+    grid-row: 1/2;
+  }
+
+    p {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .produit-info {
+
+      .nom, .description, .prix, .categorie {
+        text-align: center;
+      }
+    }
+}

@@ -31,7 +31,7 @@ class HomeAction
             $url = htmlspecialchars($outil['imageUrl']);
             $nom = htmlspecialchars($outil['nom']);
             $prix = htmlspecialchars($outil['prix']);
-            $outilHTML .= "<div class=\"article\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix</p></a></div>" ;
+            $outilHTML .= "<div class=\"article\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p></a></div>" ;
         }
 
         $outilHTML .= '</div>' ;
