@@ -21,6 +21,9 @@ services:
       context: build
       dockerfile: 8.4-cli.Dockerfile
     container_name: apicot
+    volumes:
+      - ./app:/var/php
+    working_dir: /var/php
     ports:
       - "6080:80"
     depends_on:
