@@ -1,11 +1,13 @@
 <html>
+
 <head>
     <title>AbricotDépot</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/css/scss.css" >
+    <link rel="stylesheet" href="/css/scss.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
+
 <body>
     <h1>AbricotDépot</h1>
     <nav>
@@ -16,8 +18,17 @@
         </ul>
     </nav>
 
-    <div>
-        <h1>Connectez-vous</h1>
-    </div>
+    <main>
+        <h2>Détail du produit</h2>
 
-<body
+        <div>
+            <img class="produit-image" src="{{outil_image}}" alt="{{outil_nom}}">
+            <div class="produit-info">
+                <h3>{{outil_nom}}</h3>
+                <p class="description">{{outil_description}}</p>
+                <p class="prix">Prix : {{outil_prix}} €</p>
+                <p class="categorie">Catégorie : {{outil_categorie}}</p>
+            </div>
+        </div>
+    </main>
+</body>
