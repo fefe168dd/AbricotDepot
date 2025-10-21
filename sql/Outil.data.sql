@@ -4,7 +4,7 @@ INSERT INTO "outil" ("id", "name", "description", "prix", "image_url") VALUES
 ('3b9d0g5c-1e6f-6g5g-0g5c-1e6f6g5g0g5c', 'Tondeuse', 'Ça coupe les mauvaises herbes.', 14.99, 'https://static.thcdn.com/images/large/original//productimg/1600/1600/12387827-1495186723101692.jpg'),
 ('4c1d2e3f-7a8b-4c9d-9e0f-1a2b3c4d5e6f', 'Bétonneuse', 'Bétonneuse électrique pour mélanger le béton sur chantier.', 24.99, 'https://m.media-amazon.com/images/I/616jluxKx1L._UF1000,1000_QL80_.jpg'),
 ('5d2e3f4a-8b9c-5d0e-0f1a-2b3c4d5e6f7a', 'Compresseur à air', 'Compresseur portable 8 bar, idéal pour outils pneumatiques.', 39.99, 'https://m.media-amazon.com/images/I/61GAloGhsxL.jpg'),
-('6e3f4a5b-9c0d-6e1f-1a2b-3c4d5e6f7a8b', 'Arrosoir', 'Arrosoir 10L en métal, léger et résistant.', 1.99., 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS25bSkvv6zA1ZUwSOHW2LXoNkGxPwo-DaG3g&s'),
+('6e3f4a5b-9c0d-6e1f-1a2b-3c4d5e6f7a8b', 'Arrosoir', 'Arrosoir 10L en métal, léger et résistant.', 1.99, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS25bSkvv6zA1ZUwSOHW2LXoNkGxPwo-DaG3g&s'),
 ('7f4g5h6i-0j1k-7l8m-2n3o-4p5q6r7s8t9u', 'Marteau', 'Marteau de charpentier avec manche en bois.', 9.99, 'https://www.aucomptoirdelaquincaillerie.fr/upload/image/-p-image-524890-grande.jpg'),
 ('8g5h6i7j-1k2l-8m9n-3o4p-5q6r7s8t9u0v', 'Perceuse', 'Perceuse sans fil avec batterie longue durée.', 59.99, 'https://www.maxoutil.com/media/catalog_webp/product/v/o/VOA20129_0.webp?width=265&height=265&store=fr&image-type=image'),
 ('9h6i7j8k-2l3m-9n0o-4p5q-6r7s8t9u0v1w', 'Scie circulaire', 'Scie circulaire puissante pour coupes précises.', 79.99, 'https://voleda.fr/90922-large_default/scie-circulaire-bosch-gks-190-1400w-190mm.jpg'),
