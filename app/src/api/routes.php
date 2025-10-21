@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use abricotdepot\api\actions\HomeAction;
+use abricotdepot\web\actions\HomeAction;
 
-return function( \Slim\App $app):\Slim\App {
+return function(\Slim\App $app):\Slim\App {
 
 
 

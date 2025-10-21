@@ -23,7 +23,8 @@
     "psr-4" : {
       "abricotdepot\\api\\" : "./src/api",
       "abricotdepot\\core\\" : "./src/application_core",
-      "abricotdepot\\infra\\" : "./src/infrastructure"
+      "abricotdepot\\infra\\" : "./src/infrastructure",
+      "abricotdepot\\web\\" : "./src/web"
     }
   }
 }
