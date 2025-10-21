@@ -24,6 +24,7 @@ $app->addErrorMiddleware($c->get('displayErrorDetails'), false, false)
 ;
 
 $app = (require_once __DIR__ . '/../src/api/routes.php')($app);
+$app = (require_once __DIR__ . '/../src/web/routes.php')($app);
 
 
 return $app;
