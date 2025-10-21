@@ -9,6 +9,7 @@
 ul {
   padding: 0;
   list-style: none;
+  text-align: center;
 }
 
 h1 {
@@ -30,7 +31,12 @@ nav {
   align-items: center;
 
   .logo {
+    padding-left: 0.5em;
     display: none;
+  }
+
+  .icon {
+    @include img(2em)
   }
 
 }
@@ -62,6 +68,7 @@ nav {
         .logo {
           display: block;
           @include img(7em);
+          text-align: center;
         }
       }
 
