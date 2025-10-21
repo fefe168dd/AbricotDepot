@@ -18,17 +18,21 @@
         </ul>
     </nav>
 
-    <main>
-        <h2>Détail du produit</h2>
+    <main class="detaille">
 
-        <div>
+        <div class="articleDetaille">
+            <h2>Détail du produit</h2>
             <img class="produit-image" src="{{outil_image}}" alt="{{outil_nom}}">
             <div class="produit-info">
-                <h3>{{outil_nom}}</h3>
+                <h3 class="nom">{{outil_nom}}</h3>
                 <p class="description">{{outil_description}}</p>
                 <p class="prix">Prix : {{outil_prix}} €</p>
                 <p class="categorie">Catégorie : {{outil_categorie}}</p>
             </div>
         </div>
+
+        <form>
+            {{outil_quantite_select}}
+        </form>
     </main>
 </body>

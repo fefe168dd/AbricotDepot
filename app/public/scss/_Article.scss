@@ -1,6 +1,6 @@
 @use 'sass:color';
 
-@mixin img($largeur) {
+@mixin article($largeur) {
   border : 1px grey solid ;
   border-radius: 1em;
   width: $largeur;

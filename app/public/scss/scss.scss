@@ -1,9 +1,11 @@
 @use "Article" as * ;
+@use "Logo" as * ;
 @use "Mixin" as *;
+@use "ArticleDetaille" as * ;
 
 .article {
   @include taille(1 , 0 , 2 , 2% , 40%) ;
-  @include img(15em) ;
+  @include article(15em) ;
 }
 
 ul {
@@ -40,6 +42,18 @@ nav {
 
 }
 
+.detaille {
+
+  .articleDetaille {
+    @include articleDetaille(15em) ;
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+}
+
 
 
 .Articles {
@@ -66,12 +80,25 @@ nav {
 
         .logo {
           display: block;
-          @include img(7em);
-          text-align: center;
+          @include img(7em);margin-left: 0.25em;
         }
       }
 
     }
+
+    .detaille {
+
+      .articleDetaille {
+        @include articleDetaille(50%)
+      }
+
+      h2 {
+        text-align: center;
+      }
+
+    }
+
+
 
     h1 {
       grid-row: 1/2;
