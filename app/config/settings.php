@@ -17,6 +17,9 @@ use abricotdepot\infra\repository\PDOReservationRepository;
 use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepository;
 use abricotdepot\infra\repository\PDOOutilRepository;
 use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
+use abricotdepot\web\actions\PanierAction;
+use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
+use abricotdepot\infra\repository\PDOPanierRepository;
 
 use Psr\Container\ContainerInterface;
 
@@ -82,6 +85,30 @@ return [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
      },
+'panier.pdo' => function (ContainerInterface $container) {
+    $config = parse_ini_file($container->get('env.config'));
+    $dsn = "{$config['panier.driver']}:host={$config['panier.host']};dbname={$config['panier.database']}";
+    $user = $config['panier.username'];
+    $password = $config['panier.password'];
+    return new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+},
+
+PanierRepository::class => function (ContainerInterface $c) {
+    // récupérer les deux PDO du container
+    $pdoPanier = $c->get('panier.pdo');
+    $pdoOutil  = $c->get('outil.pdo');
+
+    // injecter les deux PDO dans le repository
+    return new PDOPanierRepository($pdoPanier, $pdoOutil);
+},
+
+// Bind PanierAction avec injection du repository
+PanierAction::class => function (ContainerInterface $container) {
+    return new PanierAction($container->get(PanierRepository::class));
+},
 
     // Bind StockRepository interface to PDOStockRepository
     StockRepository::class => function (ContainerInterface $container) {
