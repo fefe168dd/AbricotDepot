@@ -38,6 +38,7 @@ nav {
   align-items: center;
 }
 .menu .logo {
+  padding-left: 0.5em;
   display: none;
 }
 .menu .icon {
@@ -88,6 +89,9 @@ nav {
     margin-bottom: 0.5em;
     font-size: 2em;
     font-weight: bold;
+  }
+  body nav .menu .logo {
+    text-align: center;
   }
   body h1 {
     grid-row: 1/2;

@@ -31,6 +31,7 @@ nav {
   align-items: center;
 
   .logo {
+    padding-left: 0.5em;
     display: none;
   }
 
@@ -67,6 +68,7 @@ nav {
         .logo {
           display: block;
           @include img(7em);
+          text-align: center;
         }
       }
 
