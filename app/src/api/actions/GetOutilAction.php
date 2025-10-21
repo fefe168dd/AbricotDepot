@@ -17,16 +17,15 @@ class GetOutilAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $id = $args['id'];
-        $outil = $this->outilRepository->OutilParId($id);
+        $outils = $this->outilRepository->listerOutils();
 
-        if (!$outil) {
-            $response->getBody()->write(json_encode(['error' => 'Outil not found']));
+        if (empty($outils)) {
+            $response->getBody()->write(json_encode(['error' => 'No outils found']));
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
-        $outilData = new OutilDTO($outil);
-        $response->getBody()->write(json_encode($outilData));
+        $outilsData = array_map(fn($outil) => new OutilDTO($outil), $outils);
+        $response->getBody()->write(json_encode($outilsData));
         return $response->withHeader('Content-Type', 'application/json');
     }
 }
