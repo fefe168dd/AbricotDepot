@@ -9,6 +9,7 @@
 ul {
   padding: 0;
   list-style: none;
+  text-align: center;
 }
 
 h1 {
@@ -31,6 +32,10 @@ nav {
 
   .logo {
     display: none;
+  }
+
+  .icon {
+    @include img(2em)
   }
 
 }

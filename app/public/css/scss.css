@@ -17,6 +17,7 @@
 ul {
   padding: 0;
   list-style: none;
+  text-align: center;
 }
 
 h1 {
@@ -38,6 +39,19 @@ nav {
 }
 .menu .logo {
   display: none;
+}
+.menu .icon {
+  width: 2em;
+  box-sizing: border-box;
+}
+.menu .icon img {
+  width: 100%;
+}
+.menu .icon h3 {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 2em;
+  font-weight: bold;
 }
 
 .Articles {
