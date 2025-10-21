@@ -2,6 +2,7 @@
 namespace abricotdepot\web\actions;
 
 use abricotdepot\core\application\usecases\ServiceOutil;
+use abricotdepot\core\application\usecases\ServiceStock;
 
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -10,10 +11,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class DetailProduitAction
 {
     private ServiceOutil $serviceOutil;
+    private ServiceStock $serviceStock;
 
-    public function __construct(ServiceOutil $serviceOutil)
+    public function __construct(ServiceOutil $serviceOutil, ServiceStock $serviceStock)
     {
         $this->serviceOutil = $serviceOutil;
+        $this->serviceStock = $serviceStock;
+
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -26,9 +30,15 @@ class DetailProduitAction
 
         //appel du usecase
         $outil = $this->serviceOutil->obtenirOutilParId($outilId);
+        $stock = $this->serviceStock->obtenirStockParOutilId($outilId);
 
         if (!$outil) {
             $response->getBody()->write('Outil introuvable');
+            return $response->withStatus(404);
+        }
+
+        if (!$stock) {
+            $response->getBody()->write('Stock introuvable');
             return $response->withStatus(404);
         }
 
@@ -41,15 +51,34 @@ class DetailProduitAction
             $response->getBody()->write('Erreur : fichier HTML introuvable.');
             return $response->withStatus(500);
         }
-        
 
+        // Génération du sélecteur de quantité basé sur le stock disponible
+        $maxQuantite = $stock->quantity ?? 0;
+
+        $quantiteSelect = '<select name="quantite" id="quantite">';
+        //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
+        if ($maxQuantite > 0) {
+            $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
+            $quantiteSelect .= '<label for="quantite">Quantité :</label>';
+            $quantiteSelect .= '<select name="quantite" id="quantite">';
+            for ($i = 1; $i <= $maxQuantite; $i++) {
+                $quantiteSelect .= "<option value=\"$i\">$i</option>";
+            }
+            $quantiteSelect .= '</select>';
+            $quantiteSelect .= '<button type="submit">Ajouter au panier</button>';
+            $quantiteSelect .= '</form>';
+        }
+        //sinon on affiche rupture de stock et la date de restockage la plus proche si elle est définie
+        else {
+            $quantiteSelect = '<p>Rupture de stock</p>';
+        }
         $remplacements = [
             '{{outil_nom}}' => htmlspecialchars($outil->nom),
             '{{outil_description}}' => htmlspecialchars($outil->description),
             '{{outil_prix}}' => htmlspecialchars($outil->prix),
             '{{outil_image}}' => htmlspecialchars($outil->imageUrl ?? '/Image/default.png'),
-            '{{outil_categorie}}' => htmlspecialchars($outil->categorie['nom'] ?? 'N/A')
-
+            '{{outil_categorie}}' => htmlspecialchars($outil->categorie['nom'] ?? 'N/A'),
+            '{{outil_quantite_select}}' => ($quantiteSelect)
         ];
 
         $html = str_replace(array_keys($remplacements), array_values($remplacements), $html);
