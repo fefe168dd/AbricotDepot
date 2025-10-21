@@ -4,34 +4,34 @@ use DateTime;
 
 class Reservation
 {
-    private string $id;
-    private string $userId;
+    private ?string $id;
     private string $outilId;
+    private int $quantity;
     private DateTime $datedebut;
     private DateTime $datefin;
 
-    public function __construct(string $id, string $userId, string $outilId, DateTime $datedebut, DateTime $datefin)
+    public function __construct(?string $id, string $outilId, int $quantity, DateTime $datedebut, DateTime $datefin)
     {
         $this->id = $id;
-        $this->userId = $userId;
         $this->outilId = $outilId;
+        $this->quantity = $quantity;
         $this->datedebut = $datedebut;
         $this->datefin = $datefin;
     }
 
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
-    public function getUserId(): string
-    {
-        return $this->userId;
-    }
 
     public function getOutilId(): string
     {
         return $this->outilId;
+    }
+    public function getQuantity(): int
+    {
+        return $this->quantity;
     }
 
     public function getDatedebut(): DateTime
@@ -41,5 +41,9 @@ class Reservation
     public function getDatefin(): DateTime
     {
         return $this->datefin;
+    }
+    public function setId(string $id): void
+    {
+        $this->id = $id;
     }
 }

@@ -21,6 +21,7 @@ class PDOReservationRepository implements ReservationRepository
                 $row['id'],
                 $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['outil_id'],
+                $row['quantity'],
                 new \DateTime($row['date_debut'] ?? $row['start_date']),
                 new \DateTime($row['date_fin'] ?? $row['end_date'])
             );
@@ -39,6 +40,7 @@ class PDOReservationRepository implements ReservationRepository
                 $row['id'],
                 $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['outil_id'],
+                $row['quantity'],
                 new \DateTime($row['date_debut'] ?? $row['start_date']),
                 new \DateTime($row['date_fin'] ?? $row['end_date'])
             );
@@ -48,13 +50,17 @@ class PDOReservationRepository implements ReservationRepository
 
     public function sauvegarderReservation(Reservation $reservation): void
     {
-        $stmt = $this->pdo->prepare("INSERT INTO reservations (id, outil_id, utilisateur_id, date_debut, date_fin) VALUES (:id, :outil_id, :utilisateur_id, :date_debut, :date_fin)");
-        $stmt->bindParam(':id', $reservation->getId());
-        $stmt->bindParam(':outil_id', $reservation->getOutilId());
-        $stmt->bindParam(':utilisateur_id', $reservation->getUserId());
-        $stmt->bindParam(':date_debut', $reservation->getDateDebut()->format('Y-m-d H:i:s'));
-        $stmt->bindParam(':date_fin', $reservation->getDateFin()->format('Y-m-d H:i:s'));
-        $stmt->execute();
+        if ($reservation->getId() === null) {
+            $reservation->setId(Uuid::uuid4()->toString());
+        }
+    $stmt = $this->pdo->prepare("INSERT INTO reservations (id, outil_id, start_date, end_date, quantity, status) VALUES (:id, :outil_id, :start_date, :end_date, :quantity, :status)");
+    $stmt->bindValue(':id', $reservation->getId());
+    $stmt->bindValue(':outil_id', $reservation->getOutilId());
+    $stmt->bindValue(':start_date', $reservation->getDateDebut()->format('Y-m-d H:i:s'));
+    $stmt->bindValue(':end_date', $reservation->getDateFin()->format('Y-m-d H:i:s'));
+    $stmt->bindValue(':quantity', $reservation->getQuantity());
+    $stmt->bindValue(':status', 0); // Par défaut, le statut est 0 (en attente)
+    $stmt->execute();
     }
     //TODO: Ajouter d'autres méthodes par ID outil ou utilisateur si nécessaire
 }
