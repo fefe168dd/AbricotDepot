@@ -5,12 +5,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
 use abricotdepot\core\application\ports\api\dto\OutilDTO;
+use abricotdepot\core\application\usecases\ServiceOutil;
 
 class GetOutilByCategorie 
 {
-    private OutilRepository $outilRepository;
+    private ServiceOutil $outilRepository;
 
-    public function __construct(OutilRepository $outilRepository)
+    public function __construct(ServiceOutil $outilRepository)
     {
         $this->outilRepository = $outilRepository;
     }

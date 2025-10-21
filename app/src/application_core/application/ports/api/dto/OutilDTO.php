@@ -10,7 +10,7 @@ class OutilDTO
     public string $description;
     public float $prix;
     public string $imageUrl;
-    public Categorie $categorie;
+    public array $categorie;
     public function __construct(Outil $outil)
     {
         $this->id = $outil->getId();
@@ -18,6 +18,10 @@ class OutilDTO
         $this->description = $outil->getDescription();
         $this->prix = $outil->getprix();
         $this->imageUrl = $outil->getImageUrl();
-        $this->categorie = $outil->getCategory();
+        $cat = $outil->getCategorie();
+        $this->categorie = [
+            'id' => $cat->getId(),
+            'nom' => $cat->getNom(),
+        ];
     }
 }

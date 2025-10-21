@@ -14,25 +14,55 @@ class PDOOutilRepository implements OutilRepository
     }
     public function listerOutils(): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM outils");
-        return $stmt->fetchAll(\PDO::FETCH_CLASS, Outil::class);
+        $sql = "SELECT o.id, o.name AS nom, o.description, o.prix, o.image_url, c.idcat, c.name AS categorie_name
+                FROM outil o
+                JOIN outil_categorie oc ON o.id = oc.outil_id
+                JOIN categorie c ON oc.categorie_id = c.idcat";
+        $stmt = $this->pdo->query($sql);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $outils = [];
+        foreach ($results as $row) {
+            $categorie = new \abricotdepot\core\domain\entities\Outil\Categorie($row['idcat'], $row['categorie_name']);
+            $outils[] = new Outil($row['id'], $row['nom'], $row['description'], (float)$row['prix'], $row['image_url'], $categorie);
+        }
+        return $outils;
     }
 
     public function OutilParId(string $id): ?Outil
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM outils WHERE id = :id");
+        $sql = "SELECT o.id, o.name AS nom, o.description, o.prix, o.image_url, c.idcat, c.name AS categorie_name
+                FROM outil o
+                JOIN outil_categorie oc ON o.id = oc.outil_id
+                JOIN categorie c ON oc.categorie_id = c.idcat
+                WHERE o.id = :id";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        $outil = $stmt->fetchObject(Outil::class);
-        return $outil ?: null;
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($row) {
+            $categorie = new \abricotdepot\core\domain\entities\Outil\Categorie($row['idcat'], $row['categorie_name']);
+            return new Outil($row['id'], $row['nom'], $row['description'], (float)$row['prix'], $row['image_url'], $categorie);
+        }
+        return null;
     }
 
     public function OutilParCategorie(string $categoriename): array
     {
-        $stmt = $this->pdo->prepare("SELECT o.* FROM outils o JOIN categories c ON o.categorie_id = c.id WHERE c.nom = :categoriename");
+        $sql = "SELECT o.id, o.name AS nom, o.description, o.prix, o.image_url, c.idcat, c.name AS categorie_name
+                FROM outil o
+                JOIN outil_categorie oc ON o.id = oc.outil_id
+                JOIN categorie c ON oc.categorie_id = c.idcat
+                WHERE c.name = :categoriename";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':categoriename', $categoriename);
         $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_CLASS, Outil::class);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $outils = [];
+        foreach ($results as $row) {
+            $categorie = new \abricotdepot\core\domain\entities\Outil\Categorie($row['idcat'], $row['categorie_name']);
+            $outils[] = new Outil($row['id'], $row['nom'], $row['description'], (float)$row['prix'], $row['image_url'], $categorie);
+        }
+        return $outils;
     }
 
     }

@@ -25,7 +25,7 @@ class ServiceOutil
         return $outil ? new OutilDTO($outil) : null;
     }
 
-    public function obtenirOutilsParCategorie(string $categorieName): array
+    public function OutilParCategorie(string $categorieName): array
     {
         $outils = $this->outilRepository->OutilParCategorie($categorieName);
         return array_map(fn($outil) => new OutilDTO($outil), $outils);

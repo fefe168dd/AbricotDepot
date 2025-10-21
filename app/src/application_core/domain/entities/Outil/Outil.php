@@ -9,7 +9,7 @@ class Outil
     private string $description;
     private float $prix;
     private string $imageUrl;
-    private Categorie $category;
+    private Categorie $categorie;
 
     public function __construct(string $id, string $nom, string $description, float $prix, string $imageUrl, Categorie $category)
     {
@@ -18,7 +18,7 @@ class Outil
         $this->description = $description;
         $this->prix = $prix;
         $this->imageUrl = $imageUrl;
-        $this->category = $category;
+        $this->categorie = $category;
     }
 
     public function getId(): string
@@ -41,9 +41,9 @@ class Outil
         return $this->prix;
     }
 
-    public function getCategory(): Categorie
+    public function getCategorie(): Categorie
     {
-        return $this->category;
+        return $this->categorie;
     }
     public function getImageUrl(): string
     {
