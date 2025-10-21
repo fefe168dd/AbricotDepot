@@ -59,12 +59,22 @@ class DetailProduitAction
         //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
         if ($maxQuantite > 0) {
             $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
+            //combo quantité
             $quantiteSelect .= '<label for="quantite">Quantité :</label>';
             $quantiteSelect .= '<select name="quantite" id="quantite">';
             for ($i = 1; $i <= $maxQuantite; $i++) {
                 $quantiteSelect .= "<option value=\"$i\">$i</option>";
             }
             $quantiteSelect .= '</select>';
+            //selection des dates
+            $quantiteSelect .= '<div class="dates">';
+            $quantiteSelect .= '<label for="date_debut">Date de début :</label>';
+            $quantiteSelect .= '<input type="date" name="date_debut" id="date_debut" required>';
+
+            $quantiteSelect .= '<label for="date_fin">Date de fin :</label>';
+            $quantiteSelect .= '<input type="date" name="date_fin" id="date_fin" required>';
+            $quantiteSelect .= '</div>';
+            //bouton ajouter au panier
             $quantiteSelect .= '<button type="submit">Ajouter au panier</button>';
             $quantiteSelect .= '</form>';
         }
