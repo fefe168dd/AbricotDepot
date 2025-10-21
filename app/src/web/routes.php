@@ -11,7 +11,7 @@ return function(\Slim\App $app):\Slim\App {
     $app->get('/', HomeAction::class);
 
     $app->get('/connexion', ConnexionAction::class);
-
+    $app->get('/inscription', \abricotdepot\web\actions\InscriptionAction::class);
 
     return $app;
 };
