@@ -1,7 +1,7 @@
 <?php 
-namespace App\core\application\ports\api\dto;
+namespace abricotdepot\core\application\ports\api\dto;
 
-use App\core\domain\entities\Reservations\Reservation;
+use abricotdepot\core\domain\entities\Reservations\Reservation;
 class ReservationDTO 
 {
     public string $id;

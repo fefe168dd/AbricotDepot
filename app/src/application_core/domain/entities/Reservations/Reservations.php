@@ -1,5 +1,5 @@
 <?php
-namespace App\core\domain\entities\Reservations;
+namespace abricotdepot\core\domain\entities\Reservations;
 use DateTime;
 
 class Reservation

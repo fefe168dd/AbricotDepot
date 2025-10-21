@@ -1,7 +1,7 @@
 <?php 
-namespace App\core\application\ports\spi\repositoryInterface;
+namespace abricotdepot\core\application\ports\spi\repositoryInterface;
 
-use App\core\domain\entities\Outil\Outil;
+use abricotdepot\core\domain\entities\Outil\Outil;
 
 interface OutilRepository 
 {

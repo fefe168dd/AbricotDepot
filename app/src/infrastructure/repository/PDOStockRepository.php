@@ -1,7 +1,7 @@
 <?php
-namespace App\infrastructure\repository;
-use App\core\application\ports\spi\repositoryInterface\StockRepository;
-use App\core\domain\entities\Stock\Stock;
+namespace abricotdepot\infrastructure\repository;
+use abricotdepot\core\application\ports\spi\repositoryInterface\StockRepository;
+use abricotdepot\core\domain\entities\Stock\Stock;
 use PDO;
 
 class PDOStockRepository implements StockRepository 

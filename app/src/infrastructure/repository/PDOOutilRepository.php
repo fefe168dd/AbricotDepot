@@ -1,9 +1,9 @@
 <?php 
-namespace App\infrastructure\repository;
+namespace abricotdepot\infrastructure\repository;
 use Ramsey\Uuid\Uuid;
 
-use App\core\application\ports\spi\repositoryInterface\OutilRepository;
-use App\core\domain\entities\Outil\Outil;
+use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
+use abricotdepot\core\domain\entities\Outil\Outil;
 
 class PDOOutilRepository implements OutilRepository 
 {

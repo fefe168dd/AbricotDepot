@@ -1,8 +1,8 @@
 <?php
-namespace App\core\application\usecases;
+namespace abricotdepot\core\application\usecases;
 
-use App\core\application\ports\spi\repositoryInterface\OutilRepository;
-use App\core\application\ports\api\dto\OutilDTO;
+use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
+use abricotdepot\core\application\ports\api\dto\OutilDTO;
 
 class ServiceOutil 
 {

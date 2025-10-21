@@ -1,8 +1,8 @@
 <?php 
-namespace App\core\application\ports\api\dto;
+namespace abricotdepot\core\application\ports\api\dto;
 
-use App\core\domain\entities\Outil\Categorie;
-use App\core\domain\entities\Outil\Outil;
+use abricotdepot\core\domain\entities\Outil\Categorie;
+use abricotdepot\core\domain\entities\Outil\Outil;
 class OutilDTO 
 {
     public string $id;

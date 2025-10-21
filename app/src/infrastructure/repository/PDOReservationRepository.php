@@ -1,9 +1,9 @@
 <?php 
-namespace App\infrastructure\repository;
+namespace abricotdepot\infrastructure\repository;
 use Ramsey\Uuid\Uuid;
 
-use App\core\domain\entities\Reservations\Reservation;
-use App\core\application\ports\spi\repositoryInterface\ReservationRepository;
+use abricotdepot\core\domain\entities\Reservations\Reservation;
+use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepository;
 use PDO;
 class PDOReservationRepository implements ReservationRepository 
 {

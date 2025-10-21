@@ -1,5 +1,5 @@
 <?php
-namespace App\core\domain\entities\Outil;
+namespace abricotdepot\core\domain\entities\Outil;
 
 class Categorie
 {

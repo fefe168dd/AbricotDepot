@@ -1,7 +1,7 @@
 <?php 
-namespace App\core\application\ports\spi\repositoryInterface;
+namespace abricotdepot\core\application\ports\spi\repositoryInterface;
 
-use  App\core\domain\entities\Reservations\Reservation;
+use  abricotdepot\core\domain\entities\Reservations\Reservation;
 
 interface ReservationRepository 
 {

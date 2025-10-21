@@ -1,6 +1,6 @@
 <?php
-namespace App\core\domain\entities\Outil;
-use App\core\domain\entities\Outil\Categorie;
+namespace abricotdepot\core\domain\entities\Outil;
+use abricotdepot\core\domain\entities\Outil\Categorie;
 
 class Outil
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\core\domain\entities\Stock;
+namespace abricotdepot\core\domain\entities\Stock;
 
 class Stock
 {

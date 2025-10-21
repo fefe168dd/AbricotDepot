@@ -1,8 +1,8 @@
 <?php
-namespace App\core\application\usecases;
+namespace abricotdepot\core\application\usecases;
 
-use App\core\application\ports\spi\repositoryInterface\StockRepository;
-use App\core\application\ports\api\dto\StockDTO;
+use abricotdepot\core\application\ports\spi\repositoryInterface\StockRepository;
+use abricotdepot\core\application\ports\api\dto\StockDTO;
 
 class ServiceStock 
 {

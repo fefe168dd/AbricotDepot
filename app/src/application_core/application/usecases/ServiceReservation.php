@@ -1,9 +1,9 @@
 <?php 
-namespace App\core\application\usecases;
+namespace abricotdepot\core\application\usecases;
 
-use App\core\application\ports\spi\repositoryInterface\ReservationRepository;
-use App\core\application\ports\api\dto\ReservationDTO;
-use App\core\domain\entities\Reservations\Reservation;
+use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepository;
+use abricotdepot\core\application\ports\api\dto\ReservationDTO;
+use abricotdepot\core\domain\entities\Reservations\Reservation;
 
 class ServiceReservation 
 {

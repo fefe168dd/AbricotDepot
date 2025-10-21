@@ -1,9 +1,9 @@
 <?php 
-namespace App\api\actions;
+namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use App\core\application\usecases\ServiceStock;
+use abricotdepot\core\application\usecases\ServiceStock;
 
 class GetStockByIdOutilAction 
 {

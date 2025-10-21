@@ -1,6 +1,6 @@
 <?php
 
-namespace pp\core\domain\entities\Stock;
+namespace abricotdepot\core\domain\entities\Stock;
 
 class StockDisponible
 {

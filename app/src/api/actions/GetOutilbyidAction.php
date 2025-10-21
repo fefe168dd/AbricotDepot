@@ -1,9 +1,10 @@
 <?php 
-namespace App\api\actions;
+namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use App\core\application\ports\spi\repositoryInterface\OutilRepository;
+use abricotdepot\core\application\ports\api\dto\OutilDTO;
+use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
 
 class GetOutilAction 
 {
@@ -24,7 +25,7 @@ class GetOutilAction
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
-        $outilData = new \App\core\application\ports\api\dto\OutilDTO($outil);
+        $outilData = new OutilDTO($outil);
         $response->getBody()->write(json_encode($outilData));
         return $response->withHeader('Content-Type', 'application/json');
     }

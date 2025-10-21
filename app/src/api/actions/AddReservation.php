@@ -4,8 +4,8 @@ namespace App\api\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use App\core\application\usecases\ServiceReservation;
-use  App\core\application\ports\api\dto\ReservationDTO;
+use abricotdepot\core\application\usecases\ServiceReservation;
+use  abricotdepot\core\application\ports\api\dto\ReservationDTO;
 
 class AddReservationAction
 {

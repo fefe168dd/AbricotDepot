@@ -1,7 +1,7 @@
 <?php 
-namespace App\core\application\ports\api\dto;
+namespace abricotdepot\core\application\ports\api\dto;
 
-use App\core\domain\entities\Stock\Stock;
+use abricotdepot\core\domain\entities\Stock\Stock;
 class StockDTO 
 {
     public string $id;
