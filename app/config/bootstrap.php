@@ -4,13 +4,17 @@ use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use toubilib\api\middlewares\Cors;
 
-$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ );
-$dotenv->load();
-
 
 
 $app = AppFactory::create();
 
+
+$containerBuilder = new ContainerBuilder();
+$containerBuilder->addDefinitions([
+    'displayErrorDetails' => true,
+]);
+
+$c = $containerBuilder->build();
 
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
