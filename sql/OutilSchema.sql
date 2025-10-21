@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS "outil_categorie";
+DROP TABLE IF EXISTS "categorie";
 DROP TABLE IF EXISTS "outil";
 CREATE TABLE "public"."outil"(
     "id" uuid NOT NULL,
@@ -8,19 +10,17 @@ CREATE TABLE "public"."outil"(
     CONSTRAINT "id" PRIMARY KEY ("id")
 );
 
-DROP TABLE IF EXISTS "categorie";
 CREATE TABLE "public"."categorie"(
-    "id" uuid NOT NULL,
+    "idcat" int NOT NULL,
     "name" VARCHAR(100) NOT NULL ,
-    CONSTRAINT "id" PRIMARY KEY ("id")
+    CONSTRAINT "idcat" PRIMARY KEY ("idcat")
 );
 
-DROP TABLE IF EXISTS "outil_categorie";
 CREATE TABLE "public"."outil_categorie"(
     "outil_id" uuid NOT NULL,
-    "categorie_id" uuid NOT NULL,
+    "categorie_id" int NOT NULL,
     CONSTRAINT "outil_categorie_pk" PRIMARY KEY ("outil_id", "categorie_id"),
     CONSTRAINT "outil_fk" FOREIGN KEY ("outil_id") REFERENCES "public"."outil"("id") ON DELETE CASCADE,
-    CONSTRAINT "categorie_fk" FOREIGN KEY ("categorie_id") REFERENCES "public"."categorie"("id") ON DELETE CASCADE
+    CONSTRAINT "categorie_fk" FOREIGN KEY ("categorie_id") REFERENCES "public"."categorie"("idcat") ON DELETE CASCADE
 );
 

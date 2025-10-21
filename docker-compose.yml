@@ -16,6 +16,7 @@ services:
       - abridepooutil.db
       - abridepopanier.db
       - abridepostock.db
+      - abrideporeservation.db
   apicot:
     build:
       context: build
@@ -31,6 +32,7 @@ services:
       - abridepooutil.db
       - abridepopanier.db
       - abridepostock.db
+      - abrideporeservation.db
     networks:
       - verger.net
     command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"
