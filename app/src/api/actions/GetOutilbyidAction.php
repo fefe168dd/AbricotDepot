@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use abricotdepot\core\application\ports\api\dto\OutilDTO;
 use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
 
-class GetOutilAction 
+class GetOutilbyidAction
 {
     private OutilRepository $outilRepository;
 

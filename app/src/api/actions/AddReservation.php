@@ -1,5 +1,5 @@
 <?php 
-namespace App\api\actions;
+namespace abricotdepot\api\actions;
 
 
 use Psr\Http\Message\ResponseInterface as Response;
