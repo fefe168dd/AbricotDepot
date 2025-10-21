@@ -1,9 +1,13 @@
 @use 'sass:color';
 
 @mixin img($largeur) {
+  border : 1px grey solid ;
+  border-radius: 1em;
   width: $largeur;
   box-sizing: border-box;
-  margin-left: 5%;
+  margin-left: 2%;
+  margin-top : 2% ;
+  padding: 1%;
 
   img {
     width: 100%;

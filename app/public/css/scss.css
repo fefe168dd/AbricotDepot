@@ -1,9 +1,13 @@
 .article {
   width: 40%;
   margin-left: 2%;
+  border: 1px grey solid;
+  border-radius: 1em;
   width: 15em;
   box-sizing: border-box;
-  margin-left: 5%;
+  margin-left: 2%;
+  margin-top: 2%;
+  padding: 1%;
 }
 .article img {
   width: 100%;
@@ -55,9 +59,13 @@ nav {
   display: none;
 }
 .menu .icon {
+  border: 1px grey solid;
+  border-radius: 1em;
   width: 2em;
   box-sizing: border-box;
-  margin-left: 5%;
+  margin-left: 2%;
+  margin-top: 2%;
+  padding: 1%;
 }
 .menu .icon img {
   width: 100%;
@@ -105,9 +113,13 @@ nav {
   }
   body nav .menu .logo {
     display: block;
+    border: 1px grey solid;
+    border-radius: 1em;
     width: 7em;
     box-sizing: border-box;
-    margin-left: 5%;
+    margin-left: 2%;
+    margin-top: 2%;
+    padding: 1%;
   }
   body nav .menu .logo img {
     width: 100%;
