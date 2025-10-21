@@ -1,6 +1,6 @@
 <?php
+namespace abricotdepot\web\actions ;
 
-namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -9,7 +9,7 @@ class HomeAction
 {
     public function __invoke(Request $request, Response $response): Response
     {
-        $file = __DIR__ . '/../../../public/html/acceuil.html';
+        $file = __DIR__ . '/../../../public/html/accueil.html';
 
 
         if (!file_exists($file)) {
