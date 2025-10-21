@@ -1,5 +1,5 @@
 <?php
-namespace abricotdepot\infrastructure\repository;
+namespace abricotdepot\infra\repository;
 use abricotdepot\core\application\ports\spi\repositoryInterface\StockRepository;
 use abricotdepot\core\domain\entities\Stock\Stock;
 use PDO;
@@ -15,7 +15,7 @@ class PDOStockRepository implements StockRepository
 
     public function listerStocks(): array
     {
-        $stmt = $this->connection->query('SELECT * FROM stocks');
+        $stmt = $this->connection->query('SELECT * FROM stock');
         $stocksData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $stocks = [];
         foreach ($stocksData as $data) {
@@ -26,7 +26,7 @@ class PDOStockRepository implements StockRepository
 
     public function StockParId(string $id): ?Stock
     {
-        $stmt = $this->connection->prepare('SELECT * FROM stocks WHERE id = :id');
+        $stmt = $this->connection->prepare('SELECT * FROM stock WHERE id = :id');
         $stmt->execute(['id' => $id]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
         if ($data) {
@@ -37,7 +37,7 @@ class PDOStockRepository implements StockRepository
 
     public function StockParOutilId(string $outilId): ?Stock
     {
-        $stmt = $this->connection->prepare('SELECT * FROM stocks WHERE outil_id = :outilId');
+        $stmt = $this->connection->prepare('SELECT * FROM stock WHERE outil_id = :outilId');
         $stmt->execute(['outilId' => $outilId]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
         if ($data) {

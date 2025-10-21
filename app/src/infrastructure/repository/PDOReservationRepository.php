@@ -1,5 +1,5 @@
 <?php 
-namespace abricotdepot\infrastructure\repository;
+namespace abricotdepot\infra\repository;
 use Ramsey\Uuid\Uuid;
 
 use abricotdepot\core\domain\entities\Reservations\Reservation;
