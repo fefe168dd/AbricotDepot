@@ -4,7 +4,6 @@ use Ramsey\Uuid\Uuid;
 
 use abricotdepot\core\domain\entities\Reservations\Reservation;
 use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepository;
-use PDO;
 class PDOReservationRepository implements ReservationRepository 
 {
     private \PDO $pdo;
@@ -15,7 +14,18 @@ class PDOReservationRepository implements ReservationRepository
     public function listerReservations(): array
     {
         $stmt = $this->pdo->query("SELECT * FROM reservations");
-        return $stmt->fetchAll(\PDO::FETCH_CLASS, Reservation::class);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $reservations = [];
+        foreach ($rows as $row) {
+            $reservations[] = new Reservation(
+                $row['id'],
+                $row['utilisateur_id'] ?? $row['user_id'] ?? '',
+                $row['outil_id'],
+                new \DateTime($row['date_debut'] ?? $row['start_date']),
+                new \DateTime($row['date_fin'] ?? $row['end_date'])
+            );
+        }
+        return $reservations;
     }
 
     public function ReservationParId(string $id): ?Reservation
@@ -23,8 +33,17 @@ class PDOReservationRepository implements ReservationRepository
         $stmt = $this->pdo->prepare("SELECT * FROM reservations WHERE id = :id");
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        $reservation = $stmt->fetchObject(Reservation::class);
-        return $reservation ?: null;
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Reservation(
+                $row['id'],
+                $row['utilisateur_id'] ?? $row['user_id'] ?? '',
+                $row['outil_id'],
+                new \DateTime($row['date_debut'] ?? $row['start_date']),
+                new \DateTime($row['date_fin'] ?? $row['end_date'])
+            );
+        }
+        return null;
     }
 
     public function sauvegarderReservation(Reservation $reservation): void
