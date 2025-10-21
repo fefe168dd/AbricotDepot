@@ -4,6 +4,9 @@ use abricotdepot\api\actions\GetOutilAction;
 use abricotdepot\api\actions\GetOutilbyidAction;
 use abricotdepot\api\actions\GetReservationAction;
 use abricotdepot\api\actions\GetReservationByIDAction;
+use abricotdepot\api\actions\AddReservationAction;
+use abricotdepot\api\actions\CancelReservationAction;
+use abricotdepot\api\actions\CompleteReservationAction;
 use abricotdepot\api\actions\GetStockAction;
 use abricotdepot\api\actions\GetStockByIdAction;
 use abricotdepot\api\actions\GetStockByIdOutilAction;
@@ -40,6 +43,15 @@ return [
      },
      GetReservationByIDAction::class => function (ContainerInterface $container) {
          return new GetReservationByIDAction($container->get(ServiceReservation::class));
+     },
+     AddReservationAction::class => function (ContainerInterface $container) {
+         return new AddReservationAction($container->get(ServiceReservation::class));
+     },
+     CancelReservationAction::class => function (ContainerInterface $container) {
+         return new CancelReservationAction($container->get(ServiceReservation::class));
+     },
+     CompleteReservationAction::class => function (ContainerInterface $container) {
+         return new CompleteReservationAction($container->get(ServiceReservation::class));
      },
      GetStockAction::class => function (ContainerInterface $container) {
          return new GetStockAction($container->get(ServiceStock::class));
@@ -94,6 +106,12 @@ return [
         return new PDOOutilRepository($container->get('outil.pdo'));
     },
 
-
+    // Services
+    ServiceReservation::class => function (ContainerInterface $container) {
+        return new ServiceReservation(
+            $container->get(ReservationRepository::class),
+            $container->get(StockRepository::class)
+        );
+    },
 
 ];
