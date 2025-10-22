@@ -23,13 +23,18 @@ class DetailProduitAction
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $outilId = $args['id'] ?? null;
+
         if (!$outilId) {
             $response->getBody()->write(json_encode(['error' => 'ID manquant']));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
-        //appel du usecase
-        $outil = $this->serviceOutil->obtenirOutilParId($outilId);
+        $apiUrl = "http://localhost:80/outils/$outilId";
+
+        $json = file_get_contents($apiUrl);
+
+        $outil = json_decode($json, true);
+
         $stock = $this->serviceStock->obtenirStockParOutilId($outilId);
 
         if (!$outil) {
@@ -73,12 +78,12 @@ class DetailProduitAction
             $quantiteSelect .= '<div class="dateD">';
             $quantiteSelect .= '<label for="date_debut">Date de début :</label>';
             $quantiteSelect .= '<input type="date" name="date_debut" id="date_debut" required>';
-            $quantiteSelect .= '</div>' ;
+            $quantiteSelect .= '</div>';
 
             $quantiteSelect .= '<div class="dateF">';
             $quantiteSelect .= '<label for="date_fin">Date de fin :</label>';
             $quantiteSelect .= '<input type="date" name="date_fin" id="date_fin" required>';
-            $quantiteSelect .= '</div>' ;
+            $quantiteSelect .= '</div>';
             $quantiteSelect .= '</div>';
             //bouton ajouter au panier
             $quantiteSelect .= '<button type="submit" class="ajoutPanier">Ajouter au panier</button>';
@@ -88,15 +93,15 @@ class DetailProduitAction
         else {
             $quantiteSelect = '<p>Rupture de stock</p>';
         }
+        
         $remplacements = [
-            '{{outil_nom}}' => htmlspecialchars($outil->nom),
-            '{{outil_description}}' => htmlspecialchars($outil->description),
-            '{{outil_prix}}' => htmlspecialchars($outil->prix),
-            '{{outil_image}}' => htmlspecialchars($outil->imageUrl ?? '/Image/default.png'),
-            '{{outil_categorie}}' => htmlspecialchars($outil->categorie['nom'] ?? 'N/A'),
-            '{{outil_quantite_select}}' => ($quantiteSelect)
+            '{{outil_nom}}' => htmlspecialchars($outil['nom'] ?? ''),
+            '{{outil_description}}' => htmlspecialchars($outil['description'] ?? ''),
+            '{{outil_prix}}' => htmlspecialchars($outil['prix'] ?? ''),
+            '{{outil_image}}' => htmlspecialchars($outil['imageUrl'] ?? '/Image/default.png'),
+            '{{outil_categorie}}' => htmlspecialchars($outil['categorie']['nom'] ?? 'N/A'),
+            '{{outil_quantite_select}}' => $quantiteSelect
         ];
-
         $html = str_replace(array_keys($remplacements), array_values($remplacements), $html);
 
         $response->getBody()->write($html);
