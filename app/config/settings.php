@@ -9,7 +9,7 @@ use abricotdepot\api\actions\CancelReservationAction;
 use abricotdepot\api\actions\CompleteReservationAction;
 use abricotdepot\api\actions\GetStockAction;
 use abricotdepot\api\actions\GetStockByIdAction;
-use abricotdepot\api\actions\GetStockByIdOutilAction;
+use abricotdepot\api\actions\GetStockByIDOutilAction;
 use abricotdepot\api\actions\GetOutilByCategorie;
 use abricotdepot\core\application\usecases\ServiceOutil;
 use abricotdepot\core\application\usecases\ServiceReservation;
@@ -62,8 +62,8 @@ return [
      GetStockByIdAction::class => function (ContainerInterface $container) {
          return new GetStockByIdAction($container->get(ServiceStock::class));
      },
-     GetStockByIdOutilAction::class => function (ContainerInterface $container) {
-         return new GetStockByIdOutilAction($container->get(ServiceStock::class));
+     GetStockByIDOutilAction::class => function (ContainerInterface $container) {
+         return new GetStockByIDOutilAction($container->get(ServiceStock::class));
      },
 
      //infra 

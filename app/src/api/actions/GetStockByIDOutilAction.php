@@ -5,7 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use abricotdepot\core\application\usecases\ServiceStock;
 
-class GetStockByIdOutilAction 
+class GetStockByIDOutilAction
 {
     private ServiceStock $serviceStock;
 
@@ -16,7 +16,7 @@ class GetStockByIdOutilAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $idOutil = $args['id_outil'];
+        $idOutil = $args['id'];
         $stock = $this->serviceStock->obtenirStockParOutilId($idOutil);
 
         if (!$stock) {
