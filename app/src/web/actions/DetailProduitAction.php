@@ -1,22 +1,13 @@
 <?php
 namespace abricotdepot\web\actions;
 
-use abricotdepot\core\application\usecases\ServiceOutil;
-use abricotdepot\core\application\usecases\ServiceStock;
-
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class DetailProduitAction
 {
-    private ServiceOutil $serviceOutil;
-    private ServiceStock $serviceStock;
-
-    public function __construct(ServiceOutil $serviceOutil, ServiceStock $serviceStock)
+    public function __construct()
     {
-        $this->serviceOutil = $serviceOutil;
-        $this->serviceStock = $serviceStock;
 
     }
 
@@ -35,7 +26,13 @@ class DetailProduitAction
 
         $outil = json_decode($json, true);
 
-        $stock = $this->serviceStock->obtenirStockParOutilId($outilId);
+        $apiUrlStock = "http://localhost:80/outils/$outilId/stocks" ;
+
+            $json = file_get_contents($apiUrlStock) ;
+
+            $stockJson = json_decode($json ,true) ;
+
+            $stock  = htmlspecialchars($stockJson['quantity']);
 
         if (!$outil) {
             $response->getBody()->write('Outil introuvable');
@@ -58,17 +55,17 @@ class DetailProduitAction
         }
 
         // Génération du sélecteur de quantité basé sur le stock disponible
-        $maxQuantite = $stock->quantity ?? 0;
+        $stock = $stock ?? 0;
 
         $quantiteSelect = '<select name="quantite" id="quantite">';
         //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
-        if ($maxQuantite > 0) {
+        if ($stock > 0) {
             $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
             //combo quantité
             $quantiteSelect .= '<div class="quant">';
             $quantiteSelect .= '<label for="quantite" class="quantite">Quantité :</label>';
             $quantiteSelect .= '<select name="quantite" id="quantite">';
-            for ($i = 1; $i <= $maxQuantite; $i++) {
+            for ($i = 1; $i <= $stock; $i++) {
                 $quantiteSelect .= "<option value=\"$i\">$i</option>";
             }
             $quantiteSelect .= '</select>';

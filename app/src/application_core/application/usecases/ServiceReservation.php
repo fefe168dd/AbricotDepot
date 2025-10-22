@@ -32,6 +32,13 @@ class ServiceReservation
         return $reservation ? new ReservationDTO($reservation) : null;
     }
 
+    public function obtenirReservationParOutilIdEtDate(string $id, \DateTime $dateDebut, \DateTime $dateFin): ?ReservationDTO
+    {
+        $reservation = $this->reservationRepository->ReservationParOutilIdEtDate($id, $dateDebut, $dateFin);
+        return $reservation ? new ReservationDTO($reservation) : null;
+    }
+
+
     public function sauvegarderReservation(RsvinputDTO $reservationDTO): Reservation
     {
         $dateDebut = $reservationDTO->dateDebut instanceof \DateTime ? $reservationDTO->dateDebut : new \DateTime((string) $reservationDTO->dateDebut);
