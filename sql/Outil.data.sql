@@ -1,6 +1,6 @@
 INSERT INTO "outil" ("id", "name", "description", "prix", "image_url") VALUES
 ('1e7b8f3a-9c4d-4f3e-8f3a-9c4d4f3e8f3a', 'Brouette', 'Brouette robuste pour vos travaux.', 15.99, 'https://m.media-amazon.com/images/I/61uXoVQWfwL._AC_UF1000,1000_QL80_.jpg'),
-('2a8c9f4b-0d5e-5f4f-9f4b-0d5e5f4f9f4b', 'Pelle', 'Pelle permettant de creuser de très très gros trous.', 4.99, 'https://www.bosch-professional.com/fr/fr/ocsmedia/273743-54/application-image/1434x828/perceuse-a-percussion-gsb-24-2-060119c801.png'),
+('2a8c9f4b-0d5e-5f4f-9f4b-0d5e5f4f9f4b', 'Pelle', 'Pelle permettant de creuser de très très gros trous.', 4.99, 'https://m.media-amazon.com/images/I/51a00lcyMkL._AC_SL1500_.jpg'),
 ('3b9d0f5c-1e6f-4b5a-8c5c-1e6f6b5a0c5c', 'Tondeuse', 'Ça coupe les mauvaises herbes.', 14.99, 'https://static.thcdn.com/images/large/original//productimg/1600/1600/12387827-1495186723101692.jpg'),
 ('4c1d2e3f-7a8b-4c9d-9e0f-1a2b3c4d5e6f', 'Bétonneuse', 'Bétonneuse électrique pour mélanger le béton sur chantier.', 24.99, 'https://m.media-amazon.com/images/I/616jluxKx1L._UF1000,1000_QL80_.jpg'),
 ('5d2e3f4a-8b9c-5d0e-0f1a-2b3c4d5e6f7a', 'Compresseur à air', 'Compresseur portable 8 bar, idéal pour outils pneumatiques.', 39.99, 'https://m.media-amazon.com/images/I/61GAloGhsxL.jpg'),

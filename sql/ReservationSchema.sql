@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS "reservations" CASCADE;
 CREATE TABLE "public"."reservations" (
     "id" UUID PRIMARY KEY,
     "outil_id" UUID NOT NULL,
+    "user_id" UUID NOT NULL,
     "quantity" INT NOT NULL,
     "start_date" TIMESTAMP NOT NULL,
     "end_date" TIMESTAMP NOT NULL,
