@@ -22,8 +22,8 @@ class PDOReservationRepository implements ReservationRepository
                 $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['outil_id'],
                 $row['quantity'],
-                new \DateTime($row['date_debut'] ?? $row['start_date']),
-                new \DateTime($row['date_fin'] ?? $row['end_date'])
+                new \DateTime($row['date_debut']),
+                new \DateTime($row['date_fin'])
             );
         }
         return $reservations;
@@ -41,12 +41,34 @@ class PDOReservationRepository implements ReservationRepository
                 $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['outil_id'],
                 $row['quantity'],
-                new \DateTime($row['date_debut'] ?? $row['start_date']),
-                new \DateTime($row['date_fin'] ?? $row['end_date'])
+                new \DateTime($row['date_debut']),
+                new \DateTime($row['date_fin'])
             );
         }
         return null;
     }
+
+public function ReservationParOutilIdEtDate(string $id, DateTime $dateDebut, DateTime $dateFin): ?Reservation
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM reservations WHERE outil_id = :id AND date_debut <= :dateFin AND date_fin >= :dateDebut;");
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':dateDebut', $dateDebut);
+        $stmt->bindParam(':dateFin', $dateFin);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $reservations = [];
+        foreach ($rows as $row) {
+            $reservations[] = new Reservation(
+                $row['id'],
+                $row['utilisateur_id'] ?? $row['user_id'] ?? '',
+                $row['outil_id'],
+                $row['quantity'],
+                new \DateTime($row['date_debut'],
+                new \DateTime($row['date_fin']))
+            );
+        }
+        return null;
+    }
+
 
     public function sauvegarderReservation(Reservation $reservation): void
     {

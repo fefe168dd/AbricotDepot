@@ -44,11 +44,15 @@ nav {
 
 .detaille {
 
+  display: grid;
+  grid-template-columns: 1fr 65% 1fr;
+
   .articleDetaille {
     @include articleDetaille(15em) ;
+    grid-column: 2/3;
   }
 
-  h2 {
+    h2 {
     text-align: center;
   }
 

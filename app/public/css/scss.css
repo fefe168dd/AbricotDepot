@@ -16,7 +16,6 @@
 .article a {
   display: grid;
   grid-template-rows: 1fr 3em 3em;
-  height: 100%;
   color: black;
   text-decoration: none;
 }
@@ -66,6 +65,10 @@ nav {
   padding: 1%;
 }
 
+.detaille {
+  display: grid;
+  grid-template-columns: 1fr 65% 1fr;
+}
 .detaille .articleDetaille {
   border-radius: 1em;
   width: 15em;
@@ -84,6 +87,58 @@ nav {
 }
 .detaille .articleDetaille .produit-info .nom, .detaille .articleDetaille .produit-info .description, .detaille .articleDetaille .produit-info .prix, .detaille .articleDetaille .produit-info .categorie {
   text-align: center;
+}
+.detaille .articleDetaille .Reservation {
+  padding: 5%;
+  background-color: #F1D5BB;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-row-gap: 10%;
+}
+.detaille .articleDetaille .Reservation .quant {
+  grid-row: 1/2;
+  display: grid;
+  grid-template-columns: 5em 1fr;
+}
+.detaille .articleDetaille .Reservation .quant .quantite {
+  grid-column: 1/2;
+}
+.detaille .articleDetaille .Reservation .quant #quantite {
+  grid-column: 2/3;
+}
+.detaille .articleDetaille .Reservation .dates {
+  grid-row: 2/3;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-row-gap: 10%;
+}
+.detaille .articleDetaille .Reservation .dates .dateD {
+  grid-row: 1/2;
+}
+.detaille .articleDetaille .Reservation .dates .dateF {
+  grid-row: 2/3;
+}
+@media (min-width: 25em) {
+  .detaille .articleDetaille .Reservation .dates {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 100%;
+    grid-column-gap: 10%;
+  }
+  .detaille .articleDetaille .Reservation .dates .dateD {
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
+  .detaille .articleDetaille .Reservation .dates .dateF {
+    grid-column: 2/3;
+    grid-row: 1/2;
+  }
+}
+.detaille .articleDetaille .Reservation .ajoutPanier {
+  grid-row: 3/4;
+}
+.detaille .articleDetaille {
+  grid-column: 2/3;
 }
 .detaille h2 {
   text-align: center;
@@ -137,6 +192,57 @@ nav {
   }
   body .detaille .articleDetaille .produit-info .nom, body .detaille .articleDetaille .produit-info .description, body .detaille .articleDetaille .produit-info .prix, body .detaille .articleDetaille .produit-info .categorie {
     text-align: center;
+  }
+  body .detaille .articleDetaille .Reservation {
+    padding: 5%;
+    background-color: #F1D5BB;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-row-gap: 10%;
+  }
+  body .detaille .articleDetaille .Reservation .quant {
+    grid-row: 1/2;
+    display: grid;
+    grid-template-columns: 5em 1fr;
+  }
+  body .detaille .articleDetaille .Reservation .quant .quantite {
+    grid-column: 1/2;
+  }
+  body .detaille .articleDetaille .Reservation .quant #quantite {
+    grid-column: 2/3;
+  }
+  body .detaille .articleDetaille .Reservation .dates {
+    grid-row: 2/3;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-row-gap: 10%;
+  }
+  body .detaille .articleDetaille .Reservation .dates .dateD {
+    grid-row: 1/2;
+  }
+  body .detaille .articleDetaille .Reservation .dates .dateF {
+    grid-row: 2/3;
+  }
+}
+@media (min-width: 25em) and (min-width: 25em) {
+  body .detaille .articleDetaille .Reservation .dates {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 100%;
+    grid-column-gap: 10%;
+  }
+  body .detaille .articleDetaille .Reservation .dates .dateD {
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
+  body .detaille .articleDetaille .Reservation .dates .dateF {
+    grid-column: 2/3;
+    grid-row: 1/2;
+  }
+}
+@media (min-width: 25em) {
+  body .detaille .articleDetaille .Reservation .ajoutPanier {
+    grid-row: 3/4;
   }
   body .detaille h2 {
     text-align: center;
