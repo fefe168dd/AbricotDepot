@@ -31,7 +31,16 @@ class HomeAction
             $url = htmlspecialchars($outil['imageUrl']);
             $nom = htmlspecialchars($outil['nom']);
             $prix = htmlspecialchars($outil['prix']);
-            $outilHTML .= "<div class=\"article\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p></a></div>" ;
+
+            $apiUrlStock = "http://localhost:80/outils/$id/stocks" ;
+
+            $json = file_get_contents($apiUrlStock) ;
+
+            $stockJson = json_decode($json , true) ;
+
+            $stock  = htmlspecialchars($stockJson['quantity']);
+
+            $outilHTML .= "<div class=\"article\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p><p class='stock'>Stock Disponible : $stock</p></a></div>" ;
         }
 
         $outilHTML .= '</div>' ;
