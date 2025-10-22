@@ -60,22 +60,28 @@ class DetailProduitAction
         if ($maxQuantite > 0) {
             $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
             //combo quantité
-            $quantiteSelect .= '<label for="quantite">Quantité :</label>';
+            $quantiteSelect .= '<div class="quant">';
+            $quantiteSelect .= '<label for="quantite" class="quantite">Quantité :</label>';
             $quantiteSelect .= '<select name="quantite" id="quantite">';
             for ($i = 1; $i <= $maxQuantite; $i++) {
                 $quantiteSelect .= "<option value=\"$i\">$i</option>";
             }
             $quantiteSelect .= '</select>';
+            $quantiteSelect .= '</div>';
             //selection des dates
             $quantiteSelect .= '<div class="dates">';
+            $quantiteSelect .= '<div class="dateD">';
             $quantiteSelect .= '<label for="date_debut">Date de début :</label>';
             $quantiteSelect .= '<input type="date" name="date_debut" id="date_debut" required>';
+            $quantiteSelect .= '</div>' ;
 
+            $quantiteSelect .= '<div class="dateF">';
             $quantiteSelect .= '<label for="date_fin">Date de fin :</label>';
             $quantiteSelect .= '<input type="date" name="date_fin" id="date_fin" required>';
+            $quantiteSelect .= '</div>' ;
             $quantiteSelect .= '</div>';
             //bouton ajouter au panier
-            $quantiteSelect .= '<button type="submit">Ajouter au panier</button>';
+            $quantiteSelect .= '<button type="submit" class="ajoutPanier">Ajouter au panier</button>';
             $quantiteSelect .= '</form>';
         }
         //sinon on affiche rupture de stock et la date de restockage la plus proche si elle est définie
