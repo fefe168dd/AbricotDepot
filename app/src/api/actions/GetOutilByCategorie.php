@@ -19,7 +19,7 @@ class GetOutilByCategorie
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $categorieName = $args['categorieName'];
-        $outils = $this->outilRepository->OutilParCategorie($categorieName);
+        $outils = $this->outilRepository->obtenirOutilsParCategorie($categorieName);
 
         if (empty($outils)) {
             $response->getBody()->write(json_encode(['error' => 'No outils found for this category']));
