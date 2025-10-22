@@ -24,26 +24,30 @@ class Reservation
         return $this->id;
     }
 
-
     public function getOutilId(): string
     {
         return $this->outilId;
     }
+    
     public function getQuantity(): int
     {
         return $this->quantity;
     }
 
-    public function getDatedebut(): DateTime
+    public function getDateDebut(): DateTime
     {
         return $this->datedebut;
     }
-    public function getDatefin(): DateTime
+    
+    public function getDateFin(): DateTime
     {
         return $this->datefin;
     }
+    
     public function setId(string $id): void
     {
         $this->id = $id;
     }
 }
+
+
