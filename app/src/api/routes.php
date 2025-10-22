@@ -7,7 +7,9 @@ return function(\Slim\App $app):\Slim\App {
 
     $app->post('/reservations', \abricotdepot\api\actions\AddReservationAction::class);
     $app->get('/reservations', \abricotdepot\api\actions\GetReservationAction::class);
-    $app->get('/reservation/{id}' , \abricotdepot\api\actions\GetReservationByIDAction::class) ;
+    $app->get('/reservation/{id}' , \abricotdepot\api\actions\GetReservationByIDAction::class);
+    $app->put('/reservations/{id}/cancel', \abricotdepot\api\actions\CancelReservationAction::class);
+    $app->put('/reservations/{id}/complete', \abricotdepot\api\actions\CompleteReservationAction::class);
     $app->get('/outils', \abricotdepot\api\actions\GetOutilAction::class);
     $app->get('/outils/{id}', \abricotdepot\api\actions\GetOutilbyidAction::class);
     $app->get('/categories/{categorieName}/outils' , \abricotdepot\api\actions\GetOutilByCategorie::class);
