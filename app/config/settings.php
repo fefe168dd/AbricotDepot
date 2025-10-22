@@ -11,6 +11,7 @@ use abricotdepot\api\actions\GetStockAction;
 use abricotdepot\api\actions\GetStockByIdAction;
 use abricotdepot\api\actions\GetStockByIdOutilAction;
 use abricotdepot\api\actions\GetOutilByCategorie;
+use abricotdepot\api\actions\RefreshTokenAction;
 use abricotdepot\core\application\usecases\ServiceOutil;
 use abricotdepot\core\application\usecases\ServiceReservation;
 use abricotdepot\core\application\usecases\ServiceStock;
@@ -23,7 +24,17 @@ use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
 use abricotdepot\web\actions\PanierAction;
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
 use abricotdepot\infra\repository\PDOPanierRepository;
-
+use abricotdepot\core\domain\entities\auth\AuthServiceInterface; 
+use abricotdepot\api\provider\AuthProviderInterface;
+use abricotdepot\core\application\usecases\AuthService;
+use abricotdepot\core\application\ports\spi\repositoryInterface\UserRepositoryInterface;
+use abricotdepot\api\provider\JwtAuthProvider;
+use abricotdepot\infra\repository\RdvRepository;
+use abricotdepot\infra\repository\PraticienRepository;
+use abricotdepot\api\middlewares\AuthnMiddleware;
+use abricotdepot\api\middlewares\AuthzMiddleware;
+use abricotdepot\core\domain\entities\auth\AuthzServiceInterface;
+use abricotdepot\core\domain\entities\auth\AuthzService;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -65,6 +76,34 @@ return [
      GetStockByIdOutilAction::class => function (ContainerInterface $container) {
          return new GetStockByIdOutilAction($container->get(ServiceStock::class));
      },
+       AuthServiceInterface::class => function (ContainerInterface $c) {
+        return new AuthService($c->get(UserRepositoryInterface::class));
+    },
+
+    AuthProviderInterface::class => function (ContainerInterface $c) {
+        $config = parse_ini_file($c->get('env.config'));
+        $secret = $config['auth.jwt.key'] ?? getenv('AUTH_JWT_KEY') ?? null;
+        if (!$secret) {
+            throw new \RuntimeException('JWT secret not configured. Add auth.jwt.key to your env file or set AUTH_JWT_KEY.');
+        }
+
+        return new JwtAuthProvider(
+            $c->get(AuthServiceInterface::class),
+            $secret,
+            'HS256',
+            3600,
+            86400
+        );
+    },
+
+    AuthnMiddleware::class => function (ContainerInterface $c) {
+        return new AuthnMiddleware($c->get(AuthProviderInterface::class));
+    },
+
+
+    AuthzMiddleware::class => function (ContainerInterface $c) {
+        return new AuthzMiddleware($c->get(AuthzServiceInterface::class));
+    },
 
      //infra 
      'outil.pdo' => function (ContainerInterface $container) {
@@ -107,6 +146,16 @@ return [
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
 },
+ 'auth.pdo' => function (ContainerInterface $container) {
+     $config = parse_ini_file($container->get('env.config'));
+     $dsn = "{$config['auth.driver']}:host={$config['auth.host']};dbname={$config['auth.database']}";
+     $user = $config['auth.username'];
+     $password = $config['auth.password'];
+     return new PDO($dsn, $user, $password, [
+         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+     ]);
+ },
 
 PanierRepository::class => function (ContainerInterface $c) {
     // récupérer les deux PDO du container
