@@ -9,9 +9,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use abricotdepot\core\domain\entities\auth\AuthServiceInterface;
 use abricotdepot\core\domain\exceptions\AuthenticationException;
 /**
- * Action pour authentifier un utilisateur
+ * Action pour autheyesntifier un utilisateur
  */
-class AuthenticateUserAction
+class AuthentificationUserAction
 {
     private AuthServiceInterface $authService;
 

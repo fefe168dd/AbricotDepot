@@ -35,7 +35,9 @@ use abricotdepot\api\middlewares\AuthnMiddleware;
 use abricotdepot\api\middlewares\AuthzMiddleware;
 use abricotdepot\core\domain\entities\auth\AuthzServiceInterface;
 use abricotdepot\core\domain\entities\auth\AuthzService;
+use abricotdepot\api\actions\AuthentificationUserAction;
 use Psr\Container\ContainerInterface;
+use abricotdepot\infra\repository\PDOUserRepository;
 
 return [
 
@@ -79,6 +81,10 @@ return [
        AuthServiceInterface::class => function (ContainerInterface $c) {
         return new AuthService($c->get(UserRepositoryInterface::class));
     },
+    AuthentificationUserAction::class => function (ContainerInterface $c) {
+        return new AuthentificationUserAction($c->get(AuthServiceInterface::class));
+    },
+
 
     AuthProviderInterface::class => function (ContainerInterface $c) {
         $config = parse_ini_file($c->get('env.config'));
@@ -99,7 +105,7 @@ return [
     AuthnMiddleware::class => function (ContainerInterface $c) {
         return new AuthnMiddleware($c->get(AuthProviderInterface::class));
     },
-
+    
 
     AuthzMiddleware::class => function (ContainerInterface $c) {
         return new AuthzMiddleware($c->get(AuthzServiceInterface::class));
