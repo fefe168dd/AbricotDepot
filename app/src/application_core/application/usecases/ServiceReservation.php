@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace abricotdepot\core\application\usecases;
 
 use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepository;
@@ -7,7 +7,7 @@ use abricotdepot\core\application\ports\api\dto\ReservationDTO;
 use abricotdepot\core\application\ports\api\dto\RsvinputDTO;
 use abricotdepot\core\domain\entities\Reservations\Reservation;
 
-class ServiceReservation 
+class ServiceReservation
 {
     private ReservationRepository $reservationRepository;
     private StockRepository $stockRepository;
@@ -15,8 +15,7 @@ class ServiceReservation
     public function __construct(
         ReservationRepository $reservationRepository,
         StockRepository $stockRepository
-    )
-    {
+    ) {
         $this->reservationRepository = $reservationRepository;
         $this->stockRepository = $stockRepository;
     }
@@ -33,14 +32,21 @@ class ServiceReservation
         return $reservation ? new ReservationDTO($reservation) : null;
     }
 
+    public function obtenirReservationParOutilIdEtDate(string $id, \DateTime $dateDebut, \DateTime $dateFin): ?ReservationDTO
+    {
+        $reservation = $this->reservationRepository->ReservationParOutilIdEtDate($id, $dateDebut, $dateFin);
+        return $reservation ? new ReservationDTO($reservation) : null;
+    }
+
+
     public function sauvegarderReservation(RsvinputDTO $reservationDTO): Reservation
     {
-        $dateDebut = $reservationDTO->dateDebut instanceof \DateTime ? $reservationDTO->dateDebut : new \DateTime((string)$reservationDTO->dateDebut);
-        $dateFin = $reservationDTO->dateFin instanceof \DateTime ? $reservationDTO->dateFin : new \DateTime((string)$reservationDTO->dateFin);
+        $dateDebut = $reservationDTO->dateDebut instanceof \DateTime ? $reservationDTO->dateDebut : new \DateTime((string) $reservationDTO->dateDebut);
+        $dateFin = $reservationDTO->dateFin instanceof \DateTime ? $reservationDTO->dateFin : new \DateTime((string) $reservationDTO->dateFin);
 
         // Vérifier que le stock existe et est suffisant
         $stock = $this->stockRepository->StockParOutilId($reservationDTO->outilId);
-        
+
         if (!$stock) {
             throw new \Exception("Aucun stock trouvé pour cet outil");
         }
@@ -55,14 +61,16 @@ class ServiceReservation
         $reservation = new Reservation(
             null,
             $reservationDTO->outilId,
+            $reservationDTO->userId,
             $reservationDTO->quantity,
-            $dateDebut,
-            $dateFin
+            $reservationDTO->dateDebut,
+            $reservationDTO->dateFin,
+            $reservationDTO->status
         );
-        
+
         // Sauvegarder la réservation
         $this->reservationRepository->sauvegarderReservation($reservation);
-        
+
         // Créer l'entrée dans stock_reservations (qui déclenche automatiquement la mise à jour du stock via trigger)
         try {
             $this->stockRepository->createStockReservation(
@@ -76,14 +84,14 @@ class ServiceReservation
             // Si la création de la réservation de stock échoue, on pourrait vouloir annuler la réservation
             throw new \Exception("Erreur lors de la réservation du stock: " . $e->getMessage());
         }
-        
+
         return $reservation;
     }
 
     public function annulerReservation(string $reservationId): void
     {
         $reservation = $this->reservationRepository->ReservationParId($reservationId);
-        
+
         if (!$reservation) {
             throw new \Exception("Réservation non trouvée");
         }
@@ -95,7 +103,7 @@ class ServiceReservation
     public function terminerReservation(string $reservationId): void
     {
         $reservation = $this->reservationRepository->ReservationParId($reservationId);
-        
+
         if (!$reservation) {
             throw new \Exception("Réservation non trouvée");
         }

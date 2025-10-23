@@ -24,7 +24,15 @@ class HomeAction
 
         $html = file_get_contents($file);
 
-        $outilHTML = '<div class="Articles">' ;
+        $outilHTML = '<label class="tri">
+        <input type="checkbox" id="toggle-sort">
+        <select class="dropdown">
+            <option value="">Trier par :</option>
+            <option value="peinture">Peinture</option>
+            <option value="jardin">Jardin</option>
+            <option value="garage">Garage</option>
+        </select>
+    </label>' . '<div class="Articles">' ;
 
         foreach ($outils as $outil) {
             $id  = htmlspecialchars($outil['id']);

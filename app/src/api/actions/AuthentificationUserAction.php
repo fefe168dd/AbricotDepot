@@ -9,9 +9,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use abricotdepot\core\domain\entities\auth\AuthServiceInterface;
 use abricotdepot\core\domain\exceptions\AuthenticationException;
 /**
- * Action pour authentifier un utilisateur
+ * Action pour autheyesntifier un utilisateur
  */
-class AuthenticateUserAction
+class AuthentificationUserAction
 {
     private AuthServiceInterface $authService;
 
@@ -57,7 +57,12 @@ class AuthenticateUserAction
                 ->withStatus(401);
                 
         } catch (\Exception $e) {
-            $payload = json_encode(['error' => 'Erreur interne du serveur']);
+            // En développement, retourner l'erreur détaillée
+            $payload = json_encode([
+                'error' => 'Erreur interne du serveur',
+                'details' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             $response->getBody()->write($payload);
             return $response
                 ->withHeader('Content-Type', 'application/json')

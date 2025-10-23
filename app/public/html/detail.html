@@ -37,3 +37,91 @@
 
     </main>
 </body>
+
+<script>//ajout des logs pour le debug
+document.addEventListener('DOMContentLoaded', () => {
+    const dateDebutInput = document.getElementById('date_debut');
+    const dateFinInput = document.getElementById('date_fin');
+    const quantiteSelect = document.getElementById('quantite');
+    const outilId = window.location.pathname.split('/').pop(); // récupère l'id depuis l'URL
+
+    console.log("🧩 Outil ID détecté :", outilId);
+
+    async function updateQuantiteOptions() {
+        const dateDebut = dateDebutInput.value;
+        const dateFin = dateFinInput.value;
+
+        console.log("📅 Dates sélectionnées :", { dateDebut, dateFin });
+
+        // On attend que les deux dates soient renseignées
+        if (!dateDebut || !dateFin) {
+            console.log("⏳ En attente des deux dates...");
+            return;
+        }
+
+        try {
+            const reservationUrl = `/reservations/${outilId}/${dateDebut}/${dateFin}`;
+            const stockUrl = `/outils/${outilId}/stocks`;
+
+            console.log("🔗 Requêtes API :", { reservationUrl, stockUrl });
+
+            const response = await fetch(reservationUrl);
+            const stockage = await fetch(stockUrl);
+
+            console.log("📡 Réponses API :", { response, stockage });
+
+                const reservations = await response.json();
+
+            if (!stockage.ok) {
+                throw new Error("Erreur lors de la récupération du stock");
+            }
+
+            const stockData = await stockage.json();
+
+            console.log("📦 Données reçues :", { reservations, stockData });
+
+            // Additionne leurs quantités si plusieurs réservations
+            let totalReserve = 0;
+            if (Array.isArray(reservations)) {
+                totalReserve = reservations.reduce((somme, res) => somme + (res.quantity ?? 0), 0);
+            } else if (reservations.quantity) {
+                totalReserve = reservations.quantity;
+            }
+
+            const stockTotal = stockData.quantity ?? 0;
+            const maxQuantite = Math.max(stockTotal - totalReserve, 0);
+
+            console.log("📊 Calculs :", {
+                stockTotal,
+                totalReserve,
+                maxQuantite
+            });
+
+            // Reconstruction de la combobox
+            quantiteSelect.innerHTML = "";
+
+            if (maxQuantite > 0) {
+                for (let i = 1; i <= maxQuantite; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = i;
+                    quantiteSelect.appendChild(option);
+                }
+            } else {
+                const option = document.createElement("option");
+                option.textContent = "Indisponible";
+                option.disabled = true;
+                quantiteSelect.appendChild(option);
+            }
+
+            console.log("✅ Combobox mise à jour avec", maxQuantite, "valeurs disponibles.");
+
+        } catch (error) {
+            console.error("❌ Erreur dans updateQuantiteOptions :", error);
+        }
+    }
+
+    dateDebutInput.addEventListener("change", updateQuantiteOptions);
+    dateFinInput.addEventListener("change", updateQuantiteOptions);
+});
+</script>
