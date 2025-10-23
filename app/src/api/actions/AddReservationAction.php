@@ -36,7 +36,8 @@ class AddReservationAction
                 userId: (string) $data['user_id'],
                 quantity: (int) $data['quantity'],
                 dateDebut: $dateDebut,
-                dateFin: $dateFin
+                dateFin: $dateFin,
+                status: 0
             );
 
             $this->serviceReservation->sauvegarderReservation($reservationDTO);
