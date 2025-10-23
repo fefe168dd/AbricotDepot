@@ -61,15 +61,7 @@ class DetailProduitAction
         //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
         if ($stock > 0) {
             $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
-            //combo quantité
-            $quantiteSelect .= '<div class="quant">';
-            $quantiteSelect .= '<label for="quantite" class="quantite" id="quantite-section">Quantité :</label>';
-            $quantiteSelect .= '<select name="quantite" id="quantite">';
-            for ($i = 1; $i <= $stock; $i++) {
-                $quantiteSelect .= "<option value=\"$i\">$i</option>";
-            }
-            $quantiteSelect .= '</select>';
-            $quantiteSelect .= '</div>';
+
             //selection des dates
             $quantiteSelect .= '<div class="dates">';
             $quantiteSelect .= '<div class="dateD">';
@@ -82,6 +74,17 @@ class DetailProduitAction
             $quantiteSelect .= '<input type="date" name="date_fin" id="date_fin" required>';
             $quantiteSelect .= '</div>';
             $quantiteSelect .= '</div>';
+            
+            //combo quantité
+            $quantiteSelect .= '<div class="quant">';
+            $quantiteSelect .= '<label for="quantite" class="quantite" id="quantite-section">Quantité :</label>';
+            $quantiteSelect .= '<select name="quantite" id="quantite">';
+            for ($i = 1; $i <= $stock; $i++) {
+                $quantiteSelect .= "<option value=\"$i\">$i</option>";
+            }
+            $quantiteSelect .= '</select>';
+            $quantiteSelect .= '</div>';
+            
             //bouton ajouter au panier
             $quantiteSelect .= '<button type="submit" class="ajoutPanier">Ajouter au panier</button>';
             $quantiteSelect .= '</form>';
