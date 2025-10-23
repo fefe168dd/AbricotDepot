@@ -17,11 +17,12 @@
 
   a {
 
+    @extend %lienNeutre ;
+
     display: grid;
     grid-template-rows: 1fr 3em 3em 3em;
 
-    color: black;
-    text-decoration: none;
+
 
     p {
       margin-top: 0.5em;
@@ -42,4 +43,9 @@
     }
 
   }
+}
+
+%lienNeutre {
+  color: black;
+  text-decoration: none;
 }
