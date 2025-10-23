@@ -25,8 +25,9 @@ class PDOReservationRepository implements ReservationRepository
                 $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['outil_id'],
                 $row['quantity'],
-                new \DateTime($row['date_debut']),
-                new \DateTime($row['date_fin'])
+                new \DateTime($row['start_date']),
+                new \DateTime($row['end_date']),
+                $row ['status']
             );
         }
         return $reservations;
@@ -44,8 +45,9 @@ class PDOReservationRepository implements ReservationRepository
                 $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['outil_id'],
                 $row['quantity'],
-                new \DateTime($row['date_debut']),
-                new \DateTime($row['date_fin'])
+                new \DateTime($row['start_date']),
+                new \DateTime($row['end_date']),
+                $row ['status']
             );
         }
         return null;
@@ -53,7 +55,7 @@ class PDOReservationRepository implements ReservationRepository
 
     public function ReservationParOutilIdEtDate(string $id, \DateTime $dateDebut, \DateTime $dateFin): ?Reservation
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM reservations WHERE outil_id = :id AND date_debut <= :dateFin AND date_fin >= :dateDebut;");
+        $stmt = $this->pdo->prepare("SELECT * FROM reservations WHERE outil_id = :id AND start_date <= :dateFin AND end_date >= :dateDebut;");
         $stmt->execute([
             ':id' => $id,
             ':dateDebut' => $dateDebut->format('Y-m-d H:i:s'),
@@ -64,12 +66,12 @@ class PDOReservationRepository implements ReservationRepository
         foreach ($rows as $row) {
             $reservations[] = new Reservation(
                 $row['id'],
-                $row['user_id'],
                 $row['outil_id'],
                 $row['user_id'],
                 $row['quantity'],
-                new \DateTime($row['date_debut']),
-                new \DateTime($row['date_fin'])
+                new \DateTime($row['start_date']),
+                new \DateTime($row['end_date']),
+                $row ['status']
             );
         }
         return null;

@@ -18,8 +18,8 @@ class GetReservationByOutilAndDatesAction
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $id = $args['id'];
-        $dateDebut = new \DateTime($request->getQueryParams()['date_debut']);
-        $dateFin = new \DateTime($request->getQueryParams()['date_fin']);
+        $dateDebut = new \DateTime($args['date_debut']);
+        $dateFin = new \DateTime($args['date_fin']);
         $reservation = $this->serviceReservation->obtenirReservationParOutilIdEtDate($id, $dateDebut, $dateFin);
 
         if (!$reservation) {

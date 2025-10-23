@@ -64,7 +64,8 @@ class ServiceReservation
             $reservationDTO->userId,
             $reservationDTO->quantity,
             $reservationDTO->dateDebut,
-            $reservationDTO->dateFin
+            $reservationDTO->dateFin,
+            $reservationDTO->status
         );
 
         // Sauvegarder la réservation

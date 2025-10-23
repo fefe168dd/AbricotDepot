@@ -10,8 +10,9 @@ class Reservation
     private int $quantity;
     private DateTime $datedebut;
     private DateTime $datefin;
+    private int $status;
 
-    public function __construct(?string $id, string $outilId, string $userId, int $quantity, DateTime $datedebut, DateTime $datefin)
+    public function __construct(?string $id, string $outilId, string $userId, int $quantity, DateTime $datedebut, DateTime $datefin, int $status)
     {
         $this->id = $id;
         $this->outilId = $outilId;
@@ -19,6 +20,7 @@ class Reservation
         $this->quantity = $quantity;
         $this->datedebut = $datedebut;
         $this->datefin = $datefin;
+        $this->status = $status;
     }
 
     public function getId(): ?string
@@ -49,8 +51,11 @@ class Reservation
     {
         return $this->datefin;
     }
-    
-    public function setId(string $id): void
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+        public function setId(string $id): void
     {
         $this->id = $id;
     }

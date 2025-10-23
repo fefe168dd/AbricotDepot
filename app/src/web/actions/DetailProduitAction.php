@@ -63,7 +63,7 @@ class DetailProduitAction
             $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
             //combo quantité
             $quantiteSelect .= '<div class="quant">';
-            $quantiteSelect .= '<label for="quantite" class="quantite">Quantité :</label>';
+            $quantiteSelect .= '<label for="quantite" class="quantite" id="quantite-section">Quantité :</label>';
             $quantiteSelect .= '<select name="quantite" id="quantite">';
             for ($i = 1; $i <= $stock; $i++) {
                 $quantiteSelect .= "<option value=\"$i\">$i</option>";
@@ -105,3 +105,4 @@ class DetailProduitAction
         return $response->withHeader('Content-Type', 'text/html');
     }
 }
+

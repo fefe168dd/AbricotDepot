@@ -10,6 +10,7 @@ return function(\Slim\App $app):\Slim\App {
     $app->get('/reservation/{id}' , \abricotdepot\api\actions\GetReservationByIDAction::class);
     $app->put('/reservations/{id}/cancel', \abricotdepot\api\actions\CancelReservationAction::class);
     $app->put('/reservations/{id}/complete', \abricotdepot\api\actions\CompleteReservationAction::class);
+    $app->get('/reservations/{id}/{date_debut}/{date_fin}', \abricotdepot\api\actions\GetReservationByOutilAndDatesAction::class);
     $app->get('/outils', \abricotdepot\api\actions\GetOutilAction::class);
     $app->get('/outils/{id}', \abricotdepot\api\actions\GetOutilbyidAction::class);
     $app->get('/categories/{categorieName}/outils' , \abricotdepot\api\actions\GetOutilByCategorie::class);
@@ -19,6 +20,7 @@ return function(\Slim\App $app):\Slim\App {
     $app->post('/auth/signin', \abricotdepot\api\actions\SignInAction::class);
     $app->post('/auth/authenticate',  \abricotdepot\api\actions\AuthentificationUserAction::class);
     $app->post('/auth/refresh' , \abricotdepot\api\actions\RefreshTokenAction::class);
+    
         
 
     return $app;
