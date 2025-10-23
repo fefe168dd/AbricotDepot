@@ -74,7 +74,7 @@ class PDOReservationRepository implements ReservationRepository
                 $row ['status']
             );
         }
-        return null;
+        return $reservations ? $reservations[0] : null;
     }
 
 
