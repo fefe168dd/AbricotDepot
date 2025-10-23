@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS "stock_reservations";
 DROP TABLE IF EXISTS "stock";
 CREATE TABLE "public"."stock"(
     "id" uuid NOT NULL,
@@ -8,7 +9,6 @@ CREATE TABLE "public"."stock"(
     CONSTRAINT "id" PRIMARY KEY ("id")
 );
 
-DROP TABLE IF EXISTS "stock_reservations";
 CREATE TABLE "public"."stock_reservations"(
     "id" uuid NOT NULL,
     "stock_id" uuid NOT NULL,
