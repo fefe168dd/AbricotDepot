@@ -1,3 +1,8 @@
+.article a, .formulaire .retour a, .inscrire .retour a {
+  color: black;
+  text-decoration: none;
+}
+
 .article {
   width: 40%;
   margin-left: 2%;
@@ -16,8 +21,6 @@
 .article a {
   display: grid;
   grid-template-rows: 1fr 3em 3em 3em;
-  color: black;
-  text-decoration: none;
 }
 .article a p {
   margin-top: 0.5em;
@@ -152,7 +155,54 @@ nav {
   flex-wrap: wrap;
 }
 
+.formulaire, .inscrire {
+  display: grid;
+  padding: 2%;
+  grid-template-columns: 100%;
+}
+.formulaire .retour:hover, .inscrire .retour:hover {
+  background-color: black;
+}
+.formulaire .retour:hover a, .inscrire .retour:hover a {
+  color: white;
+}
+.formulaire .retour, .inscrire .retour {
+  text-align: center;
+  box-sizing: border-box;
+  border: 2px black solid;
+  border-radius: 1em;
+  padding: 2%;
+  margin-bottom: 2%;
+}
+.formulaire .formconnexion, .formulaire .forminscrip, .inscrire .formconnexion, .inscrire .forminscrip {
+  padding: 5%;
+  display: grid;
+  grid-template-rows: repeat(6, 2em);
+  grid-row-gap: 3%;
+  background-color: #F1D5BB;
+  border: 2px black solid;
+  border-radius: 1em;
+  margin-bottom: 0;
+}
+.formulaire .formconnexion h3, .formulaire .forminscrip h3, .inscrire .formconnexion h3, .inscrire .forminscrip h3 {
+  margin: 0;
+}
+.formulaire .formconnexion a, .formulaire .forminscrip a, .inscrire .formconnexion a, .inscrire .forminscrip a {
+  color: black;
+}
+
 @media (min-width: 25em) {
+  .formulaire, .inscrire {
+    display: grid;
+    padding: 2%;
+    grid-template-columns: 1fr 50% 1fr;
+  }
+  .formulaire .retour, .inscrire .retour {
+    grid-column: 2/3;
+  }
+  .formulaire .formconnexion, .formulaire .forminscrip, .inscrire .formconnexion, .inscrire .forminscrip {
+    grid-column: 2/3;
+  }
   body {
     display: grid;
     grid-template-rows: 3rem 3rem 1fr;

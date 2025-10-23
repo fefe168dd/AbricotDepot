@@ -64,8 +64,69 @@ nav {
   @include row
 }
 
+
+
+.formulaire , .inscrire {
+  display: grid;
+  padding: 2%;
+  grid-template-columns: 100%;
+
+  .retour:hover {
+    background-color: black;
+    a {
+      color: white;
+    }
+  }
+
+  .retour {
+    text-align: center;
+    box-sizing: border-box;
+    border: 2px black solid;
+    border-radius: 1em;
+    padding: 2%;
+    margin-bottom: 2%;
+
+    a {
+      @extend %lienNeutre ;
+    }
+  }
+
+  .formconnexion , .forminscrip {
+    padding: 5%;
+    display: grid;
+    grid-template-rows: repeat(6, 2em);
+    grid-row-gap: 3%;
+    background-color: #F1D5BB;
+    border : 2px black solid;
+    border-radius: 1em;
+    margin-bottom: 0;
+
+    h3 {
+      margin: 0;
+    }
+
+    a {
+      color: black;
+    }
+
+  }
+}
+
 @media (min-width: 25em) {
 
+  .formulaire , .inscrire {
+    display: grid;
+    padding: 2%;
+    grid-template-columns: 1fr 50% 1fr;
+
+    .retour {
+      grid-column: 2/3;
+    }
+
+    .formconnexion , .forminscrip {
+      grid-column: 2/3;
+    }
+  }
 
   body {
     display: grid;

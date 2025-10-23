@@ -1,36 +1,38 @@
 <?php
 namespace abricotdepot\web\actions;
 
-use abricotdepot\core\application\usecases\ServiceOutil;
-use abricotdepot\core\application\usecases\ServiceStock;
-
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class DetailProduitAction
 {
-    private ServiceOutil $serviceOutil;
-    private ServiceStock $serviceStock;
-
-    public function __construct(ServiceOutil $serviceOutil, ServiceStock $serviceStock)
+    public function __construct()
     {
-        $this->serviceOutil = $serviceOutil;
-        $this->serviceStock = $serviceStock;
 
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $outilId = $args['id'] ?? null;
+
         if (!$outilId) {
             $response->getBody()->write(json_encode(['error' => 'ID manquant']));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
-        //appel du usecase
-        $outil = $this->serviceOutil->obtenirOutilParId($outilId);
-        $stock = $this->serviceStock->obtenirStockParOutilId($outilId);
+        $apiUrl = "http://localhost:80/outils/$outilId";
+
+        $json = file_get_contents($apiUrl);
+
+        $outil = json_decode($json, true);
+
+        $apiUrlStock = "http://localhost:80/outils/$outilId/stocks" ;
+
+            $json = file_get_contents($apiUrlStock) ;
+
+            $stockJson = json_decode($json ,true) ;
+
+            $stock  = htmlspecialchars($stockJson['quantity']);
 
         if (!$outil) {
             $response->getBody()->write('Outil introuvable');
@@ -53,17 +55,17 @@ class DetailProduitAction
         }
 
         // Génération du sélecteur de quantité basé sur le stock disponible
-        $maxQuantite = $stock->quantity ?? 0;
+        $stock = $stock ?? 0;
 
         $quantiteSelect = '<select name="quantite" id="quantite">';
         //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
-        if ($maxQuantite > 0) {
+        if ($stock > 0) {
             $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
             //combo quantité
             $quantiteSelect .= '<div class="quant">';
-            $quantiteSelect .= '<label for="quantite" class="quantite">Quantité :</label>';
+            $quantiteSelect .= '<label for="quantite" class="quantite" id="quantite-section">Quantité :</label>';
             $quantiteSelect .= '<select name="quantite" id="quantite">';
-            for ($i = 1; $i <= $maxQuantite; $i++) {
+            for ($i = 1; $i <= $stock; $i++) {
                 $quantiteSelect .= "<option value=\"$i\">$i</option>";
             }
             $quantiteSelect .= '</select>';
@@ -73,12 +75,12 @@ class DetailProduitAction
             $quantiteSelect .= '<div class="dateD">';
             $quantiteSelect .= '<label for="date_debut">Date de début :</label>';
             $quantiteSelect .= '<input type="date" name="date_debut" id="date_debut" required>';
-            $quantiteSelect .= '</div>' ;
+            $quantiteSelect .= '</div>';
 
             $quantiteSelect .= '<div class="dateF">';
             $quantiteSelect .= '<label for="date_fin">Date de fin :</label>';
             $quantiteSelect .= '<input type="date" name="date_fin" id="date_fin" required>';
-            $quantiteSelect .= '</div>' ;
+            $quantiteSelect .= '</div>';
             $quantiteSelect .= '</div>';
             //bouton ajouter au panier
             $quantiteSelect .= '<button type="submit" class="ajoutPanier">Ajouter au panier</button>';
@@ -88,18 +90,19 @@ class DetailProduitAction
         else {
             $quantiteSelect = '<p>Rupture de stock</p>';
         }
+        
         $remplacements = [
-            '{{outil_nom}}' => htmlspecialchars($outil->nom),
-            '{{outil_description}}' => htmlspecialchars($outil->description),
-            '{{outil_prix}}' => htmlspecialchars($outil->prix),
-            '{{outil_image}}' => htmlspecialchars($outil->imageUrl ?? '/Image/default.png'),
-            '{{outil_categorie}}' => htmlspecialchars($outil->categorie['nom'] ?? 'N/A'),
-            '{{outil_quantite_select}}' => ($quantiteSelect)
+            '{{outil_nom}}' => htmlspecialchars($outil['nom'] ?? ''),
+            '{{outil_description}}' => htmlspecialchars($outil['description'] ?? ''),
+            '{{outil_prix}}' => htmlspecialchars($outil['prix'] ?? ''),
+            '{{outil_image}}' => htmlspecialchars($outil['imageUrl'] ?? '/Image/default.png'),
+            '{{outil_categorie}}' => htmlspecialchars($outil['categorie']['nom'] ?? 'N/A'),
+            '{{outil_quantite_select}}' => $quantiteSelect
         ];
-
         $html = str_replace(array_keys($remplacements), array_values($remplacements), $html);
 
         $response->getBody()->write($html);
         return $response->withHeader('Content-Type', 'text/html');
     }
 }
+

@@ -37,3 +37,72 @@
 
     </main>
 </body>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const dateDebutInput = document.getElementById('date_debut');
+    const dateFinInput = document.getElementById('date_fin');
+    const quantiteSelect = document.getElementById('quantite');
+    const outilId = window.location.pathname.split('/').pop(); // Récupère l'id depuis l'URL
+
+    async function updateQuantiteOptions() {
+        const dateDebut = dateDebutInput.value;
+        const dateFin = dateFinInput.value;
+
+        // On attend que les deux dates soient renseignées
+        if (!dateDebut || !dateFin) return;
+
+        try {
+            const response = await fetch("/reservation/${outilId}/${dateDebut}/${dateFin}");
+
+            const stockage = await fetch("/outils/{id}/stocks");
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des réservations");
+            }
+
+            if (!stockage.ok) {
+                throw new Error("Erreur lors de la récupération du stockage");
+            }
+
+            const data = await response.json();
+
+            const stockData = await stockage.json();
+
+            //Additionne leurs quantités si plusieurs réservations
+            let totalReserve = 0;
+            if (Array.isArray(reservations)) {
+                totalReserve = reservations.reduce((somme, res) => somme + (res.quantity ?? 0), 0);
+            } else if (reservations.quantity) {
+                totalReserve = reservations.quantity;
+            }
+
+            const stockTotal = stockData.quantity ?? 0;
+            const maxQuantite = Math.max(stockTotal - totalReserve, 0);
+            
+            //reconstruction de la combobox
+            quantiteSelect.innerHTML = "";
+
+            if (maxQuantite > 0) {
+                for (let i = 1; i <= maxQuantite; i++) {
+                    const option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = i;
+                    quantiteSelect.appendChild(option);
+                }
+            } else {
+                const option = document.createElement("option");
+                option.textContent = "Indisponible";
+                option.disabled = true;
+                quantiteSelect.appendChild(option);
+            }
+
+        } catch (error) {
+            console.error("Erreur :", error);
+        }
+    }
+
+    dateDebutInput.addEventListener("change", updateQuantiteOptions);
+    dateFinInput.addEventListener("change", updateQuantiteOptions);
+});
+</script>
