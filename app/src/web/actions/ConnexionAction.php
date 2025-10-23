@@ -24,7 +24,7 @@ class ConnexionAction
     <div class="formulaire">
     <form class="formconnexion" method="post" action="/connexion">
         <div class="identifiant">Adresse mail : <input type="email" name="identifiant" required></div>
-        <div class="password">Mot de passe : <input type="password" name="passw ord" required></div>
+        <div class="password">Mot de passe : <input type="password" name="password" required></div>
         <div class="submit"><button type="submit">S\'inscrire</button></div>
         <div class="inscription"><a href="/inscription">Pas de compte ? Inscrivez-vous !</a></div>
     </form>
