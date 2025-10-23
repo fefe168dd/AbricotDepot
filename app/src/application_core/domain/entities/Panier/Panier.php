@@ -3,7 +3,7 @@ namespace abricotdepot\core\domain\entities\Panier;
 
 class Panier
 {
-    private string $panierId;
+    private string $id;
     private string $userId;
     private string $outilId;
     private int $quantity;
@@ -11,14 +11,14 @@ class Panier
     private \DateTime $dateFin;
 
     public function __construct(
-        string $panierId,
+        string $id,
         string $userId,
         string $outilId,
         int $quantity,
         \DateTime $dateDebut,
         \DateTime $dateFin
     ) {
-        $this->panierId = $panierId;
+        $this->id = $id;
         $this->userId = $userId;
         $this->outilId = $outilId;
         $this->quantity = $quantity;
@@ -28,7 +28,7 @@ class Panier
 
     public function getPanierId(): string
     {
-        return $this->panierId;
+        return $this->id;
     }
 
     public function getUserId(): string

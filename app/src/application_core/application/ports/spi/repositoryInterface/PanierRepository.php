@@ -13,7 +13,7 @@ interface PanierRepository
     public function findById(string $id): ?Panier;
 
     //Récupère un panier avec tous ses items
-    public function getPanierItemsByUserI(string $userId): array;
+    public function getPanierItemsByUserId(string $userId): array;
 
     //Ajoute un item au panier
     public function getPanierItemsByUserIdAndOutilId(string $userId, string $outilId): array;

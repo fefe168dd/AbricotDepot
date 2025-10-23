@@ -25,7 +25,7 @@ class PDOPanierRepository implements PanierRepository
         ');
 
         $stmt->execute([
-            ':id' => $panier->getPanierId(),
+            ':id' => $panier->getId(),
             ':user_id' => $panier->getUserId(),
             ':outil_id' => $panier->getOutilId(),
             ':quantity' => $panier->getQuantity(),
