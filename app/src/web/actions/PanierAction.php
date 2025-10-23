@@ -23,9 +23,9 @@ class PanierAction
         if (!isset($_SESSION['panier_id'])) {
             $_SESSION['panier_id'] = Uuid::uuid4()->toString();
         }
-        $panierId = $_SESSION['panier_id'];
+        $panierId = $_SESSION['panier_id']; //va falloir le changer en userId plus tard
 
-        $panier = $this->panierRepository->getPanierWithItemsByPanierId($panierId);
+        $panier = $this->panierRepository->getPanierItemsByUserId($panierId);
 
         $file = __DIR__ . '/../../../public/html/panier.html';
         if (!file_exists($file)) {

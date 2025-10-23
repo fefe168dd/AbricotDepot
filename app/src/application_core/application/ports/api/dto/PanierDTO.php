@@ -2,7 +2,8 @@
 namespace abricotdepot\core\application\ports\api\dto;
 
 use abricotdepot\core\domain\entities\Panier\Panier;
-class OutilDTO 
+
+class PanierDTO 
 {
     public string $id;
     public string $userId;

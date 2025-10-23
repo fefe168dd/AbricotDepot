@@ -1,4 +1,5 @@
 <?php
+
 namespace abricotdepot\core\application\usecases;
 
 use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepository;
@@ -41,52 +42,47 @@ class ServiceReservation
 
     public function sauvegarderReservation(RsvinputDTO $reservationDTO): Reservation
     {
-        $dateDebut = $reservationDTO->dateDebut instanceof \DateTime ? $reservationDTO->dateDebut : new \DateTime((string) $reservationDTO->dateDebut);
-        $dateFin = $reservationDTO->dateFin instanceof \DateTime ? $reservationDTO->dateFin : new \DateTime((string) $reservationDTO->dateFin);
+        // ✅ Conversion sécurisée des dates
+        $dateDebut = $reservationDTO->dateDebut instanceof \DateTime
+            ? $reservationDTO->dateDebut
+            : new \DateTime((string)$reservationDTO->dateDebut);
 
-        // Vérifier que le stock existe et est suffisant
-        $stock = $this->stockRepository->StockParOutilId($reservationDTO->outilId);
+        $dateFin = $reservationDTO->dateFin instanceof \DateTime
+            ? $reservationDTO->dateFin
+            : new \DateTime((string)$reservationDTO->dateFin);
 
-        if (!$stock) {
-            throw new \Exception("Aucun stock trouvé pour cet outil");
+        // ✅ Vérification de la cohérence des dates
+        if ($dateFin < $dateDebut) {
+            throw new \InvalidArgumentException("La date de fin ne peut pas être antérieure à la date de début.");
         }
 
-        if (!$stock->hasEnoughStock($reservationDTO->quantity)) {
-            throw new \Exception(
-                "Stock insuffisant. Disponible: {$stock->getAvailable()}, Demandé: {$reservationDTO->quantity}"
-            );
+        // ✅ Vérification basique des champs essentiels
+        if (empty($reservationDTO->outilId) || empty($reservationDTO->userId)) {
+            throw new \InvalidArgumentException("L'outil et l'utilisateur doivent être spécifiés.");
         }
 
-        // Créer la réservation
+        if ($reservationDTO->quantity <= 0) {
+            throw new \InvalidArgumentException("La quantité doit être supérieure à zéro.");
+        }
+
+        // ✅ Création de l'entité Reservation
         $reservation = new Reservation(
-            null,
+            \Ramsey\Uuid\Uuid::uuid4()->toString(),
             $reservationDTO->outilId,
             $reservationDTO->userId,
             $reservationDTO->quantity,
-            $reservationDTO->dateDebut,
-            $reservationDTO->dateFin,
-            $reservationDTO->status
+            $dateDebut,
+            $dateFin,
+            $reservationDTO->status ?? 'pending'
         );
 
-        // Sauvegarder la réservation
+        // ✅ Enregistrement en base via le repository
         $this->reservationRepository->sauvegarderReservation($reservation);
 
-        // Créer l'entrée dans stock_reservations (qui déclenche automatiquement la mise à jour du stock via trigger)
-        try {
-            $this->stockRepository->createStockReservation(
-                $stock->getId(),
-                $reservation->getId(),
-                $reservationDTO->quantity,
-                $dateDebut,
-                $dateFin
-            );
-        } catch (\Exception $e) {
-            // Si la création de la réservation de stock échoue, on pourrait vouloir annuler la réservation
-            throw new \Exception("Erreur lors de la réservation du stock: " . $e->getMessage());
-        }
-
+        // ✅ Retourne l'entité créée
         return $reservation;
     }
+
 
     public function annulerReservation(string $reservationId): void
     {
@@ -96,7 +92,6 @@ class ServiceReservation
             throw new \Exception("Réservation non trouvée");
         }
 
-        // Annuler la réservation de stock (le trigger mettra à jour automatiquement les quantités)
         $this->stockRepository->cancelStockReservation($reservationId);
     }
 
@@ -108,7 +103,6 @@ class ServiceReservation
             throw new \Exception("Réservation non trouvée");
         }
 
-        // Terminer la réservation de stock (le trigger mettra à jour automatiquement les quantités)
         $this->stockRepository->completeStockReservation($reservationId);
     }
 }
