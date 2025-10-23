@@ -34,8 +34,9 @@ use abricotdepot\infra\repository\PraticienRepository;
 use abricotdepot\api\middlewares\AuthnMiddleware;
 use abricotdepot\api\middlewares\AuthzMiddleware;
 use abricotdepot\core\domain\entities\auth\AuthzServiceInterface;
-use abricotdepot\core\domain\entities\auth\AuthzService;
+use abricotdepot\core\application\usecases\AuthzService;
 use abricotdepot\api\actions\AuthentificationUserAction;
+use abricotdepot\api\actions\SignInAction;
 use Psr\Container\ContainerInterface;
 use abricotdepot\infra\repository\PDOUserRepository;
 
@@ -78,15 +79,27 @@ return [
      GetStockByIdOutilAction::class => function (ContainerInterface $container) {
          return new GetStockByIdOutilAction($container->get(ServiceStock::class));
      },
-       AuthServiceInterface::class => function (ContainerInterface $c) {
-        return new AuthService($c->get(UserRepositoryInterface::class));
+     AuthentificationUserAction::class => function (ContainerInterface $container) {
+         return new AuthentificationUserAction(
+             $container->get(AuthServiceInterface::class),
+         );
+     },
+     SignInAction::class => function (ContainerInterface $container) {
+         return new SignInAction(
+             $container->get(AuthServiceInterface::class),
+         );
+     },
+        RefreshTokenAction::class => function (ContainerInterface $container) {
+        return new RefreshTokenAction(
+            $container->get(AuthProviderInterface::class),
+        );
     },
-    AuthentificationUserAction::class => function (ContainerInterface $c) {
-        return new AuthentificationUserAction($c->get(AuthServiceInterface::class));
+    AuthServiceInterface::class => function (ContainerInterface $container) {
+        return new AuthService(
+            $container->get(UserRepositoryInterface::class)
+        );
     },
-
-
-    AuthProviderInterface::class => function (ContainerInterface $c) {
+     AuthProviderInterface::class => function (ContainerInterface $c) {
         $config = parse_ini_file($c->get('env.config'));
         $secret = $config['auth.jwt.key'] ?? getenv('AUTH_JWT_KEY') ?? null;
         if (!$secret) {
@@ -101,15 +114,20 @@ return [
             86400
         );
     },
-
-    AuthnMiddleware::class => function (ContainerInterface $c) {
-        return new AuthnMiddleware($c->get(AuthProviderInterface::class));
+    AuthnMiddleware::class => function (ContainerInterface $container) {
+        return new AuthnMiddleware(
+            $container->get(AuthProviderInterface::class)
+        );
+    },
+    AuthzServiceInterface::class => function (ContainerInterface $container) {
+        return new AuthzService();
+    },
+    AuthzMiddleware::class => function (ContainerInterface $container) {
+        return new AuthzMiddleware(
+            $container->get(AuthzServiceInterface::class)
+        );
     },
     
-
-    AuthzMiddleware::class => function (ContainerInterface $c) {
-        return new AuthzMiddleware($c->get(AuthzServiceInterface::class));
-    },
 
      //infra 
      'outil.pdo' => function (ContainerInterface $container) {
@@ -187,8 +205,17 @@ PanierAction::class => function (ContainerInterface $container) {
     OutilRepository::class => function (ContainerInterface $container) {
         return new PDOOutilRepository($container->get('outil.pdo'));
     },
+    UserRepositoryInterface::class => function (ContainerInterface $container) {
+        return new PDOUserRepository($container->get('auth.pdo'));
+    },
 
     // Services
+    ServiceOutil::class => function (ContainerInterface $container) {
+        return new ServiceOutil($container->get(OutilRepository::class));
+    },
+    ServiceStock::class => function (ContainerInterface $container) {
+        return new ServiceStock($container->get(StockRepository::class));
+    },
     ServiceReservation::class => function (ContainerInterface $container) {
         return new ServiceReservation(
             $container->get(ReservationRepository::class),

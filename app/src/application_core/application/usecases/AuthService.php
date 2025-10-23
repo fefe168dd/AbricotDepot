@@ -17,16 +17,16 @@ class AuthService implements AuthServiceInterface
     public function authenticateuser(string $username, string $password): ?UserProfile
     {
         $userData = $this->userRepository->findbyPseudo($username);
-        if ($userData && password_verify($password, $userData['password'])) {
-            return new UserProfile($userData['id'], $userData['name'], $userData['email']);
+        if ($userData && password_verify($password, $userData['password_hash'])) {
+            return new UserProfile($userData['id'], $userData['username'], $userData['email'], $userData['role'] ?? 'user');
         }
         return null;
     }
     public function authenticateemail(string $email, string $password): ?UserProfile
     {
         $userData = $this->userRepository->findbyEmail($email);
-        if ($userData && password_verify($password, $userData['password'])) {
-            return new UserProfile($userData['id'], $userData['name'], $userData['email']);
+        if ($userData && password_verify($password, $userData['password_hash'])) {
+            return new UserProfile($userData['id'], $userData['username'], $userData['email'], $userData['role'] ?? 'user');
         }
         return null;
     }

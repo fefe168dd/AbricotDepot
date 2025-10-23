@@ -21,7 +21,7 @@ class PDOUserRepository implements UserRepositoryInterface
      */
     public function findByEmail(string $email): ?array
     {
-        $stmt = $this->pdo->prepare('SELECT id, email, password, role FROM users WHERE email = :email');
+        $stmt = $this->pdo->prepare('SELECT id, username, email, password_hash FROM users WHERE email = :email');
         $stmt->execute(['email' => $email]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -44,7 +44,7 @@ class PDOUserRepository implements UserRepositoryInterface
      */
     public function findByPseudo(string $pseudo): ?array
     {
-        $stmt = $this->pdo->prepare('SELECT id, name, email, password FROM users WHERE name = :pseudo');
+        $stmt = $this->pdo->prepare('SELECT id, username, email, password_hash FROM users WHERE username = :pseudo');
         $stmt->execute(['pseudo' => $pseudo]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $data ?: null;
