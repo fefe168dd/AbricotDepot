@@ -49,4 +49,37 @@ class PDOUserRepository implements UserRepositoryInterface
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $data ?: null;
     }
+
+    /**
+     * Vérifie si un utilisateur existe par username
+     */
+    public function existsByUsername(string $username): bool
+    {
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM users WHERE username = :username');
+        $stmt->execute(['username' => $username]);
+        
+        return $stmt->fetchColumn() > 0;
+    }
+
+    /**
+     * Crée un nouveau compte utilisateur
+     */
+    public function create(string $id, string $username, string $email, string $passwordHash): bool
+    {
+        try {
+            $stmt = $this->pdo->prepare(
+                'INSERT INTO users (id, username, email, password_hash) VALUES (:id, :username, :email, :password_hash)'
+            );
+            
+            return $stmt->execute([
+                'id' => $id,
+                'username' => $username,
+                'email' => $email,
+                'password_hash' => $passwordHash
+            ]);
+        } catch (\PDOException $e) {
+            // Log l'erreur si nécessaire
+            return false;
+        }
+    }
 }

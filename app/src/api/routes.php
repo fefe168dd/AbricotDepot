@@ -17,6 +17,7 @@ return function(\Slim\App $app):\Slim\App {
     $app->get('/stocks', \abricotdepot\api\actions\GetStockAction::class);
     $app->get('/stocks/{id}', \abricotdepot\api\actions\GetStockByIdAction::class);
     $app->get('/outils/{id}/stocks' , \abricotdepot\api\actions\GetStockByIDOutilAction::class);
+    $app->post('/auth/signup', \abricotdepot\api\actions\SignUpAction::class);
     $app->post('/auth/signin', \abricotdepot\api\actions\SignInAction::class);
     $app->post('/auth/authenticate',  \abricotdepot\api\actions\AuthentificationUserAction::class);
     $app->post('/auth/refresh' , \abricotdepot\api\actions\RefreshTokenAction::class);
