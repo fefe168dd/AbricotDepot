@@ -22,6 +22,7 @@ use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepos
 use abricotdepot\infra\repository\PDOOutilRepository;
 use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
 use abricotdepot\web\actions\PanierAction;
+use abricotdepot\web\actions\ProfileAction;
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
 use abricotdepot\infra\repository\PDOPanierRepository;
 use abricotdepot\core\domain\entities\auth\AuthServiceInterface; 

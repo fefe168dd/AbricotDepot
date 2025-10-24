@@ -22,8 +22,8 @@ class PDOReservationRepository implements ReservationRepository
         foreach ($rows as $row) {
             $reservations[] = new Reservation(
                 $row['id'],
-                $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['outil_id'],
+                $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['quantity'],
                 new \DateTime($row['start_date']),
                 new \DateTime($row['end_date']),
@@ -42,8 +42,8 @@ class PDOReservationRepository implements ReservationRepository
         if ($row) {
             return new Reservation(
                 $row['id'],
-                $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['outil_id'],
+                $row['utilisateur_id'] ?? $row['user_id'] ?? '',
                 $row['quantity'],
                 new \DateTime($row['start_date']),
                 new \DateTime($row['end_date']),
