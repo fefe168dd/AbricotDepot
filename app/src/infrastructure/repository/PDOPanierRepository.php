@@ -1,30 +1,36 @@
 <?php
+
 namespace abricotdepot\infra\repository;
+
+use Ramsey\Uuid\Uuid;
 
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
 use abricotdepot\core\domain\entities\Panier\Panier;
 
 
-class PDOPanierRepository implements PanierRepository 
+class PDOPanierRepository implements PanierRepository
 {
-    private \PDO $pdoPanier;
-private \PDO $pdoOutil;
+    private \PDO $pdo;
 
-public function __construct(\PDO $pdoPanier, \PDO $pdoOutil)
-{
-    $this->pdoPanier = $pdoPanier;
-    $this->pdoOutil = $pdoOutil;
-
-    $this->pdoPanier->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-    $this->pdoOutil->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-}
-
-    public function save(Panier $panier): void
+    public function __construct(\PDO $pdo)
     {
-        $stmt = $this->pdo->prepare('INSERT INTO panier (id, user_id) VALUES (:id, :user_id)');
+        $this->pdo = $pdo;
+    }
+
+    public function savePanier(Panier $panier): void
+    {
+        $stmt = $this->pdo->prepare('
+            INSERT INTO panier (id, user_id, outil_id, quantity, datedebut, datefin)
+            VALUES (:id, :user_id, :outil_id, :quantity, :datedebut, :datefin)
+        ');
+
         $stmt->execute([
-            ':id' => $panier->getIdPanier(),
-            ':user_id' => $panier->getUserId()
+            ':id' => $panier->getId(),
+            ':user_id' => $panier->getUserId(),
+            ':outil_id' => $panier->getOutilId(),
+            ':quantity' => $panier->getQuantity(),
+            ':datedebut' => $panier->getDateDebut()->format('Y-m-d H:i:s'),
+            ':datefin' => $panier->getDateFin()->format('Y-m-d H:i:s'),
         ]);
     }
 
@@ -35,48 +41,65 @@ public function __construct(\PDO $pdoPanier, \PDO $pdoOutil)
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if ($row) {
-            return new Panier($row['id'], $row['user_id']);
+            return new Panier(
+                $row['id'],
+                $row['user_id'],
+                $row['outil_id'],
+                (int)$row['quantity'],
+                new \DateTime($row['datedebut']),
+                new \DateTime($row['datefin'])
+            );
         }
 
         return null;
     }
 
-    public function getPanierWithItemsByPanierId(string $panierId): array
-{
-    // 1️⃣ Récupérer les items dans la base panier
-    $items = $this->pdoPanier->query("SELECT * FROM panier_item WHERE panier_id = '$panierId'")->fetchAll();
+    public function getPanierItemsByUserId(string $userId): array
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM panier WHERE user_id = :user_id');
+        $stmt->execute([':user_id' => $userId]);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    // 2️⃣ Pour chaque item, récupérer les infos de l'outil depuis la base outil
-    foreach ($items as &$item) {
-        $outilStmt = $this->pdoOutil->prepare("SELECT * FROM outil WHERE id = :id");
-        $outilStmt->execute([':id' => $item['outil_id']]);
-        $outil = $outilStmt->fetch();
+        $paniers = [];
+        foreach ($rows as $row) {
+            $paniers[] = new Panier(
+                $row['id'],
+                $row['user_id'],
+                $row['outil_id'],
+                (int)$row['quantity'],
+                new \DateTime($row['datedebut']),
+                new \DateTime($row['datefin'])
+            );
+        }
 
-        if (!$outil) continue;
-
-        $item['name'] = $outil['name'];
-        $item['description'] = $outil['description'];
-        $item['prix'] = (float)$outil['prix'];
-        $item['image_url'] = $outil['image_url'];
+        return $paniers;
     }
 
-    return [
-        'panier_id' => $panierId,
-        'items' => $items
-    ];
-}
-
-    public function addItem(string $panierId, int $outilId, int $quantity = 1): void
+    public function getPanierItemsByUserIdAndOutilId(string $userId, string $outilId): array
     {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO panier_item (panier_id, outil_id, quantity)
-            VALUES (:panier_id, :outil_id, :quantity)
-            ON DUPLICATE KEY UPDATE quantity = quantity + :quantity
-        ");
+        $stmt = $this->pdo->prepare('
+            SELECT * FROM panier 
+            WHERE user_id = :user_id AND outil_id = :outil_id
+        ');
         $stmt->execute([
-            ':panier_id' => $panierId,
-            ':outil_id' => $outilId,
-            ':quantity' => $quantity
+            ':user_id' => $userId,
+            ':outil_id' => $outilId
         ]);
+
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $paniers = [];
+        foreach ($rows as $row) {
+            $paniers[] = new Panier(
+                $row['id'],
+                $row['user_id'],
+                $row['outil_id'],
+                (int)$row['quantity'],
+                new \DateTime($row['datedebut']),
+                new \DateTime($row['datefin'])
+            );
+        }
+
+        return $paniers;
     }
 }

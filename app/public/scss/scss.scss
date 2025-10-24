@@ -125,6 +125,15 @@ nav {
 
     .formconnexion , .forminscrip {
       grid-column: 2/3;
+
+      .ErreurAuth p {
+        padding: 2%;
+        background-color: red;
+        color : white ;
+        border : 3px white solid;
+        border-radius: 1em;
+      }
+
     }
   }
 

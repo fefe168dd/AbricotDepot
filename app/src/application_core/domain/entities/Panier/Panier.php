@@ -1,31 +1,58 @@
 <?php
+namespace abricotdepot\core\domain\entities\Panier;
 
-class Panier {
-   private int $idpanier;
-   private int $user_id;
+class Panier
+{
+    private string $id;
+    private string $userId;
+    private string $outilId;
+    private int $quantity;
+    private \DateTime $dateDebut;
+    private \DateTime $dateFin;
 
-   public function __construct(int $idpanier, int $user_id) {
-       $this->idpanier = $idpanier;
-       $this->user_id = $user_id;
-   }
-   public function getIdPanier(): int {
-       return $this->idpanier;
-   }
+    public function __construct(
+        string $id,
+        string $userId,
+        string $outilId,
+        int $quantity,
+        \DateTime $dateDebut,
+        \DateTime $dateFin
+    ) {
+        $this->id = $id;
+        $this->userId = $userId;
+        $this->outilId = $outilId;
+        $this->quantity = $quantity;
+        $this->dateDebut = $dateDebut;
+        $this->dateFin = $dateFin;
+    }
 
-   public function getUserId(): int {
-       return $this->user_id;
-   }
+    public function getPanierId(): string
+    {
+        return $this->id;
+    }
 
-   public function addItemToPanier(string $panierId, int $outilId, int $quantity = 1): void {
-    $stmt = $this->pdo->prepare("
-        INSERT INTO panier_item (panier_id, outil_id, quantity) 
-        VALUES (:panier_id, :outil_id, :quantity)
-        ON DUPLICATE KEY UPDATE quantity = quantity + :quantity
-    ");
-    $stmt->execute([
-        ':panier_id' => $panierId,
-        ':outil_id' => $outilId,
-        ':quantity' => $quantity
-    ]);
-}
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    public function getOutilId(): string
+    {
+        return $this->outilId;
+    }
+
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
+    public function getDateDebut(): \DateTime
+    {
+        return $this->dateDebut;
+    }
+
+    public function getDateFin(): \DateTime
+    {
+        return $this->dateFin;
+    }
 }

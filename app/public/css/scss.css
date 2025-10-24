@@ -203,6 +203,13 @@ nav {
   .formulaire .formconnexion, .formulaire .forminscrip, .inscrire .formconnexion, .inscrire .forminscrip {
     grid-column: 2/3;
   }
+  .formulaire .formconnexion .ErreurAuth p, .formulaire .forminscrip .ErreurAuth p, .inscrire .formconnexion .ErreurAuth p, .inscrire .forminscrip .ErreurAuth p {
+    padding: 2%;
+    background-color: red;
+    color: white;
+    border: 3px white solid;
+    border-radius: 1em;
+  }
   body {
     display: grid;
     grid-template-rows: 3rem 3rem 1fr;

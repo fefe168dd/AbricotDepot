@@ -3,16 +3,16 @@ namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use abricotdepot\api\provider\AuthProviderInterface;
+use abricotdepot\core\application\usecases\CreateUserUseCase;
 use abricotdepot\core\domain\exceptions\AuthenticationException;
 
-class SignInAction
+class SignUpAction
 {
-    private AuthProviderInterface $authProvider;
+    private CreateUserUseCase $createUserUseCase;
 
-    public function __construct(AuthProviderInterface $authProvider)
+    public function __construct(CreateUserUseCase $createUserUseCase)
     {
-        $this->authProvider = $authProvider;
+        $this->createUserUseCase = $createUserUseCase;
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
@@ -20,6 +20,7 @@ class SignInAction
         try {
             $data = $request->getParsedBody();
             
+            // Validation basique des données
             $validationErrors = $this->validateInput($data);
             if (!empty($validationErrors)) {
                 $payload = json_encode([
@@ -32,9 +33,10 @@ class SignInAction
                     ->withStatus(400);
             }
 
-            if (!is_string($data['email']) || !is_string($data['password'])) {
+            // Vérifier les types
+            if (!is_string($data['username']) || !is_string($data['email']) || !is_string($data['password'])) {
                 $payload = json_encode([
-                    'error' => 'Email et mot de passe doivent être des chaînes de caractères'
+                    'error' => 'Tous les champs doivent être des chaînes de caractères'
                 ]);
                 $response->getBody()->write($payload);
                 return $response
@@ -42,9 +44,10 @@ class SignInAction
                     ->withStatus(400);
             }
 
-            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            // Vérifier la confirmation du mot de passe si fournie
+            if (isset($data['password_confirm']) && $data['password'] !== $data['password_confirm']) {
                 $payload = json_encode([
-                    'error' => 'Format d\'email invalide'
+                    'error' => 'Les mots de passe ne correspondent pas'
                 ]);
                 $response->getBody()->write($payload);
                 return $response
@@ -52,35 +55,43 @@ class SignInAction
                     ->withStatus(400);
             }
 
-            $authToken = $this->authProvider->signin(
-                trim($data['email']), 
+            // Créer l'utilisateur via le use case
+            $userProfile = $this->createUserUseCase->execute(
+                trim($data['username']),
+                trim($data['email']),
                 $data['password']
             );
 
             $payload = json_encode([
                 'success' => true,
-                'message' => 'Authentification réussie',
-                'data' => $authToken->toArray()
+                'message' => 'Compte créé avec succès',
+                'data' => [
+                    'id' => $userProfile->getId(),
+                    'username' => $userProfile->getName(),
+                    'email' => $userProfile->getEmail(),
+                    'role' => $userProfile->getRole()
+                ]
             ]);
 
             $response->getBody()->write($payload);
             return $response
                 ->withHeader('Content-Type', 'application/json')
-                ->withStatus(200);
+                ->withStatus(201);
 
         } catch (AuthenticationException $e) {
             $payload = json_encode([
                 'error' => $e->getMessage(),
-                'code' => 'AUTHENTICATION_FAILED'
+                'code' => 'REGISTRATION_FAILED'
             ]);
             $response->getBody()->write($payload);
             return $response
                 ->withHeader('Content-Type', 'application/json')
-                ->withStatus(401);
+                ->withStatus(400);
                 
         } catch (\Exception $e) {
             $payload = json_encode([
-                'error' => $e->getMessage(),
+                'error' => 'Erreur interne du serveur',
+                'message' => $e->getMessage(),
                 'code' => 'INTERNAL_ERROR'
             ]);
             $response->getBody()->write($payload);
@@ -91,27 +102,26 @@ class SignInAction
     }
 
     /**
-     * Valide les données d'entrée
+     * Valide les données d'entrée basiques
      */
     private function validateInput(?array $data): array
     {
         $errors = [];
 
         if ($data === null) {
-            $errors[] = 'Aucune donnée fournie';
-            return $errors;
+            return ['Les données du corps de la requête sont manquantes'];
         }
 
-        if (!isset($data['email']) || empty($data['email'])) {
-            $errors[] = 'Email requis';
+        if (!isset($data['username'])) {
+            $errors[] = 'Le champ username est requis';
         }
 
-        if (!isset($data['password']) || empty($data['password'])) {
-            $errors[] = 'Mot de passe requis';
+        if (!isset($data['email'])) {
+            $errors[] = 'Le champ email est requis';
         }
 
-        if (isset($data['password']) && strlen($data['password']) < 6) {
-            $errors[] = 'Le mot de passe doit contenir au moins 6 caractères';
+        if (!isset($data['password'])) {
+            $errors[] = 'Le champ password est requis';
         }
 
         return $errors;

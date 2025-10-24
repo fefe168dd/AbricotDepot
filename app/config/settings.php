@@ -37,6 +37,8 @@ use abricotdepot\core\domain\entities\auth\AuthzServiceInterface;
 use abricotdepot\core\application\usecases\AuthzService;
 use abricotdepot\api\actions\AuthentificationUserAction;
 use abricotdepot\api\actions\SignInAction;
+use abricotdepot\api\actions\SignUpAction;
+use abricotdepot\core\application\usecases\CreateUserUseCase;
 use Psr\Container\ContainerInterface;
 use abricotdepot\infra\repository\PDOUserRepository;
 
@@ -45,6 +47,7 @@ return [
     'displayErrorDetails' => true,
     'logs.dir' => __DIR__ . '/../../var/logs',
      'env.config' => __DIR__ . '/.env.dist',
+     'env.set'=> __DIR__ . '/env.config',
 
      GetOutilAction::class => function (ContainerInterface $container) {
          return new GetOutilAction($container->get(ServiceOutil::class));
@@ -86,12 +89,22 @@ return [
      },
      SignInAction::class => function (ContainerInterface $container) {
          return new SignInAction(
-             $container->get(AuthServiceInterface::class),
+             $container->get(AuthProviderInterface::class),
+         );
+     },
+     SignUpAction::class => function (ContainerInterface $container) {
+         return new SignUpAction(
+             $container->get(CreateUserUseCase::class)
          );
      },
         RefreshTokenAction::class => function (ContainerInterface $container) {
         return new RefreshTokenAction(
             $container->get(AuthProviderInterface::class),
+        );
+    },
+    CreateUserUseCase::class => function (ContainerInterface $container) {
+        return new CreateUserUseCase(
+            $container->get(UserRepositoryInterface::class)
         );
     },
     AuthServiceInterface::class => function (ContainerInterface $container) {
@@ -100,7 +113,7 @@ return [
         );
     },
      AuthProviderInterface::class => function (ContainerInterface $c) {
-        $config = parse_ini_file($c->get('env.config'));
+        $config = parse_ini_file($c->get('env.set'));
         $secret = $config['auth.jwt.key'] ?? getenv('AUTH_JWT_KEY') ?? null;
         if (!$secret) {
             throw new \RuntimeException('JWT secret not configured. Add auth.jwt.key to your env file or set AUTH_JWT_KEY.');
