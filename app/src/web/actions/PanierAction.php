@@ -17,13 +17,15 @@ class PanierAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        session_start();
+        $cookies = $request->getCookieParams();
+        $panierId = $cookies['panier_id'] ?? null;
+        $setCookieHeader = null;
 
-        // ID de panier depuis session
-        if (!isset($_SESSION['panier_id'])) {
-            $_SESSION['panier_id'] = Uuid::uuid4()->toString();
+        if (!$panierId) {
+            // génère cookie guest, ne crée pas de ligne en base
+            $panierId = Uuid::uuid4()->toString();
+            $setCookieHeader = 'panier_id=' . $panierId . '; Path=/; HttpOnly';
         }
-        $panierId = $_SESSION['panier_id']; //va falloir le changer en userId plus tard
 
         $panier = $this->panierRepository->getPanierItemsByUserId($panierId);
 
@@ -34,35 +36,36 @@ class PanierAction
         }
         $html = file_get_contents($file);
 
-        if (!$panier || empty($panier['items'])) {
-            $html = str_replace('{{panier_items}}', '<p>Votre panier est vide.</p>', $html);
-            $html = str_replace('{{panier_total}}', '0.00', $html);
-            $response->getBody()->write($html);
-            return $response->withHeader('Content-Type', 'text/html');
-        }
-
         $itemsHtml = '';
         $total = 0.0;
-        foreach ($panier['items'] as $item) {
-            $subTotal = $item['prix'] * $item['quantity'];
-            $total += $subTotal;
-            $itemsHtml .= '<div class="panier-item">';
-            $itemsHtml .= '<img src="' . htmlspecialchars($item['image_url'] ?? '/Image/default.png') . '" alt="" style="width:80px;height:80px;">';
-            $itemsHtml .= '<div class="info">';
-            $itemsHtml .= '<h3>' . htmlspecialchars($item['name']) . '</h3>';
-            $itemsHtml .= '<p>' . htmlspecialchars($item['description']) . '</p>';
-            $itemsHtml .= '<p>Prix unitaire: ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>';
-            $itemsHtml .= '<p>Quantité: ' . intval($item['quantity']) . '</p>';
-            $itemsHtml .= '<p>Sous-total: ' . number_format($subTotal, 2, ',', ' ') . ' €</p>';
-            $itemsHtml .= '</div></div>';
+
+        if (!empty($panier['items'])) {
+            foreach ($panier['items'] as $item) {
+                $sub = $item['prix'] * $item['quantity'];
+                $total += $sub;
+                $itemsHtml .= '<div class="panier-item">';
+                $itemsHtml .= '<img src="' . htmlspecialchars($item['image_url'] ?? '') . '" style="width:80px;height:80px;">';
+                $itemsHtml .= '<div class="info">';
+                $itemsHtml .= '<h3>' . htmlspecialchars($item['name']) . '</h3>';
+                $itemsHtml .= '<p>' . htmlspecialchars($item['description']) . '</p>';
+                $itemsHtml .= '<p>Du: ' . htmlspecialchars($item['datedebut']) . ' au ' . htmlspecialchars($item['datefin']) . '</p>';
+                $itemsHtml .= '<p>Prix unitaire: ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>';
+                $itemsHtml .= '<p>Quantité: ' . intval($item['quantity']) . '</p>';
+                $itemsHtml .= '<p>Sous-total: ' . number_format($sub, 2, ',', ' ') . ' €</p>';
+                $itemsHtml .= '</div></div>';
+            }
+        } else {
+            $itemsHtml = '<p>Votre panier est vide.</p>';
         }
 
         $html = str_replace('{{panier_items}}', $itemsHtml, $html);
         $html = str_replace('{{panier_total}}', number_format($total, 2, ',', ' '), $html);
-        $menu = (new GenerateMenuClasse())->generateMenu();
-        $html = str_replace('{{Menu}}', $menu, $html);
 
         $response->getBody()->write($html);
-        return $response->withHeader('Content-Type', 'text/html');
+        $response = $response->withHeader('Content-Type', 'text/html');
+        if ($setCookieHeader) {
+            $response = $response->withHeader('Set-Cookie', $setCookieHeader);
+        }
+        return $response;
     }
 }
