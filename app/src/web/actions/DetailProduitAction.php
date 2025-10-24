@@ -22,13 +22,13 @@ class DetailProduitAction
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
-        $apiUrl = "http://localhost:80/outils/$outilId";
+        $apiUrl = "http://apicot:80/outils/$outilId";
 
         $json = file_get_contents($apiUrl);
 
         $outil = json_decode($json, true);
 
-        $apiUrlStock = "http://localhost:80/outils/$outilId/stocks";
+        $apiUrlStock = "http://apicot:80/outils/$outilId/stocks";
 
         $json = file_get_contents($apiUrlStock);
 

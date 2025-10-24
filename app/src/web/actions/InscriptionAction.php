@@ -41,7 +41,7 @@ class InscriptionAction
 
 <div class="inscrire">
 <h1>Inscription</h1>
-  <div class="retour"><a href="/connexion">Retour</a></div>  
+  <a href="/connexion"><div class="retour">Retour</div></a>
     <form class="forminscrip" method="post" action="/inscription">
         <h3>Pas de compte? Inscrivez-vous !</h3>
         <div>Pseudo : <input type="text" name="username" required></div>
