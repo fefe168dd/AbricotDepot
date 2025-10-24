@@ -48,7 +48,7 @@ class JwtAuthProvider implements AuthProviderInterface
     }
 
 
-     public function refresh(string $refreshToken): AuthTokenDTO
+    public function refresh(string $refreshToken): AuthTokenDTO
     {
         try {
             $decoded = JWT::decode($refreshToken, new Key($this->jwtSecret, $this->jwtAlgorithm));
