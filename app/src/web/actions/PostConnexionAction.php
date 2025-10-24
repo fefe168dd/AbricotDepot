@@ -61,7 +61,7 @@ class PostConnexionAction
 
                 setcookie('access_token', $token['accessToken']);
                 setcookie('refresh_token', $token['refreshToken']);
-                setcookie('user', $token['user']);
+                setcookie('user_id', $token['user']['id']);
 
 
                 return $response

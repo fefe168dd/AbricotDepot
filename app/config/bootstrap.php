@@ -29,6 +29,4 @@ $app = (require_once __DIR__ . '/../src/api/routes.php')($app);
 $app = (require_once __DIR__ . '/../src/web/routes.php')($app);
 $routeParser = $app->getRouteCollector()->getRouteParser();
 
-session_start() ;
-
 return $app;

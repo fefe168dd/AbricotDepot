@@ -7,6 +7,7 @@ use abricotdepot\web\actions\DetailProduitAction;
 use abricotdepot\web\actions\PanierAction;
 use abricotdepot\web\actions\PostConnexionAction;
 use abricotdepot\web\actions\ProfileAction;
+use abricotdepot\api\middlewares\AuthnMiddleware;
 
 return function(\Slim\App $app):\Slim\App {
 
@@ -17,7 +18,8 @@ return function(\Slim\App $app):\Slim\App {
     $app->post('/connexion', PostConnexionAction::class);
     $app->get('/inscription', \abricotdepot\web\actions\InscriptionAction::class);
     $app->post('/inscription', \abricotdepot\web\actions\PostInscriptionAction::class);
-    $app->get('/{id}', DetailProduitAction::class); 
+    $app->get('/{id}', DetailProduitAction::class);
+    $app->post('/{id}/ajouterPanier', \abricotdepot\web\actions\InscriptionAction::class);
 
     return $app;
 };
