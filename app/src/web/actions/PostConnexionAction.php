@@ -58,9 +58,6 @@ class PostConnexionAction
 
         if ($authOk) {
 
-            $_SESSION['user'] = $res['data']['user'];
-            $_SESSION['accessToken'] = $res['data']['accessToken'];
-
             return $response
                 ->withHeader('Location', '/')
                 ->withStatus(302);
