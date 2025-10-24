@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface;
@@ -14,7 +15,7 @@ class LogoutAction
         try {
             // Récupération du profil utilisateur depuis les attributs (ajouté par AuthnMiddleware)
             $userProfile = $request->getAttribute('userProfile');
-            
+
             if (!$userProfile) {
                 $payload = json_encode([
                     'error' => 'Utilisateur non authentifié'
@@ -38,7 +39,6 @@ class LogoutAction
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(200);
-
         } catch (\Exception $e) {
             $payload = json_encode([
                 'error' => 'Erreur lors de la déconnexion',

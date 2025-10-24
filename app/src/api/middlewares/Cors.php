@@ -7,7 +7,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Routing\RouteContext;
 
-class Cors {
+class Cors
+{
     public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $routeContext = RouteContext::fromRequest($request);
@@ -22,9 +23,8 @@ class Cors {
         return $response
             ->withHeader('Access-Control-Allow-Origin', $origin)
             ->withHeader('Access-Control-Allow-Headers', $requestHeaders)
-            ->withHeader('Access-Control-Allow-Methods', implode(',',$methods))
+            ->withHeader('Access-Control-Allow-Methods', implode(',', $methods))
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
             ->withHeader('Access-Control-Allow-Credentials', 'true');
     }
-
 }

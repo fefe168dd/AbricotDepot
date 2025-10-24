@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace abricotdepot\api\actions;
 
 
@@ -6,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use abricotdepot\core\application\usecases\ServiceReservation;
 
-class GetReservationByIDAction 
+class GetReservationByIDAction
 {
     private ServiceReservation $serviceReservation;
 

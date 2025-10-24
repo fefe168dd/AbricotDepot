@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace abricotdepot\api\actions;
 
@@ -6,7 +6,7 @@ use abricotdepot\core\application\usecases\ServiceReservation;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class CompleteReservationAction 
+class CompleteReservationAction
 {
     private ServiceReservation $serviceReservation;
 
@@ -29,7 +29,7 @@ class CompleteReservationAction
 
         try {
             $this->serviceReservation->terminerReservation($reservationId);
-            
+
             $response->getBody()->write(json_encode([
                 'success' => true,
                 'message' => 'Réservation terminée avec succès'

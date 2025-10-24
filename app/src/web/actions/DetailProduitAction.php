@@ -59,7 +59,8 @@ class DetailProduitAction
 
         // Génération du sélecteur de quantité basé sur le stock disponible
         $stock = $stock ?? 0;
-
+        $token = $_COOKIE['access_token'] ?? null;
+        $userId = $_COOKIE['user']['id'] ?? null;
         if (!$token) {
             // Pas de token → utilisateur non connecté
             $quantiteSelect = '<a href="/connexion">Vous devez vous connecter pour réserver cet outil</a>';

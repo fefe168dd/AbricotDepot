@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use abricotdepot\core\domain\entities\auth\AuthServiceInterface;
 use abricotdepot\core\domain\exceptions\AuthenticationException;
+
 /**
  * Action pour autheyesntifier un utilisateur
  */
@@ -24,7 +25,7 @@ class AuthentificationUserAction
     {
         try {
             $data = $request->getParsedBody();
-            
+
             // Validation des données d'entrée
             if (!isset($data['email']) || !isset($data['password'])) {
                 $payload = json_encode(['error' => 'Email et mot de passe requis']);
@@ -48,14 +49,12 @@ class AuthentificationUserAction
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(200);
-
         } catch (AuthenticationException $e) {
             $payload = json_encode(['error' => $e->getMessage()]);
             $response->getBody()->write($payload);
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(401);
-                
         } catch (\Exception $e) {
             // En développement, retourner l'erreur détaillée
             $payload = json_encode([

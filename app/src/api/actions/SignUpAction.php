@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface;
@@ -19,7 +20,7 @@ class SignUpAction
     {
         try {
             $data = $request->getParsedBody();
-            
+
             // Validation basique des données
             $validationErrors = $this->validateInput($data);
             if (!empty($validationErrors)) {
@@ -77,7 +78,6 @@ class SignUpAction
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(201);
-
         } catch (AuthenticationException $e) {
             $payload = json_encode([
                 'error' => $e->getMessage(),
@@ -87,7 +87,6 @@ class SignUpAction
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(400);
-                
         } catch (\Exception $e) {
             $payload = json_encode([
                 'error' => 'Erreur interne du serveur',

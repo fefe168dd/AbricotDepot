@@ -174,26 +174,26 @@ return [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
      },
-'panier.pdo' => function (ContainerInterface $container) {
-    $config = parse_ini_file($container->get('env.config'));
-    $dsn = "{$config['panier.driver']}:host={$config['panier.host']};dbname={$config['panier.database']}";
-    $user = $config['panier.username'];
-    $password = $config['panier.password'];
-    return new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-},
- 'auth.pdo' => function (ContainerInterface $container) {
-     $config = parse_ini_file($container->get('env.config'));
-     $dsn = "{$config['auth.driver']}:host={$config['auth.host']};dbname={$config['auth.database']}";
-     $user = $config['auth.username'];
-     $password = $config['auth.password'];
-     return new PDO($dsn, $user, $password, [
-         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-     ]);
- },
+    'panier.pdo' => function (ContainerInterface $container) {
+        $config = parse_ini_file($container->get('env.config'));
+        $dsn = "{$config['panier.driver']}:host={$config['panier.host']};dbname={$config['panier.database']}";
+        $user = $config['panier.username'];
+        $password = $config['panier.password'];
+        return new PDO($dsn, $user, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+    },
+    'auth.pdo' => function (ContainerInterface $container) {
+        $config = parse_ini_file($container->get('env.config'));
+        $dsn = "{$config['auth.driver']}:host={$config['auth.host']};dbname={$config['auth.database']}";
+        $user = $config['auth.username'];
+        $password = $config['auth.password'];
+        return new PDO($dsn, $user, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+    },
 
 PanierRepository::class => function (ContainerInterface $c) {
     // récupérer les deux PDO du container

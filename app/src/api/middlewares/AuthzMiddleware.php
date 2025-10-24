@@ -35,10 +35,10 @@ class AuthzMiddleware implements MiddlewareInterface
 
         return $handler->handle($request);
     }
-private function checkAuthorization(
+    private function checkAuthorization(
         ServerRequestInterface $request,
-        UserProfile $userProfile, 
-        ?string $routeName, 
+        UserProfile $userProfile,
+        ?string $routeName,
         array $routeArguments
     ): void {
         // Implémentation de la logique d'autorisation basée sur le profil utilisateur,
