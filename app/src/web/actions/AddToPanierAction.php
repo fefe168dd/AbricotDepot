@@ -16,7 +16,6 @@ class AddToPanierAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        session_start();
 
         // Récupérer l'ID du panier depuis la session
         $panierId = $_SESSION['panier_id'] ?? null;
