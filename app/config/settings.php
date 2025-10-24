@@ -22,7 +22,7 @@ use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepos
 use abricotdepot\infra\repository\PDOOutilRepository;
 use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
 use abricotdepot\web\actions\PanierAction;
-use abricotdepot\web\actions\ProfileAction;
+use abricotdepot\web\actions\GetProfileAction;
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
 use abricotdepot\infra\repository\PDOPanierRepository;
 use abricotdepot\core\domain\entities\auth\AuthServiceInterface; 
@@ -207,6 +207,14 @@ PanierRepository::class => function (ContainerInterface $c) {
 // Bind PanierAction avec injection du repository
 PanierAction::class => function (ContainerInterface $container) {
     return new PanierAction($container->get(PanierRepository::class));
+},
+
+// Bind GetProfileAction avec injection des repositories
+GetProfileAction::class => function (ContainerInterface $container) {
+    return new GetProfileAction(
+        $container->get(ReservationRepository::class),
+        $container->get(OutilRepository::class)
+    );
 },
 
     // Bind StockRepository interface to PDOStockRepository

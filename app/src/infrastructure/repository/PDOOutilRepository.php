@@ -1,7 +1,5 @@
 <?php 
 namespace abricotdepot\infra\repository;
-use Ramsey\Uuid\Uuid;
-
 use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
 use abricotdepot\core\domain\entities\Outil\Outil;
 
@@ -64,5 +62,4 @@ class PDOOutilRepository implements OutilRepository
         }
         return $outils;
     }
-
-    }
+}

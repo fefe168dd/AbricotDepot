@@ -78,6 +78,26 @@ class PDOReservationRepository implements ReservationRepository
     }
 
 
+    public function ReservationParUserId(string $userId): array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM reservations WHERE user_id = :user_id ORDER BY start_date DESC");
+        $stmt->execute([':user_id' => $userId]);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $reservations = [];
+        foreach ($rows as $row) {
+            $reservations[] = new Reservation(
+                $row['id'],
+                $row['outil_id'],
+                $row['user_id'],
+                $row['quantity'],
+                new \DateTime($row['start_date']),
+                new \DateTime($row['end_date']),
+                $row['status']
+            );
+        }
+        return $reservations;
+    }
+
     public function sauvegarderReservation(Reservation $reservation): void
     {
         if ($reservation->getId() === null) {
@@ -92,5 +112,4 @@ class PDOReservationRepository implements ReservationRepository
         $stmt->bindValue(':status', 0); // Par défaut, le statut est 0 (en attente)
         $stmt->execute();
     }
-    //TODO: Ajouter d'autres méthodes par ID outil ou utilisateur si nécessaire
 }
