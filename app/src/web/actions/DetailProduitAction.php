@@ -47,7 +47,7 @@ class DetailProduitAction
         }
 
         //lecture du template HTML
-        $file = __DIR__ . '/../../../public/html/detail.html';
+        $file = __DIR__ . '/../../../public/html/accueil.html';
 
         $html = file_get_contents($file);
 
@@ -61,11 +61,14 @@ class DetailProduitAction
         $stock = $stock ?? 0;
         $token = $_COOKIE['access_token'] ?? null;
         $userId = $_COOKIE['user']['id'] ?? null;
+
+
+
         if (!$token) {
             // Pas de token → utilisateur non connecté
             $quantiteSelect = '<a href="/connexion">Vous devez vous connecter pour réserver cet outil</a>';
-        } 
-        
+        }
+
         else {
             $quantiteSelect = '<select name="quantite" id="quantite">';
             //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
@@ -73,6 +76,7 @@ class DetailProduitAction
                 $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
 
                 //selection des dates
+                $quantiteSelect .= '<input type="hidden" name="outil_id" value="' . htmlspecialchars($outilId) . '">';
                 $quantiteSelect .= '<div class="dates">';
                 $quantiteSelect .= '<div class="dateD">';
                 $quantiteSelect .= '<label for="date_debut">Date de début :</label>';
@@ -105,6 +109,20 @@ class DetailProduitAction
             }
         }
 
+        $htmlDetaille = '<main class="detaille"><div class="articleDetaille">
+            <h2>Détail du produit</h2>
+            <img class="produit-image" src="{{outil_image}}" alt="{{outil_nom}}">
+            <div class="produit-info">
+                <h3 class="nom">{{outil_nom}}</h3>
+                <p class="description">{{outil_description}}</p>
+                <p class="prix">Prix : {{outil_prix}} €</p>
+                <p class="categorie">Catégorie : {{outil_categorie}}</p>
+            </div>
+            <form class="Reservation">
+                '.$quantiteSelect.'
+            </form>
+        </div></main>' ;
+
         $remplacements = [
             '{{outil_nom}}' => htmlspecialchars($outil['nom'] ?? ''),
             '{{outil_description}}' => htmlspecialchars($outil['description'] ?? ''),
@@ -113,6 +131,8 @@ class DetailProduitAction
             '{{outil_categorie}}' => htmlspecialchars($outil['categorie']['nom'] ?? 'N/A'),
             '{{outil_quantite_select}}' => $quantiteSelect
         ];
+        $html = str_replace('{{Liste Outil}}', $htmlDetaille, $html);
+
         $html = str_replace(array_keys($remplacements), array_values($remplacements), $html);
 
         $menu = (new GenerateMenuClasse())->generateMenu();

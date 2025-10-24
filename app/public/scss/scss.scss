@@ -64,6 +64,10 @@ nav {
   @include row
 }
 
+.inscrire a {
+  @extend %lienNeutre
+}
+
 
 
 .formulaire , .inscrire {
@@ -72,7 +76,6 @@ nav {
   grid-template-columns: 100%;
 
     a {
-      @extend %lienNeutre ;
       width: 100%;
       grid-column: 2/3;
 
