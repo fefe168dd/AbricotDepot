@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use abricotdepot\web\actions\DeconnexionAction;
 use abricotdepot\web\actions\HomeAction;
 use abricotdepot\web\actions\ConnexionAction;
 use abricotdepot\web\actions\DetailProduitAction;
@@ -20,6 +21,7 @@ return function(\Slim\App $app):\Slim\App {
     $app->post('/connexion', PostConnexionAction::class);
     $app->get('/inscription', \abricotdepot\web\actions\InscriptionAction::class);
     $app->post('/inscription', \abricotdepot\web\actions\PostInscriptionAction::class);
+    $app->get('/deconnexion', DeconnexionAction::class);
     $app->get('/profile', GetProfileAction::class);
     $app->get('/{id}', DetailProduitAction::class);
     $app->post('/{id}/ajouterPanier', \abricotdepot\web\actions\InscriptionAction::class);
