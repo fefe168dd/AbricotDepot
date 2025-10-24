@@ -12,7 +12,7 @@ class HomeAction
 
 
         $file = __DIR__ . '/../../../public/html/accueil.html';
-        $apiUrl = "http://localhost:80/outils" ;
+        $apiUrl = "http://apicot:80/outils" ;
 
         $json = file_get_contents($apiUrl) ;
 
@@ -42,7 +42,7 @@ class HomeAction
             $nom = htmlspecialchars($outil['nom']);
             $prix = htmlspecialchars($outil['prix']);
 
-            $apiUrlStock = "http://localhost:80/outils/$id/stocks" ;
+            $apiUrlStock = "http://apicot:80/outils/$id/stocks" ;
 
             $json = file_get_contents($apiUrlStock) ;
 

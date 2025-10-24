@@ -1,4 +1,4 @@
-.article a, .formulaire a, .inscrire a {
+.article a, .formulaire .retour a, .inscrire .retour a {
   color: black;
   text-decoration: none;
 }
@@ -160,23 +160,19 @@ nav {
   padding: 2%;
   grid-template-columns: 100%;
 }
-.formulaire a, .inscrire a {
-  width: 100%;
-  grid-column: 2/3;
+.formulaire .retour:hover, .inscrire .retour:hover {
+  background-color: black;
 }
-.formulaire a .retour, .inscrire a .retour {
+.formulaire .retour:hover a, .inscrire .retour:hover a {
+  color: white;
+}
+.formulaire .retour, .inscrire .retour {
   text-align: center;
   box-sizing: border-box;
   border: 2px black solid;
   border-radius: 1em;
   padding: 2%;
   margin-bottom: 2%;
-}
-.formulaire a:hover, .inscrire a:hover {
-  color: white;
-}
-.formulaire a:hover .retour, .inscrire a:hover .retour {
-  background-color: black;
 }
 .formulaire .formconnexion, .formulaire .forminscrip, .inscrire .formconnexion, .inscrire .forminscrip {
   padding: 5%;

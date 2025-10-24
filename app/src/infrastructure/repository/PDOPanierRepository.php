@@ -16,7 +16,7 @@ class PDOPanierRepository implements PanierRepository
     public function __construct(\PDO $pdoPanier, \PDO $pdoOutil)
     {
         $this->pdoPanier = $pdoPanier;
-        $this->pdoOutil  = $pdoOutil;
+        $this->pdoOutil = $pdoOutil;
         $this->pdoPanier->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->pdoOutil->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->pdoPanier->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
@@ -58,7 +58,7 @@ class PDOPanierRepository implements PanierRepository
         $row = $select->fetch();
 
         if ($row) {
-            $newQty = (int)$row['quantity'] + $quantity;
+            $newQty = (int) $row['quantity'] + $quantity;
             $upd = $this->pdoPanier->prepare('UPDATE panier SET quantity = :quantity WHERE id = :id');
             $upd->execute([':quantity' => $newQty, ':id' => $row['id']]);
             return;
@@ -75,7 +75,7 @@ class PDOPanierRepository implements PanierRepository
             ':datefin' => $datefin,
         ]);
     }
-    
+
 
     public function findById(string $id): ?Panier
     {
@@ -88,7 +88,7 @@ class PDOPanierRepository implements PanierRepository
                 $row['id'],
                 $row['user_id'],
                 $row['outil_id'],
-                (int)$row['quantity'],
+                (int) $row['quantity'],
                 new \DateTime($row['datedebut']),
                 new \DateTime($row['datefin'])
             );
@@ -140,15 +140,15 @@ class PDOPanierRepository implements PanierRepository
         foreach ($rows as $r) {
             $outil = $outilsById[$r['outil_id']] ?? null;
             $items[] = [
-                'item_id'   => $r['id'],
-                'outil_id'  => $r['outil_id'],
-                'name'      => $outil['name'] ?? 'Outil inconnu',
+                'item_id' => $r['id'],
+                'outil_id' => $r['outil_id'],
+                'name' => $outil['name'] ?? 'Outil inconnu',
                 'description' => $outil['description'] ?? '',
-                'prix'      => isset($outil['prix']) ? (float)$outil['prix'] : 0.0,
+                'prix' => isset($outil['prix']) ? (float) $outil['prix'] : 0.0,
                 'image_url' => $outil['image_url'] ?? '',
-                'quantity'  => (int)$r['quantity'],
+                'quantity' => (int) $r['quantity'],
                 'datedebut' => $r['datedebut'],
-                'datefin'   => $r['datefin'],
+                'datefin' => $r['datefin'],
             ];
         }
 
@@ -174,7 +174,7 @@ class PDOPanierRepository implements PanierRepository
                 $row['id'],
                 $row['user_id'],
                 $row['outil_id'],
-                (int)$row['quantity'],
+                (int) $row['quantity'],
                 new \DateTime($row['datedebut']),
                 new \DateTime($row['datefin'])
             );
