@@ -15,6 +15,7 @@ return function(\Slim\App $app):\Slim\App {
     $app->get('/connexion', ConnexionAction::class);
     $app->post('/connexion', PostConnexionAction::class);
     $app->get('/inscription', \abricotdepot\web\actions\InscriptionAction::class);
+    $app->post('/inscription', \abricotdepot\web\actions\PostInscriptionAction::class);
     $app->get('/{id}', DetailProduitAction::class);
 
 
