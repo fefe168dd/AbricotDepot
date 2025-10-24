@@ -6,9 +6,16 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ConnexionAction
 {
-    public function __invoke(Request $request, Response $response): Response
+    public function __invoke(Request $request, Response $response , array $args): Response
     {
         $file = __DIR__ . '/../../../public/html/accueil.html';
+
+        $htmlErreur = '' ;
+
+        $queryParams = $request->getQueryParams();
+        if (isset($queryParams['erreur']) && $queryParams['erreur'] == 1) {
+            $htmlErreur = '<div class="ErreurAuth"><p>Identifiant ou mot de passe incorrect</p></div>';
+        }
 
 
         if (!file_exists($file)) {
@@ -25,8 +32,9 @@ class ConnexionAction
     <form class="formconnexion" method="post" action="/connexion">
         <div class="identifiant">Adresse mail : <input type="email" name="identifiant" required></div>
         <div class="password">Mot de passe : <input type="password" name="password" required></div>
-        <div class="submit"><button type="submit">S\'inscrire</button></div>
+        <div class="submit"><button type="submit">Se Connecter</button></div>
         <div class="inscription"><a href="/inscription">Pas de compte ? Inscrivez-vous !</a></div>
+        '. $htmlErreur .'
     </form>
     </div>' ;
 

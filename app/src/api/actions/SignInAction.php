@@ -80,7 +80,7 @@ class SignInAction
                 
         } catch (\Exception $e) {
             $payload = json_encode([
-                'error' => 'Erreur interne du serveur',
+                'error' => $e->getMessage(),
                 'code' => 'INTERNAL_ERROR'
             ]);
             $response->getBody()->write($payload);

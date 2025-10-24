@@ -4,13 +4,16 @@ declare(strict_types=1);
 use abricotdepot\web\actions\HomeAction;
 use abricotdepot\web\actions\ConnexionAction;
 use abricotdepot\web\actions\DetailProduitAction;
+use abricotdepot\web\actions\PanierAction;
+use abricotdepot\web\actions\PostConnexionAction;
 
 return function(\Slim\App $app):\Slim\App {
 
 
-    $app->get('/panier', \abricotdepot\web\actions\PanierAction::class);
+    $app->get('/panier', PanierAction::class);
     $app->get('/', HomeAction::class);
     $app->get('/connexion', ConnexionAction::class);
+    $app->post('/connexion', PostConnexionAction::class);
     $app->get('/inscription', \abricotdepot\web\actions\InscriptionAction::class);
     $app->get('/{id}', DetailProduitAction::class);
 
