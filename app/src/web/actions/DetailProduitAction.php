@@ -13,6 +13,8 @@ class DetailProduitAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
+        $token = $_SESSION['accessToken'] ?? null;
+
         $outilId = $args['id'] ?? null;
 
         if (!$outilId) {
@@ -26,13 +28,13 @@ class DetailProduitAction
 
         $outil = json_decode($json, true);
 
-        $apiUrlStock = "http://localhost:80/outils/$outilId/stocks" ;
+        $apiUrlStock = "http://localhost:80/outils/$outilId/stocks";
 
-            $json = file_get_contents($apiUrlStock) ;
+        $json = file_get_contents($apiUrlStock);
 
-            $stockJson = json_decode($json ,true) ;
+        $stockJson = json_decode($json, true);
 
-            $stock  = htmlspecialchars($stockJson['quantity']);
+        $stock = htmlspecialchars($stockJson['quantity']);
 
         if (!$outil) {
             $response->getBody()->write('Outil introuvable');
@@ -54,46 +56,54 @@ class DetailProduitAction
             return $response->withStatus(500);
         }
 
+
         // Génération du sélecteur de quantité basé sur le stock disponible
         $stock = $stock ?? 0;
 
-        $quantiteSelect = '<select name="quantite" id="quantite">';
-        //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
-        if ($stock > 0) {
-            $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
-
-            //selection des dates
-            $quantiteSelect .= '<div class="dates">';
-            $quantiteSelect .= '<div class="dateD">';
-            $quantiteSelect .= '<label for="date_debut">Date de début :</label>';
-            $quantiteSelect .= '<input type="date" name="date_debut" id="date_debut" required>';
-            $quantiteSelect .= '</div>';
-
-            $quantiteSelect .= '<div class="dateF">';
-            $quantiteSelect .= '<label for="date_fin">Date de fin :</label>';
-            $quantiteSelect .= '<input type="date" name="date_fin" id="date_fin" required>';
-            $quantiteSelect .= '</div>';
-            $quantiteSelect .= '</div>';
-            
-            //combo quantité
-            $quantiteSelect .= '<div class="quant">';
-            $quantiteSelect .= '<label for="quantite" class="quantite" id="quantite-section">Quantité :</label>';
-            $quantiteSelect .= '<select name="quantite" id="quantite">';
-            for ($i = 1; $i <= $stock; $i++) {
-                $quantiteSelect .= "<option value=\"$i\">$i</option>";
-            }
-            $quantiteSelect .= '</select>';
-            $quantiteSelect .= '</div>';
-            
-            //bouton ajouter au panier
-            $quantiteSelect .= '<button type="submit" class="ajoutPanier">Ajouter au panier</button>';
-            $quantiteSelect .= '</form>';
-        }
-        //sinon on affiche rupture de stock et la date de restockage la plus proche si elle est définie
-        else {
-            $quantiteSelect = '<p>Rupture de stock</p>';
-        }
+        if (!$token) {
+            // Pas de token → utilisateur non connecté
+            $quantiteSelect = '<a href="/connexion">Vous devez vous connecter pour réserver cet outil</a>';
+        } 
         
+        else {
+            $quantiteSelect = '<select name="quantite" id="quantite">';
+            //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
+            if ($stock > 0) {
+                $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
+
+                //selection des dates
+                $quantiteSelect .= '<div class="dates">';
+                $quantiteSelect .= '<div class="dateD">';
+                $quantiteSelect .= '<label for="date_debut">Date de début :</label>';
+                $quantiteSelect .= '<input type="date" name="date_debut" id="date_debut" required>';
+                $quantiteSelect .= '</div>';
+
+                $quantiteSelect .= '<div class="dateF">';
+                $quantiteSelect .= '<label for="date_fin">Date de fin :</label>';
+                $quantiteSelect .= '<input type="date" name="date_fin" id="date_fin" required>';
+                $quantiteSelect .= '</div>';
+                $quantiteSelect .= '</div>';
+
+                //combo quantité
+                $quantiteSelect .= '<div class="quant">';
+                $quantiteSelect .= '<label for="quantite" class="quantite" id="quantite-section">Quantité :</label>';
+                $quantiteSelect .= '<select name="quantite" id="quantite">';
+                for ($i = 1; $i <= $stock; $i++) {
+                    $quantiteSelect .= "<option value=\"$i\">$i</option>";
+                }
+                $quantiteSelect .= '</select>';
+                $quantiteSelect .= '</div>';
+
+                //bouton ajouter au panier
+                $quantiteSelect .= '<button type="submit" class="ajoutPanier">Ajouter au panier</button>';
+                $quantiteSelect .= '</form>';
+            }
+            //sinon on affiche rupture de stock et la date de restockage la plus proche si elle est définie
+            else {
+                $quantiteSelect = '<p>Rupture de stock</p>';
+            }
+        }
+
         $remplacements = [
             '{{outil_nom}}' => htmlspecialchars($outil['nom'] ?? ''),
             '{{outil_description}}' => htmlspecialchars($outil['description'] ?? ''),
