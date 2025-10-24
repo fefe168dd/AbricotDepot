@@ -40,6 +40,8 @@ class ConnexionAction
 
 
         $html = str_replace('{{Liste Outil}}', $connexionHTML, $html);
+        $menu = (new GenerateMenuClasse())->generateMenu();
+        $html = str_replace('{{Menu}}', $menu, $html);
 
         $response->getBody()->write($html);
         return $response->withHeader('Content-Type', 'text/html');

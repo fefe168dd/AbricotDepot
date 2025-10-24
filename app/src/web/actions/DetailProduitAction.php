@@ -114,6 +114,9 @@ class DetailProduitAction
         ];
         $html = str_replace(array_keys($remplacements), array_values($remplacements), $html);
 
+        $menu = (new GenerateMenuClasse())->generateMenu();
+        $html = str_replace('{{Menu}}', $menu, $html);
+
         $response->getBody()->write($html);
         return $response->withHeader('Content-Type', 'text/html');
     }

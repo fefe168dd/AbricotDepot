@@ -59,6 +59,8 @@ class PanierAction
 
         $html = str_replace('{{panier_items}}', $itemsHtml, $html);
         $html = str_replace('{{panier_total}}', number_format($total, 2, ',', ' '), $html);
+        $menu = (new GenerateMenuClasse())->generateMenu();
+        $html = str_replace('{{Menu}}', $menu, $html);
 
         $response->getBody()->write($html);
         return $response->withHeader('Content-Type', 'text/html');

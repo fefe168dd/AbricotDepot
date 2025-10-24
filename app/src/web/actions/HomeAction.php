@@ -10,7 +10,6 @@ class HomeAction
     public function __invoke(Request $request, Response $response): Response
     {
 
-        $menu = (new GenerateMenuClasse())->generateMenu();
 
         $file = __DIR__ . '/../../../public/html/accueil.html';
         $apiUrl = "http://localhost:80/outils" ;
@@ -58,7 +57,9 @@ class HomeAction
 
 
 
+
         $html = str_replace('{{Liste Outil}}', $outilHTML, $html);
+        $menu = (new GenerateMenuClasse())->generateMenu();
         $html = str_replace('{{Menu}}', $menu, $html);
 
 
