@@ -57,12 +57,25 @@ class PanierAction
                 $itemsHtml .= '<p>Du: ' . htmlspecialchars($item['datedebut']) . ' au ' . htmlspecialchars($item['datefin']) . '</p>';
                 $itemsHtml .= '<p>Prix unitaire: ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>';
                 $itemsHtml .= '<p>Quantité: ' . intval($item['quantity']) . '</p>';
+                $itemsHtml .= '<div class="actions">';
+                $itemsHtml .= '<a href="/panier/add/' . htmlspecialchars($item['outil_id']) . '" class="btn-add">➕</a>';
+                $itemsHtml .= '<a href="/panier/remove/' . htmlspecialchars($item['outil_id']) . '" class="btn-remove">➖</a>';
+                $itemsHtml .= '</div>';
                 $itemsHtml .= '<p>Sous-total: ' . number_format($sub, 2, ',', ' ') . ' €</p>';
                 $itemsHtml .= '</div></div>';
             }
         } else {
             $itemsHtml = '<p>Votre panier est vide.</p>';
         }
+
+        $itemsHtml .= '<div class="panier-footer">';
+        $itemsHtml .= '<p class="total">Total : ' . number_format($total, 2, ',', ' ') . ' €</p>';
+        $itemsHtml .= '<div class="actions">';
+        $itemsHtml .= '<form method="POST" action="/reservation/valider">';
+        $itemsHtml .= '<button type="submit" class="btn-reserver">Réserver</button>';
+        $itemsHtml .= '</form>';
+        $itemsHtml .= '</div>';
+        $itemsHtml .= '</div>';
 
         // Remplace les placeholders dans le template
         $html = str_replace('{{panier_items}}', $itemsHtml, $html);
