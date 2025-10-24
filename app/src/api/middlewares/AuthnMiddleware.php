@@ -31,7 +31,10 @@ class AuthnMiddleware implements MiddlewareInterface
             
             // Ajout du profil utilisateur dans les attributs de la requête
             $request = $request->withAttribute('userProfile', $authTokenDTO->getUserProfile());
+            // Ajout du token d'authentification dans les attributs de la requête
             $request = $request->withAttribute('authToken', $authTokenDTO);
+            // Ajout de l'atribbut id utilisateur
+            $request = $request->withAttribute('userId', $authTokenDTO->getUserProfile()->getId());
 
             // Passage à l'action suivante
             return $handler->handle($request);
