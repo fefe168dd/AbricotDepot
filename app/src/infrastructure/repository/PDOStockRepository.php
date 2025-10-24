@@ -13,6 +13,8 @@ class PDOStockRepository implements StockRepository
     public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
+        $info = $this->pdo->query("SELECT current_database(), current_schema()")->fetch();
+        error_log("[PDOStockRepository] Database: {$info['current_database']} | Schema: {$info['current_schema']}");
     }
 
     public function listerStocks(): array
@@ -24,9 +26,9 @@ class PDOStockRepository implements StockRepository
             $stocks[] = new Stock(
                 $data['id'],
                 $data['outil_id'],
-                (int)$data['quantity'],
-                (int)($data['quantity_reserved'] ?? 0),
-                (int)($data['available'] ?? 0)
+                (int) $data['quantity'],
+                (int) ($data['quantity_reserved'] ?? 0),
+                (int) ($data['available'] ?? 0)
             );
         }
         return $stocks;
@@ -41,9 +43,9 @@ class PDOStockRepository implements StockRepository
             return new Stock(
                 $data['id'],
                 $data['outil_id'],
-                (int)$data['quantity'],
-                (int)($data['quantity_reserved'] ?? 0),
-                (int)($data['available'] ?? 0)
+                (int) $data['quantity'],
+                (int) ($data['quantity_reserved'] ?? 0),
+                (int) ($data['available'] ?? 0)
             );
         }
         return null;
@@ -51,16 +53,16 @@ class PDOStockRepository implements StockRepository
 
     public function StockParOutilId(string $outilId): ?Stock
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM stock WHERE outil_id = :outilId');
-        $stmt->execute(['outilId' => $outilId]);
+        $stmt = $this->pdo->prepare('SELECT * FROM stock WHERE outil_id = :id');
+        $stmt->execute([':id' => $outilId]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
         if ($data) {
             return new Stock(
                 $data['id'],
                 $data['outil_id'],
-                (int)$data['quantity'],
-                (int)($data['quantity_reserved'] ?? 0),
-                (int)($data['available'] ?? 0)
+                (int) $data['quantity'],
+                (int) ($data['quantity_reserved'] ?? 0),
+                (int) ($data['available'] ?? 0)
             );
         }
         return null;
