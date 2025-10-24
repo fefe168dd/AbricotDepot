@@ -9,6 +9,9 @@ class HomeAction
 {
     public function __invoke(Request $request, Response $response): Response
     {
+
+        $menu = GenerateMenuClasse::class->generateMenu() ;
+
         $file = __DIR__ . '/../../../public/html/accueil.html';
         $apiUrl = "http://localhost:80/outils" ;
 

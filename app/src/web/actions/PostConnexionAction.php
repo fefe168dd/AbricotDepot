@@ -54,19 +54,23 @@ class PostConnexionAction
         curl_close($ch);
 
         $authOk = $res['success'];
+        $token = $res['data'] ?? null;
 
 
         if ($authOk) {
 
-            return $response
-                ->withHeader('Location', '/')
-                ->withStatus(302);
-        } else {
-            // Sinon, redirige vers la page de connexion avec un message d’erreur
-            return $response
-                ->withHeader('Location', '/connexion?erreur=1')
-                ->withStatus(302);
-        }
+                setcookie('access_token', $token['accessToken']);
+                setcookie('refresh_token', $token['refreshToken']);
 
+
+                return $response
+                    ->withHeader('Location', '/')
+                    ->withStatus(302);
+            } else {
+                // Sinon, redirige vers la page de connexion avec un message d’erreur
+                return $response
+                    ->withHeader('Location', '/connexion?erreur=1')
+                    ->withStatus(302);
+            }
+        }
     }
-}
