@@ -8,5 +8,6 @@ interface ReservationRepository
     public function listerReservations(): array;
     public function ReservationParId(string $id): ?Reservation;
     public function ReservationParOutilIdEtDate(string $id, \DateTime $dateDebut, \DateTime $dateFin): ?Reservation;
+    public function ReservationParUserId(string $userId): array;
     public function sauvegarderReservation(Reservation $reservation): void;
 }
