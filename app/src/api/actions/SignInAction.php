@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface;
@@ -19,7 +20,7 @@ class SignInAction
     {
         try {
             $data = $request->getParsedBody();
-            
+
             $validationErrors = $this->validateInput($data);
             if (!empty($validationErrors)) {
                 $payload = json_encode([
@@ -53,7 +54,7 @@ class SignInAction
             }
 
             $authToken = $this->authProvider->signin(
-                trim($data['email']), 
+                trim($data['email']),
                 $data['password']
             );
 
@@ -67,7 +68,6 @@ class SignInAction
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(200);
-
         } catch (AuthenticationException $e) {
             $payload = json_encode([
                 'error' => $e->getMessage(),
@@ -77,7 +77,6 @@ class SignInAction
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(401);
-                
         } catch (\Exception $e) {
             $payload = json_encode([
                 'error' => $e->getMessage(),

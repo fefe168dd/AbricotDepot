@@ -1,11 +1,13 @@
-<?php 
+<?php
+
 namespace abricotdepot\api\actions;
 
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use abricotdepot\core\application\usecases\ServiceReservation;
-class GetReservationAction 
+
+class GetReservationAction
 {
     private ServiceReservation $serviceReservation;
 
@@ -28,4 +30,3 @@ class GetReservationAction
         return $response->withHeader('Content-Type', 'application/json');
     }
 }
-

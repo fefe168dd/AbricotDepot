@@ -6,6 +6,7 @@ use abricotdepot\core\application\ports\api\dto\RsvinputDTO;
 use abricotdepot\core\application\usecases\ServiceReservation;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+
 class AddReservationAction
 {
     private ServiceReservation $serviceReservation;

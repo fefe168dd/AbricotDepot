@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace abricotdepot\api\actions;
 
@@ -6,7 +6,7 @@ use abricotdepot\core\application\usecases\ServiceReservation;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class CancelReservationAction 
+class CancelReservationAction
 {
     private ServiceReservation $serviceReservation;
 
@@ -29,7 +29,7 @@ class CancelReservationAction
 
         try {
             $this->serviceReservation->annulerReservation($reservationId);
-            
+
             $response->getBody()->write(json_encode([
                 'success' => true,
                 'message' => 'Réservation annulée avec succès'

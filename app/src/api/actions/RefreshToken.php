@@ -1,10 +1,12 @@
-<?php 
+<?php
+
 namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use abricotdepot\api\provider\AuthProviderInterface;
 use abricotdepot\core\domain\exceptions\AuthenticationException;
+
 class RefreshTokenAction
 {
     private AuthProviderInterface $authProvider;
@@ -18,7 +20,7 @@ class RefreshTokenAction
     {
         try {
             $data = $request->getParsedBody();
-            
+
             if (!isset($data['refreshToken']) || empty($data['refreshToken'])) {
                 $payload = json_encode([
                     'error' => 'Refresh token requis'
@@ -51,7 +53,6 @@ class RefreshTokenAction
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(200);
-
         } catch (AuthenticationException $e) {
             $payload = json_encode([
                 'error' => $e->getMessage(),
@@ -61,7 +62,6 @@ class RefreshTokenAction
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(401);
-                
         } catch (\Exception $e) {
             $payload = json_encode([
                 'error' => 'Erreur interne du serveur',

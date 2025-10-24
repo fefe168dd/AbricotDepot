@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace abricotdepot\api\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -7,7 +8,7 @@ use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
 use abricotdepot\core\application\ports\api\dto\OutilDTO;
 use abricotdepot\core\application\usecases\ServiceOutil;
 
-class GetOutilByCategorie 
+class GetOutilByCategorie
 {
     private ServiceOutil $outilRepository;
 
