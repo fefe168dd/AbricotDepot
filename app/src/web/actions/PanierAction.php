@@ -4,7 +4,6 @@ namespace abricotdepot\web\actions;
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Ramsey\Uuid\Uuid;
 
 class PanierAction
 {
@@ -18,24 +17,30 @@ class PanierAction
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $cookies = $request->getCookieParams();
-        $panierId = $cookies['panier_id'] ?? null;
-        $setCookieHeader = null;
 
-        if (!$panierId) {
-            // génère cookie guest, ne crée pas de ligne en base
-            $panierId = Uuid::uuid4()->toString();
-            $setCookieHeader = 'panier_id=' . $panierId . '; Path=/; HttpOnly';
+        // Vérifie la présence du token et du user_id
+        $token = $cookies['access_token'] ?? null;
+        $userId = $cookies['user_id'] ?? null;
+
+        if (!$token || !$userId) {
+            // L'utilisateur n'est pas connecté → message d’erreur
+            $response->getBody()->write('<a href="/connexion">Vous devez vous connecter pour accéder à votre panier.</a>');
+            return $response->withHeader('Content-Type', 'text/html')->withStatus(401);
         }
 
-        $panier = $this->panierRepository->getPanierItemsByUserId($panierId);
+        // Récupère les articles du panier de l’utilisateur connecté
+        $panier = $this->panierRepository->getPanierItemsByUserId($userId);
 
+        // Vérifie que le template HTML existe
         $file = __DIR__ . '/../../../public/html/panier.html';
         if (!file_exists($file)) {
             $response->getBody()->write('Template panier introuvable');
             return $response->withStatus(500);
         }
+
         $html = file_get_contents($file);
 
+        // Construction de la section des items
         $itemsHtml = '';
         $total = 0.0;
 
@@ -43,6 +48,7 @@ class PanierAction
             foreach ($panier['items'] as $item) {
                 $sub = $item['prix'] * $item['quantity'];
                 $total += $sub;
+
                 $itemsHtml .= '<div class="panier-item">';
                 $itemsHtml .= '<img src="' . htmlspecialchars($item['image_url'] ?? '') . '" style="width:80px;height:80px;">';
                 $itemsHtml .= '<div class="info">';
@@ -58,14 +64,12 @@ class PanierAction
             $itemsHtml = '<p>Votre panier est vide.</p>';
         }
 
+        // Remplace les placeholders dans le template
         $html = str_replace('{{panier_items}}', $itemsHtml, $html);
         $html = str_replace('{{panier_total}}', number_format($total, 2, ',', ' '), $html);
 
+        // Écrit la réponse finale
         $response->getBody()->write($html);
-        $response = $response->withHeader('Content-Type', 'text/html');
-        if ($setCookieHeader) {
-            $response = $response->withHeader('Set-Cookie', $setCookieHeader);
-        }
-        return $response;
+        return $response->withHeader('Content-Type', 'text/html');
     }
 }
