@@ -6,6 +6,9 @@ use abricotdepot\core\domain\entities\Panier\Panier;
 
 interface PanierRepository
 {
+    //Récupère tous les paniers
+    public function getAllPaniers(): array;
+
     //Sauvegarde un panier en base
     public function savePanier(Panier $panier): void;
 

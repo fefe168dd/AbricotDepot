@@ -23,6 +23,26 @@ class PDOPanierRepository implements PanierRepository
         }
     }
 
+    public function getAllPaniers(): array
+    {
+        $stmt = $this->pdoPanier->query('SELECT * FROM panier');
+        $rows = $stmt->fetchAll();
+
+        $paniers = [];
+        foreach ($rows as $row) {
+            $paniers[] = new Panier(
+                $row['id'],
+                $row['user_id'],
+                $row['outil_id'],
+                (int)$row['quantity'],
+                new \DateTime($row['datedebut']),
+                new \DateTime($row['datefin'])
+            );
+        }
+
+        return $paniers;
+    }
+
     /**
      * Sauvegarde un panier complet (utilisé rarement, par ex. migration)
      */

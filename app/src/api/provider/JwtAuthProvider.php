@@ -110,6 +110,8 @@ class JwtAuthProvider implements AuthProviderInterface
         $payload = [
             'sub' => $userProfile->getId(),
             'email' => $userProfile->getEmail(),
+            'role' => $userProfile->getRole(),
+            'type' => 'access',
             'exp' => time() + $this->accessTokenExpiry,
         ];
         return JWT::encode($payload, $this->jwtSecret, $this->jwtAlgorithm);
@@ -119,6 +121,8 @@ class JwtAuthProvider implements AuthProviderInterface
         $payload = [
             'sub' => $userProfile->getId(),
             'email' => $userProfile->getEmail(),
+            'role' => $userProfile->getRole(),
+            'type' => 'refresh',
             'exp' => time() + $this->refreshTokenExpiry,
         ];
         return JWT::encode($payload, $this->jwtSecret, $this->jwtAlgorithm);

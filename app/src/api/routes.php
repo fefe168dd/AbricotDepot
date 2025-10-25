@@ -22,7 +22,8 @@ return function(\Slim\App $app):\Slim\App {
     $app->post('/auth/authenticate',  \abricotdepot\api\actions\AuthentificationUserAction::class);
     $app->post('/auth/refresh' , \abricotdepot\api\actions\RefreshTokenAction::class);
     $app->post('/auth/logout', \abricotdepot\api\actions\LogoutAction::class);
-    
+    $app->post('/panier/ajoutProduit', \abricotdepot\api\actions\AddToPanierAction::class)
+    ->add(\abricotdepot\api\middlewares\AuthnMiddleware::class);
         
 
     return $app;

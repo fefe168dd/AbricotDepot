@@ -1,16 +1,17 @@
 <?php
-namespace abricotdepot\web\actions ;
+
+namespace abricotdepot\web\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ConnexionAction
 {
-    public function __invoke(Request $request, Response $response , array $args): Response
+    public function __invoke(Request $request, Response $response, array $args): Response
     {
         $file = __DIR__ . '/../../../public/html/accueil.html';
 
-        $htmlErreur = '' ;
+        $htmlErreur = '';
 
         $queryParams = $request->getQueryParams();
         if (isset($queryParams['erreur']) && $queryParams['erreur'] == 1) {
@@ -34,9 +35,9 @@ class ConnexionAction
         <div class="password">Mot de passe : <input type="password" name="password" required></div>
         <div class="submit"><button type="submit">Se Connecter</button></div>
         <div class="inscription"><a href="/inscription">Pas de compte ? Inscrivez-vous !</a></div>
-        '. $htmlErreur .'
+        ' . $htmlErreur . '
     </form>
-    </div>' ;
+    </div>';
 
 
         $html = str_replace('{{Liste Outil}}', $connexionHTML, $html);

@@ -60,7 +60,6 @@ class DetailProduitAction
         // Génération du sélecteur de quantité basé sur le stock disponible
         $stock = $stock ?? 0;
         $token = $_COOKIE['access_token'] ?? null;
-        $userId = $_COOKIE['user']['id'] ?? null;
 
 
 
@@ -73,10 +72,9 @@ class DetailProduitAction
             $quantiteSelect = '<select name="quantite" id="quantite">';
             //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
             if ($stock > 0) {
-                $quantiteSelect = '<form method="POST" action="/ajouterPanier">';
-
+                $quantiteSelect = '<form class="Reservation" method="POST" action="/' . htmlspecialchars($outilId) . '/ajouterPanier">';
+                
                 //selection des dates
-                $quantiteSelect .= '<input type="hidden" name="outil_id" value="' . htmlspecialchars($outilId) . '">';
                 $quantiteSelect .= '<div class="dates">';
                 $quantiteSelect .= '<div class="dateD">';
                 $quantiteSelect .= '<label for="date_debut">Date de début :</label>';
@@ -118,9 +116,7 @@ class DetailProduitAction
                 <p class="prix">Prix : {{outil_prix}} €</p>
                 <p class="categorie">Catégorie : {{outil_categorie}}</p>
             </div>
-            <form class="Reservation">
-                '.$quantiteSelect.'
-            </form>
+            '.$quantiteSelect.'
         </div></main>' ;
 
         $remplacements = [

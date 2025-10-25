@@ -42,7 +42,7 @@ class ServiceReservation
 
     public function sauvegarderReservation(RsvinputDTO $reservationDTO): Reservation
     {
-        // ✅ Conversion sécurisée des dates
+        //Conversion sécurisée des dates
         $dateDebut = $reservationDTO->dateDebut instanceof \DateTime
             ? $reservationDTO->dateDebut
             : new \DateTime((string)$reservationDTO->dateDebut);
@@ -51,12 +51,12 @@ class ServiceReservation
             ? $reservationDTO->dateFin
             : new \DateTime((string)$reservationDTO->dateFin);
 
-        // ✅ Vérification de la cohérence des dates
+        //Vérification de la cohérence des dates
         if ($dateFin < $dateDebut) {
             throw new \InvalidArgumentException("La date de fin ne peut pas être antérieure à la date de début.");
         }
 
-        // ✅ Vérification basique des champs essentiels
+        //Vérification basique des champs essentiels
         if (empty($reservationDTO->outilId) || empty($reservationDTO->userId)) {
             throw new \InvalidArgumentException("L'outil et l'utilisateur doivent être spécifiés.");
         }
@@ -65,7 +65,7 @@ class ServiceReservation
             throw new \InvalidArgumentException("La quantité doit être supérieure à zéro.");
         }
 
-        // ✅ Création de l'entité Reservation
+        //Création de l'entité Reservation
         $reservation = new Reservation(
             \Ramsey\Uuid\Uuid::uuid4()->toString(),
             $reservationDTO->outilId,
@@ -76,10 +76,9 @@ class ServiceReservation
             $reservationDTO->status ?? 'pending'
         );
 
-        // ✅ Enregistrement en base via le repository
+        //Enregistrement en base via le repository
         $this->reservationRepository->sauvegarderReservation($reservation);
 
-        // ✅ Retourne l'entité créée
         return $reservation;
     }
 

@@ -14,6 +14,12 @@ class ServicePanier
         $this->panierRepository = $panierRepository;
     }
 
+    public function getAllPaniers(): array
+    {
+        $paniers = $this->panierRepository->getAllPaniers();
+        return array_map(fn(Panier $p) => new PanierDTO($p), $paniers);
+    }
+
     public function savePanier(Panier $panier): void
     {
         $this->panierRepository->savePanier($panier);
