@@ -4,6 +4,7 @@ namespace abricotdepot\web\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
+use abricotdepot\api\application\entities\User;
 
 class AddToPanierAction
 {
@@ -18,27 +19,23 @@ class AddToPanierAction
     {
 
         // Récupérer l'ID du panier depuis la session
-        $panierId = $_SESSION['panier_id'] ?? null;
-        if (!$panierId) {
-            // Générer un nouveau panier si inexistant
-            $panierId = \Ramsey\Uuid\Uuid::uuid4()->toString();
-            $_SESSION['panier_id'] = $panierId;
-            $this->panierRepository->save(new \abricotdepot\core\domain\entities\Panier\Panier($panierId, null));
-        }
-
+        $userId = $_COOKIE['user']['id'] ?? null;
+        
         // Récupérer les données POST
         $data = $request->getParsedBody();
         $outilId = $data['outil_id'] ?? null;
-        $quantite = (int)($data['quantite'] ?? 1);
+        $quantite = (int)($data['quantite']);
 
         if (!$outilId) {
             $response->getBody()->write('Erreur : ID de l\'outil manquant.');
             return $response->withStatus(400);
         }
 
+        
         // Ajouter l'item au panier
         try {
-            $this->panierRepository->addItem($panierId, $outilId, $quantite);
+            
+            $this->panierRepository->savePanier();
         } catch (\Exception $e) {
             $response->getBody()->write('Erreur lors de l\'ajout au panier : ' . $e->getMessage());
             return $response->withStatus(500);

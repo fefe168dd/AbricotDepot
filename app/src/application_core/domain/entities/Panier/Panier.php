@@ -26,7 +26,7 @@ class Panier
         $this->dateFin = $dateFin;
     }
 
-    public function getPanierId(): string
+    public function getId(): string
     {
         return $this->id;
     }
