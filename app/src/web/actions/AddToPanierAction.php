@@ -66,15 +66,7 @@ Erreur cURL : $curlError
 </pre>");
             return $response->withStatus(500);
         }
-
-        $response->getBody()->write("<pre>
-Erreur lors de l'ajout au panier
-Code HTTP : $statusCode
-Réponse API : $res
-Erreur cURL : $curlError
-</pre>");
         // Si tout s'est bien passé, redirection vers le panier
-        //return $response->withHeader('Location', '/panier')->withStatus(302);
-         return $response;
+        return $response->withHeader('Location', '/panier')->withStatus(302);
     }
 }

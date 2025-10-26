@@ -1,4 +1,5 @@
 <?php
+
 namespace abricotdepot\web\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -6,10 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class DetailProduitAction
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
@@ -49,13 +47,12 @@ class DetailProduitAction
         //lecture du template HTML
         $file = __DIR__ . '/../../../public/html/accueil.html';
 
-        $html = file_get_contents($file);
-
         if (!file_exists($file)) {
             $response->getBody()->write('Erreur : fichier HTML introuvable.');
             return $response->withStatus(500);
         }
 
+        $html = file_get_contents($file);
 
         // Génération du sélecteur de quantité basé sur le stock disponible
         $stock = $stock ?? 0;
@@ -66,14 +63,12 @@ class DetailProduitAction
         if (!$token) {
             // Pas de token → utilisateur non connecté
             $quantiteSelect = '<a href="/connexion">Vous devez vous connecter pour réserver cet outil</a>';
-        }
-
-        else {
+        } else {
             $quantiteSelect = '<select name="quantite" id="quantite">';
             //si le stock est superieur a 0 on affiche le formulaire d'ajout au panier
             if ($stock > 0) {
                 $quantiteSelect = '<form class="Reservation" method="POST" action="/' . htmlspecialchars($outilId) . '/ajouterPanier">';
-                
+
                 //selection des dates
                 $quantiteSelect .= '<div class="dates">';
                 $quantiteSelect .= '<div class="dateD">';
@@ -99,7 +94,6 @@ class DetailProduitAction
 
                 //bouton ajouter au panier
                 $quantiteSelect .= '<button type="submit" class="ajoutPanier">Ajouter au panier</button>';
-                $quantiteSelect .= '</form>';
             }
             //sinon on affiche rupture de stock et la date de restockage la plus proche si elle est définie
             else {
@@ -116,8 +110,8 @@ class DetailProduitAction
                 <p class="prix">Prix : {{outil_prix}} €</p>
                 <p class="categorie">Catégorie : {{outil_categorie}}</p>
             </div>
-            '.$quantiteSelect.'
-        </div></main>' ;
+            ' . $quantiteSelect . '
+        </div></main>';
 
         $remplacements = [
             '{{outil_nom}}' => htmlspecialchars($outil['nom'] ?? ''),
@@ -138,4 +132,104 @@ class DetailProduitAction
         return $response->withHeader('Content-Type', 'text/html');
     }
 }
+?>
+<script>
+    //ajout des logs pour le debug
+    document.addEventListener('DOMContentLoaded', () => {
+        const dateDebutInput = document.getElementById('date_debut');
+        const dateFinInput = document.getElementById('date_fin');
+        const quantiteSelect = document.getElementById('quantite');
+        const outilId = window.location.pathname.split('/').pop(); // récupère l'id depuis l'URL
 
+        console.log("🧩 Outil ID détecté :", outilId);
+
+        async function updateQuantiteOptions() {
+            const dateDebut = dateDebutInput.value;
+            const dateFin = dateFinInput.value;
+
+            console.log("Dates sélectionnées :", {
+                dateDebut,
+                dateFin
+            });
+
+            // On attend que les deux dates soient renseignées
+            if (!dateDebut || !dateFin) {
+                console.log("En attente des deux dates...");
+                return;
+            }
+
+            try {
+                const reservationUrl = `/reservations/${outilId}/${dateDebut}/${dateFin}`;
+                const stockUrl = `/outils/${outilId}/stocks`;
+
+                console.log("Requêtes API :", {
+                    reservationUrl,
+                    stockUrl
+                });
+
+                const response = await fetch(reservationUrl);
+                const stockage = await fetch(stockUrl);
+
+                console.log("Réponses API :", {
+                    response,
+                    stockage
+                });
+
+                const reservations = await response.json();
+
+                if (!stockage.ok) {
+                    throw new Error("Erreur lors de la récupération du stock");
+                }
+
+                const stockData = await stockage.json();
+
+                console.log("Données reçues :", {
+                    reservations,
+                    stockData
+                });
+
+                // Additionne leurs quantités si plusieurs réservations
+                let totalReserve = 0;
+                if (Array.isArray(reservations)) {
+                    totalReserve = reservations.reduce((somme, res) => somme + (res.quantity ?? 0), 0);
+                } else if (reservations.quantity) {
+                    totalReserve = reservations.quantity;
+                }
+
+                const stockTotal = stockData.quantity ?? 0;
+                const maxQuantite = Math.max(stockTotal - totalReserve, 0);
+
+                console.log("Calculs :", {
+                    stockTotal,
+                    totalReserve,
+                    maxQuantite
+                });
+
+                // Reconstruction de la combobox
+                quantiteSelect.innerHTML = "";
+
+                if (maxQuantite > 0) {
+                    for (let i = 1; i <= maxQuantite; i++) {
+                        const option = document.createElement("option");
+                        option.value = i;
+                        option.textContent = i;
+                        quantiteSelect.appendChild(option);
+                    }
+                } else {
+                    const option = document.createElement("option");
+                    option.textContent = "Indisponible";
+                    option.disabled = true;
+                    quantiteSelect.appendChild(option);
+                }
+
+                console.log("Combobox mise à jour avec", maxQuantite, "valeurs disponibles.");
+
+            } catch (error) {
+                console.error("Erreur dans updateQuantiteOptions :", error);
+            }
+        }
+
+        dateDebutInput.addEventListener("change", updateQuantiteOptions);
+        dateFinInput.addEventListener("change", updateQuantiteOptions);
+    });
+</script>
