@@ -1,4 +1,5 @@
 <?php
+
 namespace abricotdepot\web\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -18,6 +19,20 @@ class AddToPanierAction
         // Vérification que tous les champs obligatoires sont présents
         if (!$outilId || !$quantite || !$dateDebut || !$dateFin) {
             $response->getBody()->write('Champs manquants.');
+            return $response->withStatus(400);
+        }
+
+        $aujourdhui = new \DateTime('today');
+
+        // Vérifie que la date de début n’est pas dans le passé
+        if ($dateDebut < $aujourdhui) {
+            $response->getBody()->write("La date de début ne peut pas être antérieure à la date actuelle.");
+            return $response->withStatus(400);
+        }
+
+        // Vérifie que la date de fin n’est pas avant la date de début
+        if ($dateFin < $dateDebut) {
+            $response->getBody()->write("La date de fin ne peut pas être antérieure à la date de début.");
             return $response->withStatus(400);
         }
 
@@ -45,7 +60,7 @@ class AddToPanierAction
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER     => [
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $token,         
+                'Authorization: Bearer ' . $token,
             ],
             CURLOPT_POSTFIELDS     => $payload,
         ]);
