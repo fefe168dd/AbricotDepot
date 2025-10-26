@@ -56,7 +56,6 @@ class AuthentificationUserAction
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(401);
         } catch (\Exception $e) {
-            // En développement, retourner l'erreur détaillée
             $payload = json_encode([
                 'error' => 'Erreur interne du serveur',
                 'details' => $e->getMessage(),
