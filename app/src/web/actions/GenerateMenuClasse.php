@@ -12,7 +12,7 @@ class GenerateMenuClasse
 
 
         if($connected) {
-            $menu = '<li><a href="/profil"><div class="inscription"><img class="icon" src="Image/icones/User.png"></div></a></li>
+            $menu = '<li><a href="/profile"><div class="inscription"><img class="icon" src="Image/icones/User.png"></div></a></li>
             <li><a href="/panier"><div class="panier"><img class="icon" src="Image/icones/shopping-basket.png"></div></a></li>
             <li><a href="/deconnexion"><div class="deconnexion"><img class="icon" src="Image/icones/Log-out.png"></div></a></li>' ;
         }else {
