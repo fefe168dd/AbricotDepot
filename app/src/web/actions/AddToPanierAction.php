@@ -23,15 +23,17 @@ class AddToPanierAction
         }
 
         $aujourdhui = new \DateTime('today');
+        $dateDebutObj = new \DateTime($dateDebut);
+        $dateFinObj   = new \DateTime($dateFin);
 
         // Vérifie que la date de début n’est pas dans le passé
-        if ($dateDebut < $aujourdhui) {
+        if ($dateDebutObj < $aujourdhui) {
             $response->getBody()->write("La date de début ne peut pas être antérieure à la date actuelle.");
             return $response->withStatus(400);
         }
 
         // Vérifie que la date de fin n’est pas avant la date de début
-        if ($dateFin < $dateDebut) {
+        if ($dateFinObj < $dateDebutObj) {
             $response->getBody()->write("La date de fin ne peut pas être antérieure à la date de début.");
             return $response->withStatus(400);
         }
