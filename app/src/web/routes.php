@@ -15,7 +15,6 @@ use abricotdepot\web\actions\PanierRemoveAction;
 
 return function(\Slim\App $app):\Slim\App {
 
-
     $app->get('/panier', PanierAction::class);
     $app->get('/', HomeAction::class);
     $app->get('/connexion', ConnexionAction::class);
@@ -24,10 +23,13 @@ return function(\Slim\App $app):\Slim\App {
     $app->post('/inscription', \abricotdepot\web\actions\PostInscriptionAction::class);
     $app->get('/deconnexion', DeconnexionAction::class);
     $app->get('/profile', GetProfileAction::class);
-    $app->get('/{id}', DetailProduitAction::class);
     $app->post('/{id}/ajouterPanier', AddToPanierAction::class);
     $app->get('/panier/add/{outil_id}', PanierAddAction::class);
     $app->get('/panier/remove/{outil_id}', PanierRemoveAction::class);
+    $app->post('/panier/reserver', \abricotdepot\web\actions\ReserverPanierAction::class);
+    $app->get('/{id}', DetailProduitAction::class);
+
+
 
     return $app;
 };

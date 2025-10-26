@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 
 return function(\Slim\App $app):\Slim\App {
-
-
     $app->post('/reservations', \abricotdepot\api\actions\AddReservationAction::class);
     $app->get('/reservations', \abricotdepot\api\actions\GetReservationAction::class);
     $app->get('/reservation/{id}' , \abricotdepot\api\actions\GetReservationByIDAction::class);

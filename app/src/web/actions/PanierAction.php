@@ -71,7 +71,7 @@ class PanierAction
         $itemsHtml .= '<div class="panier-footer">';
         $itemsHtml .= '<p class="total">Total : ' . number_format($total, 2, ',', ' ') . ' €</p>';
         $itemsHtml .= '<div class="actions">';
-        $itemsHtml .= '<form method="POST" action="/reservation/valider">';
+        $itemsHtml .= '<form method="POST" action="/panier/reserver">';
         $itemsHtml .= '<button type="submit" class="btn-reserver">Réserver</button>';
         $itemsHtml .= '</form>';
         $itemsHtml .= '</div>';
