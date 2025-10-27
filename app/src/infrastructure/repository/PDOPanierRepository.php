@@ -252,4 +252,11 @@ class PDOPanierRepository implements PanierRepository
 
         return $paniers;
     }
+    // Dans PDOPanierRepository
+public function clearPanier(string $userId): void
+{
+    $stmt = $this->pdoPanier->prepare('DELETE FROM panier WHERE user_id = :user_id');
+    $stmt->execute([':user_id' => $userId]);
+}
+
 }

@@ -35,12 +35,13 @@ class ReserverPanierAction
 
         // Pour chaque item → créer une réservation
         foreach ($panier['items'] as $item) {
-            $this->reservationRepository->createReservation(
+                 $this->reservationRepository->createReservation(
                 $userId,
                 $item['outil_id'],
                 $item['datedebut'],
                 $item['datefin'],
-                $item['quantity']
+                $item['quantity'],
+                \abricotdepot\core\domain\entities\Reservations\Reservation::STATUS_PENDING
             );
         }
 

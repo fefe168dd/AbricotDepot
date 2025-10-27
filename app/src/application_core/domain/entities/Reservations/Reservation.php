@@ -11,7 +11,9 @@ class Reservation
     private DateTime $datedebut;
     private DateTime $datefin;
     private int $status;
-
+    public const STATUS_PENDING = 0;
+    public const STATUS_CONFIRMED = 1;
+    public const STATUS_CANCELED = 2;
     public function __construct(?string $id, string $outilId, string $userId, int $quantity, DateTime $datedebut, DateTime $datefin, int $status)
     {
         $this->id = $id;
@@ -20,6 +22,7 @@ class Reservation
         $this->quantity = $quantity;
         $this->datedebut = $datedebut;
         $this->datefin = $datefin;
+        $this->status = $status;
         $this->status = $status;
     }
 
