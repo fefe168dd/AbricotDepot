@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use abricotdepot\core\application\usecases\ServiceReservation;
 
-class GetReservationByOutilAndDatesAction
+class GetReservationEnCoursByOutilAndDatesAction
 {
     private ServiceReservation $serviceReservation;
 
@@ -21,7 +21,7 @@ class GetReservationByOutilAndDatesAction
         $id = $args['id'];
         $dateDebut = new \DateTime($args['date_debut']);
         $dateFin = new \DateTime($args['date_fin']);
-        $reservation = $this->serviceReservation->obtenirReservationParOutilIdEtDate($id, $dateDebut, $dateFin);
+        $reservation = $this->serviceReservation->obtenirReservationEnCoursParOutilIdEtDate($id, $dateDebut, $dateFin);
 
         if (!$reservation) {
             $response->getBody()->write(json_encode(['error' => 'Reservation not found']));

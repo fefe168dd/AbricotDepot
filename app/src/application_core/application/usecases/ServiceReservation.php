@@ -33,9 +33,9 @@ class ServiceReservation
         return $reservation ? new ReservationDTO($reservation) : null;
     }
 
-    public function obtenirReservationParOutilIdEtDate(string $id, \DateTime $dateDebut, \DateTime $dateFin): ?ReservationDTO
+    public function obtenirReservationEnCoursParOutilIdEtDate(string $id, \DateTime $dateDebut, \DateTime $dateFin): ?ReservationDTO
     {
-        $reservation = $this->reservationRepository->ReservationParOutilIdEtDate($id, $dateDebut, $dateFin);
+        $reservation = $this->reservationRepository->ReservationEnCoursParOutilIdEtDate($id, $dateDebut, $dateFin);
         return $reservation ? new ReservationDTO($reservation) : null;
     }
 

@@ -105,19 +105,13 @@ class PDOReservationRepository implements ReservationRepository
         );
     }
 
-    public function ReservationParOutilIdEtDate(string $outilId, DateTime $startDate, DateTime $endDate): ?Reservation
+    public function ReservationEnCoursParOutilIdEtDate(string $outilId, DateTime $startDate, DateTime $endDate): ?Reservation
     {
-        $stmt = $this->pdo->prepare('
-            SELECT * FROM reservations
-            WHERE outil_id = :outil_id
-              AND start_date = :start_date
-              AND end_date = :end_date
-            LIMIT 1
-        ');
+        $stmt = $this->pdo->prepare('SELECT * FROM reservations WHERE outil_id = :outil_id AND start_date <= :dateFin AND end_date >= :dateDebut AND status =0;');
         $stmt->execute([
             ':outil_id' => $outilId,
-            ':start_date' => $startDate->format('Y-m-d H:i:s'),
-            ':end_date' => $endDate->format('Y-m-d H:i:s')
+            ':dateDebut' => $startDate->format('Y-m-d H:i:s'),
+            ':dateFin' => $endDate->format('Y-m-d H:i:s')
         ]);
         $row = $stmt->fetch();
         if (!$row) return null;

@@ -156,7 +156,7 @@ return [
      },
      'reservation.pdo' => function (ContainerInterface $container) {
         $config = parse_ini_file($container->get('env.config'));
-        $dsn = "pgsql:host={$config['reservation.host']};dbname=abridepoReservation";        $user = $config['reservation.username'];
+        $dsn = "pgsql:host={$config['reservation.host']};dbname={$config['reservation.database']}";       $user = $config['reservation.username'];
         $password = $config['reservation.password'];
         return new PDO($dsn, $user, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
