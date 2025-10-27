@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use abricotdepot\web\actions\DeconnexionAction;
@@ -12,15 +13,18 @@ use abricotdepot\api\middlewares\AuthnMiddleware;
 use abricotdepot\web\actions\AddToPanierAction;
 use abricotdepot\web\actions\PanierAddAction;
 use abricotdepot\web\actions\PanierRemoveAction;
+use abricotdepot\web\actions\ConfirmationReservationAction;
+use abricotdepot\web\actions\PostInscriptionAction;
 
-return function(\Slim\App $app):\Slim\App {
+return function (\Slim\App $app): \Slim\App {
 
+    $app->get('/reservation/confirmation', ConfirmationReservationAction::class);
     $app->get('/panier', PanierAction::class);
     $app->get('/', HomeAction::class);
     $app->get('/connexion', ConnexionAction::class);
     $app->post('/connexion', PostConnexionAction::class);
     $app->get('/inscription', \abricotdepot\web\actions\InscriptionAction::class);
-    $app->post('/inscription', \abricotdepot\web\actions\PostInscriptionAction::class);
+    $app->post('/inscription', PostInscriptionAction::class);
     $app->get('/deconnexion', DeconnexionAction::class);
     $app->get('/profile', GetProfileAction::class);
     $app->post('/{id}/ajouterPanier', AddToPanierAction::class);
@@ -31,6 +35,6 @@ return function(\Slim\App $app):\Slim\App {
 
 
 
+
     return $app;
 };
-
