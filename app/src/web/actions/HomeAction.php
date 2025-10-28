@@ -28,19 +28,29 @@ class HomeAction
 
         $outilHTML = '<label class="tri">
         <input type="checkbox" id="toggle-sort">
-        <select class="dropdown">
-            <option value="">Trier par :</option>
+        <select class="dropdown" id="category-filter">
+            <option value="">Toutes les catégories</option>
+            <option value="jardinage">Jardinage</option>
+            <option value="bricolage">Bricolage</option>
+            <option value="construction">Construction</option>
             <option value="peinture">Peinture</option>
-            <option value="jardin">Jardin</option>
-            <option value="garage">Garage</option>
+            <option value="outils électriques">Outils électriques</option>
         </select>
-    </label>' . '<div class="Articles">' ;
+    </label>' . '<div class="Articles" id="articles-container">' ;
 
         foreach ($outils as $outil) {
             $id  = htmlspecialchars($outil['id']);
             $url = htmlspecialchars($outil['imageUrl']);
             $nom = htmlspecialchars($outil['nom']);
             $prix = htmlspecialchars($outil['prix']);
+            
+            // Gérer le cas où categorie est un tableau ou une chaîne
+            $categorieRaw = $outil['categorie'] ?? '';
+            if (is_array($categorieRaw)) {
+                $categorie = isset($categorieRaw['nom']) ? htmlspecialchars($categorieRaw['nom']) : '';
+            } else {
+                $categorie = htmlspecialchars($categorieRaw);
+            }
 
             $apiUrlStock = "http://apicot:80/outils/$id/stocks" ;
 
@@ -50,10 +60,28 @@ class HomeAction
 
             $stock  = htmlspecialchars($stockJson['quantity']);
 
-            $outilHTML .= "<div class=\"article\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p><p class='stock'>Stock Disponible : $stock</p></a></div>" ;
+            $outilHTML .= "<div class=\"article\" data-category=\"$categorie\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p><p class='stock'>Stock Disponible : $stock</p></a></div>" ;
         }
 
         $outilHTML .= '</div>' ;
+        
+        // Ajouter le script JavaScript pour le filtrage
+        $outilHTML .= '<script>
+        document.getElementById("category-filter").addEventListener("change", function() {
+            const selectedCategory = this.value.toLowerCase();
+            const articles = document.querySelectorAll(".article");
+            
+            articles.forEach(article => {
+                const articleCategory = article.getAttribute("data-category").toLowerCase();
+                
+                if (selectedCategory === "" || articleCategory === selectedCategory) {
+                    article.style.display = "";
+                } else {
+                    article.style.display = "none";
+                }
+            });
+        });
+        </script>';
 
 
 
