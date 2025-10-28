@@ -17,6 +17,32 @@ class HomeAction
         $json = file_get_contents($apiUrl) ;
 
         $outils = json_decode($json , true);
+        
+        // Pagination
+        $queryParams = $request->getQueryParams();
+        $page = isset($queryParams['page']) ? max(1, intval($queryParams['page'])) : 1;
+        $selectedCategory = isset($queryParams['category']) ? $queryParams['category'] : '';
+        $itemsPerPage = 5;
+        
+        // Filtrer par catégorie si sélectionnée
+        if (!empty($selectedCategory)) {
+            $outils = array_filter($outils, function($outil) use ($selectedCategory) {
+                $categorieRaw = $outil['categorie'] ?? '';
+                if (is_array($categorieRaw)) {
+                    $categorie = isset($categorieRaw['nom']) ? strtolower($categorieRaw['nom']) : '';
+                } else {
+                    $categorie = strtolower($categorieRaw);
+                }
+                return $categorie === strtolower($selectedCategory);
+            });
+        }
+        
+        $totalItems = count($outils);
+        $totalPages = ceil($totalItems / $itemsPerPage);
+        $offset = ($page - 1) * $itemsPerPage;
+        
+        // Extraire les outils pour la page courante
+        $outilsPagines = array_slice($outils, $offset, $itemsPerPage);
 
 
         if (!file_exists($file)) {
@@ -30,15 +56,15 @@ class HomeAction
         <input type="checkbox" id="toggle-sort">
         <select class="dropdown" id="category-filter">
             <option value="">Toutes les catégories</option>
-            <option value="jardinage">Jardinage</option>
-            <option value="bricolage">Bricolage</option>
-            <option value="construction">Construction</option>
-            <option value="peinture">Peinture</option>
-            <option value="outils électriques">Outils électriques</option>
+            <option value="jardinage"' . ($selectedCategory === 'jardinage' ? ' selected' : '') . '>Jardinage</option>
+            <option value="bricolage"' . ($selectedCategory === 'bricolage' ? ' selected' : '') . '>Bricolage</option>
+            <option value="construction"' . ($selectedCategory === 'construction' ? ' selected' : '') . '>Construction</option>
+            <option value="peinture"' . ($selectedCategory === 'peinture' ? ' selected' : '') . '>Peinture</option>
+            <option value="outils électriques"' . ($selectedCategory === 'outils électriques' ? ' selected' : '') . '>Outils électriques</option>
         </select>
     </label>' . '<div class="Articles" id="articles-container">' ;
 
-        foreach ($outils as $outil) {
+        foreach ($outilsPagines as $outil) {
             $id  = htmlspecialchars($outil['id']);
             $url = htmlspecialchars($outil['imageUrl']);
             $nom = htmlspecialchars($outil['nom']);
@@ -65,21 +91,41 @@ class HomeAction
 
         $outilHTML .= '</div>' ;
         
+        // Ajouter la pagination
+        if ($totalPages > 1) {
+            $categoryParam = !empty($selectedCategory) ? '&category=' . urlencode($selectedCategory) : '';
+            $outilHTML .= '<div class="pagination">';
+            $outilHTML .= '<p>Page ' . $page . ' sur ' . $totalPages . ' (' . $totalItems . ' outils au total)</p>';
+            $outilHTML .= '<div class="nav-buttons">';
+            
+            // Bouton Précédent
+            if ($page > 1) {
+                $outilHTML .= '<a href="/?page=' . ($page - 1) . $categoryParam . '" class="btn-nav">« Précédent</a>';
+            }
+            
+            // Bouton Suivant
+            if ($page < $totalPages) {
+                $outilHTML .= '<a href="/?page=' . ($page + 1) . $categoryParam . '" class="btn-nav">Suivant »</a>';
+            }
+            
+            $outilHTML .= '</div>'; // Fermeture nav-buttons
+            $outilHTML .= '</div>'; // Fermeture pagination
+        }
+        
         // Ajouter le script JavaScript pour le filtrage
         $outilHTML .= '<script>
         document.getElementById("category-filter").addEventListener("change", function() {
-            const selectedCategory = this.value.toLowerCase();
-            const articles = document.querySelectorAll(".article");
+            const selectedCategory = this.value;
+            const url = new URL(window.location.href);
             
-            articles.forEach(article => {
-                const articleCategory = article.getAttribute("data-category").toLowerCase();
-                
-                if (selectedCategory === "" || articleCategory === selectedCategory) {
-                    article.style.display = "";
-                } else {
-                    article.style.display = "none";
-                }
-            });
+            if (selectedCategory) {
+                url.searchParams.set("category", selectedCategory);
+            } else {
+                url.searchParams.delete("category");
+            }
+            url.searchParams.set("page", "1"); // Reset to page 1 when changing category
+            
+            window.location.href = url.toString();
         });
         </script>';
 
