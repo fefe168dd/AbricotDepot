@@ -52,15 +52,9 @@ class HomeAction
                 $categorie = htmlspecialchars($categorieRaw);
             }
 
-            $apiUrlStock = "http://apicot:80/outils/$id/stocks" ;
+            $stock = htmlspecialchars(getMaxQuantite($outil['id']));
 
-            $json = file_get_contents($apiUrlStock) ;
-
-            $stockJson = json_decode($json , true) ;
-
-            $stock  = htmlspecialchars($stockJson['quantity']);
-
-            $outilHTML .= "<div class=\"article\" data-category=\"$categorie\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p><p class='stock'>Stock Disponible : $stock</p></a></div>" ;
+            $outilHTML .= "<div class=\"article\" data-category=\"$categorie\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p><p class='stock'>Stock Disponible Aujourd'hui: $stock</p></a></div>" ;
         }
 
         $outilHTML .= '</div>' ;
@@ -95,4 +89,51 @@ class HomeAction
         $response->getBody()->write($html);
         return $response->withHeader('Content-Type', 'text/html');
     }
+}
+
+function getMaxQuantite(string $outilId): int //Récupère la quantité disponible pour aujourd'hui
+{
+    $today = date('Y-m-d');
+    $reservationUrl = "http://apicot:80/reservations/{$outilId}/{$today}/{$today}";
+    $stockUrl       = "http://apicot:80/outils/{$outilId}/stocks";
+    
+
+    // --- Récupération des réservations ---
+    $ch1 = curl_init($reservationUrl);
+    curl_setopt_array($ch1, [
+        CURLOPT_RETURNTRANSFER => true,
+    ]);
+    $resReservations = curl_exec($ch1);
+    curl_close($ch1);
+
+    $reservations = json_decode($resReservations, true) ?? [];
+
+    // --- Récupération du stock ---
+    $ch2 = curl_init($stockUrl);
+    curl_setopt_array($ch2, [
+        CURLOPT_RETURNTRANSFER => true,
+    ]);
+    $resStock = curl_exec($ch2);
+    curl_close($ch2);
+
+    $stockData = json_decode($resStock, true) ?? [];
+
+    // --- Calcul total réservé ---
+    $totalReserve = 0;
+    if (is_array($reservations)) {
+        if (array_keys($reservations) === range(0, count($reservations) - 1)) {
+            // Tableau de réservations
+            foreach ($reservations as $res) {
+                $totalReserve += $res['quantity'] ?? 0;
+            }
+        } else {
+            // Une seule réservation
+            $totalReserve = $reservations['quantity'] ?? 0;
+        }
+    }
+
+    $stockTotal  = $stockData['quantity'] ?? 0;
+    $maxQuantite = max($stockTotal - $totalReserve, 0);
+
+    return $maxQuantite;
 }
