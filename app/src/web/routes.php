@@ -28,8 +28,8 @@ return function (\Slim\App $app): \Slim\App {
     $app->get('/deconnexion', DeconnexionAction::class);
     $app->get('/profile', GetProfileAction::class);
     $app->post('/{id}/ajouterPanier', AddToPanierAction::class);
-    $app->get('/panier/add/{outil_id}', PanierAddAction::class);
-    $app->get('/panier/remove/{outil_id}', PanierRemoveAction::class);
+    $app->post('/panier/add/{outil_id}/{datedebut}/{datefin}', \abricotdepot\web\actions\AddPanierAction::class);
+    $app->post('/panier/remove/{outil_id}/{datedebut}/{datefin}', \abricotdepot\web\actions\RemovePanierAction::class);
     $app->post('/panier/reserver', \abricotdepot\web\actions\ReserverPanierAction::class);
     $app->get('/{id}', DetailProduitAction::class);
 

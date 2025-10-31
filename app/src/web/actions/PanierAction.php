@@ -49,6 +49,9 @@ class PanierAction
                 $sub = $item['prix'] * $item['quantity'];
                 $total += $sub;
 
+                $datedebut = urlencode($item['datedebut']);
+                $datefin   = urlencode($item['datefin']);
+
                 $itemsHtml .= '<div class="panier-item">';
                 $itemsHtml .= '<img src="' . htmlspecialchars($item['image_url'] ?? '') . '" style="width:80px;height:80px;">';
                 $itemsHtml .= '<div class="info">';
@@ -58,8 +61,8 @@ class PanierAction
                 $itemsHtml .= '<p>Prix unitaire: ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>';
                 $itemsHtml .= '<p>Quantité: ' . intval($item['quantity']) . '</p>';
                 $itemsHtml .= '<div class="actions">';
-                $itemsHtml .= '<a href="/panier/add/' . htmlspecialchars($item['outil_id']) . '" class="btn-add">➕</a>';
-                $itemsHtml .= '<a href="/panier/remove/' . htmlspecialchars($item['outil_id']) . '" class="btn-remove">➖</a>';
+                $itemsHtml .= '<a href="/panier/add/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '" class="btn-add">➕</a>';
+                $itemsHtml .= '<a href="/panier/remove/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '" class="btn-remove">➖</a>';
                 $itemsHtml .= '</div>';
                 $itemsHtml .= '<p>Sous-total: ' . number_format($sub, 2, ',', ' ') . ' €</p>';
                 $itemsHtml .= '</div></div>';
@@ -67,6 +70,11 @@ class PanierAction
         } else {
             $itemsHtml = '<p>Votre panier est vide.</p>';
         }
+
+
+
+
+
 
         $itemsHtml .= '<div class="panier-footer">';
         $itemsHtml .= '<p class="total">Total : ' . number_format($total, 2, ',', ' ') . ' €</p>';
