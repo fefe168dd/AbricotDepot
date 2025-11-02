@@ -22,8 +22,6 @@ API RESTful développée avec PHP/Slim pour la gestion des locations d'outils.
 ```bash
 git clone [URL_DU_REPO]
 cd AbricotDepo
-# Copier le fichier de configuration
-cp app/config/.env.dist app/config/.env
 # Lancer les services
 docker-compose up -d
 ```
