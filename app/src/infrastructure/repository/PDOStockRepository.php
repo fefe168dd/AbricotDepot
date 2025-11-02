@@ -72,16 +72,20 @@ class PDOStockRepository implements StockRepository
     {
         $stmt = $this->pdo->prepare(
             'UPDATE stock 
-             SET quantity = :quantity, 
-                 quantity_reserved = :quantity_reserved 
-             WHERE id = :id'
+            SET quantity = :quantity, 
+                quantity_reserved = :quantity_reserved,
+                available = :available
+            WHERE id = :id'
         );
         $stmt->execute([
             'id' => $stock->getId(),
             'quantity' => $stock->getQuantity(),
-            'quantity_reserved' => $stock->getQuantityReserved()
+            'quantity_reserved' => $stock->getQuantityReserved(),
+            'available' => $stock->getAvailable()
         ]);
     }
+
+
 
     public function createStockReservation(
         string $stockId,
@@ -238,3 +242,5 @@ class PDOStockRepository implements StockRepository
         }
     }
 }
+
+?>

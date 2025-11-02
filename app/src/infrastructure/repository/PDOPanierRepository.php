@@ -68,79 +68,90 @@ class PDOPanierRepository implements PanierRepository
      * Ajoute un article dans le panier d’un utilisateur (ou augmente la quantité)
      */
     public function addItem(string $userId, string $outilId, int $quantity, ?string $datedebut = null, ?string $datefin = null): void
-    {
-        $datedebut = $datedebut ?? date('Y-m-d 00:00:00');
-        $datefin   = $datefin ?? date('Y-m-d 23:59:59');
+{
+    // Si aucune date fournie, on met des valeurs par défaut
+    $datedebut = $datedebut ?? date('Y-m-d 00:00:00');
+    $datefin   = $datefin   ?? date('Y-m-d 23:59:59');
 
-        // Vérifie si l’article existe déjà dans le panier
-        $select = $this->pdoPanier->prepare('
-            SELECT id, quantity 
-            FROM panier 
-            WHERE user_id = :user_id 
-              AND outil_id = :outil_id 
-              AND datedebut = :datedebut 
-              AND datefin = :datefin 
-            LIMIT 1
+    // Vérifie si l’article existe déjà avec ces mêmes dates
+    $select = $this->pdoPanier->prepare('
+        SELECT id, quantity 
+        FROM panier 
+        WHERE user_id = :user_id 
+          AND outil_id = :outil_id 
+          AND datedebut = :datedebut 
+          AND datefin = :datefin 
+        LIMIT 1
+    ');
+
+    $select->execute([
+        ':user_id'   => $userId,
+        ':outil_id'  => $outilId,
+        ':datedebut' => $datedebut,
+        ':datefin'   => $datefin,
+    ]);
+
+    $row = $select->fetch();
+
+    if ($row) {
+        // Met à jour la quantité existante
+        $newQty = (int)$row['quantity'] + $quantity;
+        $upd = $this->pdoPanier->prepare('UPDATE panier SET quantity = :quantity WHERE id = :id');
+        $upd->execute([':quantity' => $newQty, ':id' => $row['id']]);
+    } else {
+        // Ajoute une nouvelle ligne
+        $id = Uuid::uuid4()->toString();
+        $ins = $this->pdoPanier->prepare('
+            INSERT INTO panier (id, user_id, outil_id, quantity, datedebut, datefin)
+            VALUES (:id, :user_id, :outil_id, :quantity, :datedebut, :datefin)
         ');
-        $select->execute([
-            ':user_id'   => $userId,
-            ':outil_id'  => $outilId,
-            ':datedebut' => $datedebut,
-            ':datefin'   => $datefin,
+        $ins->execute([
+            ':id'         => $id,
+            ':user_id'    => $userId,
+            ':outil_id'   => $outilId,
+            ':quantity'   => $quantity,
+            ':datedebut'  => $datedebut,
+            ':datefin'    => $datefin,
         ]);
-
-        $row = $select->fetch();
-
-        if ($row) {
-            // Met à jour la quantité existante
-            $newQty = (int)$row['quantity'] + $quantity;
-            $upd = $this->pdoPanier->prepare('UPDATE panier SET quantity = :quantity WHERE id = :id');
-            $upd->execute([':quantity' => $newQty, ':id' => $row['id']]);
-        } else {
-            // Ajoute une nouvelle ligne dans le panier
-            $id = Uuid::uuid4()->toString();
-            $ins = $this->pdoPanier->prepare('
-                INSERT INTO panier (id, user_id, outil_id, quantity, datedebut, datefin)
-                VALUES (:id, :user_id, :outil_id, :quantity, :datedebut, :datefin)
-            ');
-            $ins->execute([
-                ':id'         => $id,
-                ':user_id'    => $userId,
-                ':outil_id'   => $outilId,
-                ':quantity'   => $quantity,
-                ':datedebut'  => $datedebut,
-                ':datefin'    => $datefin,
-            ]);
-        }
     }
+}
+
 
     /**
      * Retire un article (ou diminue la quantité) du panier
      */
-    public function removeItem(string $userId, string $outilId): void
-    {
-        $select = $this->pdoPanier->prepare('
-            SELECT id, quantity 
-            FROM panier 
-            WHERE user_id = :user_id 
-              AND outil_id = :outil_id 
-            LIMIT 1
-        ');
-        $select->execute([':user_id' => $userId, ':outil_id' => $outilId]);
-        $row = $select->fetch();
+    public function removeItem(string $userId, string $outilId, string $datedebut, string $datefin): void
+        {
+            $select = $this->pdoPanier->prepare('
+                SELECT id, quantity 
+                FROM panier 
+                WHERE user_id = :user_id 
+                AND outil_id = :outil_id
+                AND datedebut = :datedebut
+                AND datefin = :datefin
+                LIMIT 1
+            ');
+            $select->execute([
+                ':user_id'   => $userId,
+                ':outil_id'  => $outilId,
+                ':datedebut' => $datedebut,
+                ':datefin'   => $datefin
+            ]);
 
-        if (!$row) {
-            return; // Aucun article à retirer
+            $row = $select->fetch();
+
+            if (!$row) return;
+
+            if ($row['quantity'] > 1) {
+                $upd = $this->pdoPanier->prepare('UPDATE panier SET quantity = quantity - 1 WHERE id = :id');
+                $upd->execute([':id' => $row['id']]);
+            } else {
+                $del = $this->pdoPanier->prepare('DELETE FROM panier WHERE id = :id');
+                $del->execute([':id' => $row['id']]);
+            }
         }
 
-        if ($row['quantity'] > 1) {
-            $upd = $this->pdoPanier->prepare('UPDATE panier SET quantity = quantity - 1 WHERE id = :id');
-            $upd->execute([':id' => $row['id']]);
-        } else {
-            $del = $this->pdoPanier->prepare('DELETE FROM panier WHERE id = :id');
-            $del->execute([':id' => $row['id']]);
-        }
-    }
+
 
     /**
      * Récupère un panier complet par son ID (rarement utilisé directement)
@@ -260,3 +271,5 @@ public function clearPanier(string $userId): void
 }
 
 }
+
+?>

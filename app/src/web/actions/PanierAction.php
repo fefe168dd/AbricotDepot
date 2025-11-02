@@ -1,4 +1,5 @@
 <?php
+
 namespace abricotdepot\web\actions;
 
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
@@ -17,30 +18,22 @@ class PanierAction
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $cookies = $request->getCookieParams();
-
-        // Vérifie la présence du token et du user_id
         $token = $cookies['access_token'] ?? null;
         $userId = $cookies['user_id'] ?? null;
 
+        // Si l’utilisateur n’est pas connecté
         if (!$token || !$userId) {
-            // L'utilisateur n'est pas connecté → message d’erreur
-            $response->getBody()->write('<a href="/connexion">Vous devez vous connecter pour accéder à votre panier.</a>');
+            $file = __DIR__ . '/../../../public/html/index.html';
+            $html = file_exists($file) ? file_get_contents($file) : '<h1>Erreur : template introuvable</h1>';
+            $menu = (new GenerateMenuClasse())->generateMenu();
+            $message = '<p><a href="/connexion">Vous devez vous connecter pour accéder à votre panier.</a></p>';
+            $html = str_replace(['{{Menu}}', '{{Liste Outil}}'], [$menu, $message], $html);
+            $response->getBody()->write($html);
             return $response->withHeader('Content-Type', 'text/html')->withStatus(401);
         }
 
-        // Récupère les articles du panier de l’utilisateur connecté
+        // Récupération du panier
         $panier = $this->panierRepository->getPanierItemsByUserId($userId);
-
-        // Vérifie que le template HTML existe
-        $file = __DIR__ . '/../../../public/html/panier.html';
-        if (!file_exists($file)) {
-            $response->getBody()->write('Template panier introuvable');
-            return $response->withStatus(500);
-        }
-
-        $html = file_get_contents($file);
-
-        // Construction de la section des items
         $itemsHtml = '';
         $total = 0.0;
 
@@ -49,40 +42,74 @@ class PanierAction
                 $sub = $item['prix'] * $item['quantity'];
                 $total += $sub;
 
-                $itemsHtml .= '<div class="panier-item">';
-                $itemsHtml .= '<img src="' . htmlspecialchars($item['image_url'] ?? '') . '" style="width:80px;height:80px;">';
-                $itemsHtml .= '<div class="info">';
-                $itemsHtml .= '<h3>' . htmlspecialchars($item['name']) . '</h3>';
-                $itemsHtml .= '<p>' . htmlspecialchars($item['description']) . '</p>';
-                $itemsHtml .= '<p>Du: ' . htmlspecialchars($item['datedebut']) . ' au ' . htmlspecialchars($item['datefin']) . '</p>';
-                $itemsHtml .= '<p>Prix unitaire: ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>';
-                $itemsHtml .= '<p>Quantité: ' . intval($item['quantity']) . '</p>';
-                $itemsHtml .= '<div class="actions">';
-                $itemsHtml .= '<a href="/panier/add/' . htmlspecialchars($item['outil_id']) . '" class="btn-add">➕</a>';
-                $itemsHtml .= '<a href="/panier/remove/' . htmlspecialchars($item['outil_id']) . '" class="btn-remove">➖</a>';
-                $itemsHtml .= '</div>';
-                $itemsHtml .= '<p>Sous-total: ' . number_format($sub, 2, ',', ' ') . ' €</p>';
-                $itemsHtml .= '</div></div>';
+                $datedebut = urlencode($item['datedebut']);
+                $datefin   = urlencode($item['datefin']);
+
+                $itemsHtml .= '
+    <div class="panier-item">
+        <img src="' . htmlspecialchars($item['image_url'] ?? '') . '" 
+             alt="Image de ' . htmlspecialchars($item['name']) . '" 
+             style="width:80px;height:80px;">
+        <div class="info">
+            <h3>' . htmlspecialchars($item['name']) . '</h3>
+            <p>' . htmlspecialchars($item['description']) . '</p>
+            <p>Du : ' . htmlspecialchars($item['datedebut']) . ' au ' . htmlspecialchars($item['datefin']) . '</p>
+            <p>Prix unitaire : ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>
+            <p>Quantité : ' . intval($item['quantity']) . '</p>
+
+            <div class="actions" style="display:flex;gap:5px;align-items:center;">
+                <!-- Bouton Ajouter -->
+                <form method="POST" 
+                      action="/panier/add/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '" 
+                      style="display:inline;">
+                    <button type="submit" class="btn-add" style="background:none;border:none;cursor:pointer;font-size:1.2em;">➕</button>
+                </form>
+
+                <!-- Bouton Retirer -->
+                <form method="POST" 
+                      action="/panier/remove/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '" 
+                      style="display:inline;">
+                    <button type="submit" class="btn-remove" style="background:none;border:none;cursor:pointer;font-size:1.2em;">➖</button>
+                </form>
+            </div>
+
+            <p>Sous-total : ' . number_format($sub, 2, ',', ' ') . ' €</p>
+        </div>
+    </div>';
             }
+
+            $itemsHtml .= '
+                <div class="panier-footer">
+                    <p class="total">Total : ' . number_format($total, 2, ',', ' ') . ' €</p>
+                    <form method="POST" action="/panier/reserver">
+                        <button type="submit" class="btn-reserver">Réserver</button>
+                    </form>
+                </div>';
         } else {
             $itemsHtml = '<p>Votre panier est vide.</p>';
         }
 
-        $itemsHtml .= '<div class="panier-footer">';
-        $itemsHtml .= '<p class="total">Total : ' . number_format($total, 2, ',', ' ') . ' €</p>';
-        $itemsHtml .= '<div class="actions">';
-        $itemsHtml .= '<form method="POST" action="/panier/reserver">';
-        $itemsHtml .= '<button type="submit" class="btn-reserver">Réserver</button>';
-        $itemsHtml .= '</form>';
-        $itemsHtml .= '</div>';
-        $itemsHtml .= '</div>';
+        // Injection dans le template principal (index.html)
+        $file = __DIR__ . '/../../../public/html/accueil.html';
+        if (!file_exists($file)) {
+            $response->getBody()->write('Erreur : template index introuvable');
+            return $response->withStatus(500);
+        }
 
-        // Remplace les placeholders dans le template
-        $html = str_replace('{{panier_items}}', $itemsHtml, $html);
-        $html = str_replace('{{panier_total}}', number_format($total, 2, ',', ' '), $html);
+        $html = file_get_contents($file);
+        $menu = (new GenerateMenuClasse())->generateMenu();
 
-        // Écrit la réponse finale
+        // Insertion du contenu
+        $html = str_replace('{{Menu}}', $menu, $html);
+        $html = str_replace('{{Liste Outil}}', '
+            <main class="panier">
+                <h2>Votre panier</h2>
+                ' . $itemsHtml . '
+            </main>
+        ', $html);
+
         $response->getBody()->write($html);
         return $response->withHeader('Content-Type', 'text/html');
     }
 }
+?>
