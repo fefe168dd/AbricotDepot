@@ -2,6 +2,7 @@
 
 namespace abricotdepot\web\actions;
 
+use abricotdepot\web\helpers\TokenHelper;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -11,8 +12,6 @@ class DetailProduitAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $token = $_SESSION['accessToken'] ?? null;
-
         $outilId = $args['id'] ?? null;
 
         if (!$outilId) {
@@ -56,11 +55,11 @@ class DetailProduitAction
 
         // Génération du sélecteur de quantité basé sur le stock disponible
         $stock = $stock ?? 0;
-        $token = $_COOKIE['access_token'] ?? null;
+        
+        // Vérifier l'authentification et rafraîchir le token si nécessaire
+        $isAuthenticated = TokenHelper::ensureAuthenticated($request);
 
-
-
-        if (!$token) {
+        if (!$isAuthenticated) {
             // Pas de token → utilisateur non connecté
             $quantiteSelect = '<a href="/connexion">Vous devez vous connecter pour réserver cet outil</a>';
         } else {

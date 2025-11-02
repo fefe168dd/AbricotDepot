@@ -3,6 +3,7 @@ namespace abricotdepot\web\actions;
 
 use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepository;
 use abricotdepot\core\application\ports\spi\repositoryInterface\OutilRepository;
+use abricotdepot\web\helpers\TokenHelper;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -19,13 +20,11 @@ class GetProfileAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        // Récupérer l'utilisateur connecté depuis les cookies
-        $cookies = $request->getCookieParams();
-        $userId = $cookies['user_id'] ?? null;
-        $accessToken = $cookies['access_token'] ?? null;
+        // Vérifier l'authentification et rafraîchir le token si nécessaire
+        $userId = TokenHelper::getUserId($request);
 
         // Vérifier si l'utilisateur est connecté
-        if (!$userId || !$accessToken) {
+        if (!$userId) {
             return $response
                 ->withHeader('Location', '/connexion')
                 ->withStatus(302);

@@ -1,8 +1,8 @@
 <?php
-
 namespace abricotdepot\web\actions;
 
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
+use abricotdepot\web\helpers\TokenHelper;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -17,12 +17,11 @@ class PanierAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $cookies = $request->getCookieParams();
-        $token = $cookies['access_token'] ?? null;
-        $userId = $cookies['user_id'] ?? null;
+        // Vérifier l'authentification et rafraîchir le token si nécessaire
+        $userId = TokenHelper::getUserId($request);
 
-        // Si l’utilisateur n’est pas connecté
-        if (!$token || !$userId) {
+        // Si l'utilisateur n'est pas connecté
+        if (!$userId) {
             $file = __DIR__ . '/../../../public/html/index.html';
             $html = file_exists($file) ? file_get_contents($file) : '<h1>Erreur : template introuvable</h1>';
             $menu = (new GenerateMenuClasse())->generateMenu();

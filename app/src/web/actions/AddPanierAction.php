@@ -3,6 +3,7 @@ namespace abricotdepot\web\actions;
 
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
 use abricotdepot\core\application\ports\spi\repositoryInterface\StockRepository;
+use abricotdepot\web\helpers\TokenHelper;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -19,8 +20,8 @@ class AddPanierAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $cookies = $request->getCookieParams();
-        $userId = $cookies['user_id'] ?? null;
+        // Vérifier l'authentification et rafraîchir le token si nécessaire
+        $userId = TokenHelper::getUserId($request);
         $outilId = $args['outil_id'] ?? null;
         $datedebut = $args['datedebut'] ?? null;
         $datefin = $args['datefin'] ?? null;

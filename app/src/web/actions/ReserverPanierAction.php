@@ -3,6 +3,7 @@ namespace abricotdepot\web\actions;
 
 use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
 use abricotdepot\core\application\ports\spi\repositoryInterface\ReservationRepository;
+use abricotdepot\web\helpers\TokenHelper;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -19,7 +20,9 @@ class ReserverPanierAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $userId = $_COOKIE['user_id'] ?? null;
+        // Vérifier l'authentification et rafraîchir le token si nécessaire
+        $userId = TokenHelper::getUserId($request);
+        
         if (!$userId) {
             $response->getBody()->write('Vous devez être connecté pour réserver.');
             return $response->withStatus(403);
