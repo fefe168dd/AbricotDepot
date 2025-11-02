@@ -1,0 +1,64 @@
+@startuml
+class Users {
+    +UUID id
+    +String username
+    +String password_hash
+    +String email
+}
+
+class Outil {
+    +UUID id
+    +String name
+    +String description
+    +Decimal prix
+    +String image_url
+}
+
+class Categorie {
+    +int idcat
+    +String name
+}
+
+class Outil_Categorie {
+    +UUID outil_id
+    +int categorie_id
+}
+
+class Panier {
+    +UUID id
+    +UUID user_id
+    +UUID outil_id
+    +int quantity
+    +Timestamp datedebut
+    +Timestamp datefin
+}
+
+class Reservations {
+    +UUID id
+    +UUID user_id
+    +UUID outil_id
+    +int quantity
+    +Timestamp start_date
+    +Timestamp end_date
+    +int status
+}
+
+class Stock {
+    +UUID id
+    +UUID outil_id
+    +int quantity
+    +int quantity_reserved
+    +int available
+}
+
+Users "1" --> "0..*" Panier : possède >
+Users "1" --> "0..*" Reservations : fait >
+
+Outil "1" --> "0..*" Panier : contient >
+Outil "1" --> "0..*" Reservations : réservé >
+Outil "1" --> "1" Stock : géré par >
+
+Outil "0..*" --> "0..*" Categorie : appartient à
+Categorie "0..*" --> "0..*" Outil : contient
+
+@enduml
