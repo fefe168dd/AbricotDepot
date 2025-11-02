@@ -31,10 +31,9 @@ return function (\Slim\App $app): \Slim\App {
     $app->post('/panier/add/{outil_id}/{datedebut}/{datefin}', \abricotdepot\web\actions\AddPanierAction::class);
     $app->post('/panier/remove/{outil_id}/{datedebut}/{datefin}', \abricotdepot\web\actions\RemovePanierAction::class);
     $app->post('/panier/reserver', \abricotdepot\web\actions\ReserverPanierAction::class);
+    $app->post('/panier/delete/{outil_id}', \abricotdepot\web\actions\DeleteOutilPanierAction::class);
     $app->get('/{id}', DetailProduitAction::class);
-
-
-
+    
 
     return $app;
 };

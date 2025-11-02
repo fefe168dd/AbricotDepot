@@ -270,6 +270,19 @@ public function clearPanier(string $userId): void
     $stmt->execute([':user_id' => $userId]);
 }
 
+
+public function deleteItem(string $userId, string $outilId): void
+{
+    $sql = "DELETE FROM panier WHERE user_id = :user_id AND outil_id = :outil_id";
+    $stmt = $this->pdoPanier->prepare($sql);
+    $stmt->execute([
+        ':user_id' => $userId,
+        ':outil_id' => $outilId
+    ]);
 }
+
+
+}
+
 
 ?>
