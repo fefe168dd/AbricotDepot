@@ -1,0 +1,138 @@
+.profile-page body {
+  font-family: Arial, sans-serif;
+  background-color: white;
+  padding: 20px;
+}
+.profile-page .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #F1D5BB;
+  padding: 30px;
+  border-radius: 1em;
+  border: 2px black solid;
+}
+.profile-page h1 {
+  color: black;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.profile-page .user-info {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid grey;
+}
+.profile-page .user-info p {
+  color: #333;
+  margin-top: 5px;
+  text-align: center;
+}
+.profile-page h2 {
+  color: black;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.profile-page .reservations-list {
+  display: grid;
+  gap: 20px;
+}
+.profile-page .reservation-item {
+  border: 2px black solid;
+  border-radius: 1em;
+  padding: 20px;
+  background: white;
+  transition: all 0.3s ease;
+}
+.profile-page .reservation-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+.profile-page .reservation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.profile-page .reservation-header h3 {
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+}
+.profile-page .status-badge {
+  padding: 5px 15px;
+  border-radius: 1em;
+  font-size: 14px;
+  font-weight: bold;
+}
+.profile-page .status-badge.status-pending {
+  background-color: #FFE4B5;
+  color: black;
+  border: 2px solid #DAA520;
+}
+.profile-page .status-badge.status-confirmed {
+  background-color: #B8D4E8;
+  color: black;
+  border: 2px solid #4682B4;
+}
+.profile-page .status-badge.status-active {
+  background-color: #98D98E;
+  color: black;
+  border: 2px solid #228B22;
+}
+.profile-page .status-badge.status-completed {
+  background-color: #D3D3D3;
+  color: black;
+  border: 2px solid grey;
+}
+.profile-page .status-badge.status-cancelled {
+  background-color: #FFB6C1;
+  color: black;
+  border: 2px solid #DC143C;
+}
+.profile-page .reservation-details p {
+  margin: 8px 0;
+  color: #333;
+}
+.profile-page .reservation-details p strong {
+  color: black;
+  font-weight: bold;
+}
+.profile-page .no-reservations {
+  text-align: center;
+  padding: 40px;
+  color: grey;
+  font-size: 16px;
+  font-style: italic;
+}
+.profile-page .back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5em 1em;
+  border: 2px black solid;
+  border-radius: 1em;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+.profile-page .back-link:hover {
+  background-color: black;
+  color: white;
+}
+.profile-page .logout-link {
+  float: right;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5em 1em;
+  border: 2px #DC143C solid;
+  border-radius: 1em;
+  background-color: #FFB6C1;
+  transition: all 0.3s ease;
+}
+.profile-page .logout-link:hover {
+  background-color: #DC143C;
+  color: white;
+}
+
+/*# sourceMappingURL=Profile.css.map */

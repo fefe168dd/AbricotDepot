@@ -1,0 +1,198 @@
+// Variables de couleurs pour cohérence avec le thème
+$background-primary: white;
+$background-card: #F1D5BB;
+$background-item: white;
+
+$text-primary: black;
+$text-secondary: #333;
+$text-muted: #666;
+$text-light: grey;
+
+$border-color: grey;
+$border-primary: black;
+
+// Couleurs des statuts - harmonisées avec le thème
+$status-pending-bg: #FFE4B5;
+$status-pending-text: black;
+$status-pending-border: #DAA520;
+
+$status-confirmed-bg: #B8D4E8;
+$status-confirmed-text: black;
+$status-confirmed-border: #4682B4;
+
+$status-active-bg: #98D98E;
+$status-active-text: black;
+$status-active-border: #228B22;
+
+$status-completed-bg: #D3D3D3;
+$status-completed-text: black;
+$status-completed-border: grey;
+
+$status-cancelled-bg: #FFB6C1;
+$status-cancelled-text: black;
+$status-cancelled-border: #DC143C;
+
+// Styles de la page profil
+.profile-page {
+  body {
+    font-family: Arial, sans-serif;
+    background-color: $background-primary;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: $background-card;
+    padding: 30px;
+    border-radius: 1em;
+    border: 2px $border-primary solid;
+  }
+
+  h1 {
+    color: $text-primary;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .user-info {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid $border-color;
+
+    p {
+      color: $text-secondary;
+      margin-top: 5px;
+      text-align: center;
+    }
+  }
+
+  h2 {
+    color: $text-primary;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .reservations-list {
+    display: grid;
+    gap: 20px;
+  }
+
+  .reservation-item {
+    border: 2px $border-primary solid;
+    border-radius: 1em;
+    padding: 20px;
+    background: $background-item;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+  }
+
+  .reservation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    h3 {
+      color: $text-primary;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  .status-badge {
+    padding: 5px 15px;
+    border-radius: 1em;
+    font-size: 14px;
+    font-weight: bold;
+
+    &.status-pending {
+      background-color: $status-pending-bg;
+      color: $status-pending-text;
+      border: 2px solid $status-pending-border;
+    }
+
+    &.status-confirmed {
+      background-color: $status-confirmed-bg;
+      color: $status-confirmed-text;
+      border: 2px solid $status-confirmed-border;
+    }
+
+    &.status-active {
+      background-color: $status-active-bg;
+      color: $status-active-text;
+      border: 2px solid $status-active-border;
+    }
+
+    &.status-completed {
+      background-color: $status-completed-bg;
+      color: $status-completed-text;
+      border: 2px solid $status-completed-border;
+    }
+
+    &.status-cancelled {
+      background-color: $status-cancelled-bg;
+      color: $status-cancelled-text;
+      border: 2px solid $status-cancelled-border;
+    }
+  }
+
+  .reservation-details {
+    p {
+      margin: 8px 0;
+      color: $text-secondary;
+
+      strong {
+        color: $text-primary;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .no-reservations {
+    text-align: center;
+    padding: 40px;
+    color: $text-light;
+    font-size: 16px;
+    font-style: italic;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: $text-primary;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5em 1em;
+    border: 2px $border-primary solid;
+    border-radius: 1em;
+    background-color: white;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: black;
+      color: white;
+    }
+  }
+
+  .logout-link {
+    float: right;
+    color: $text-primary;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5em 1em;
+    border: 2px $status-cancelled-border solid;
+    border-radius: 1em;
+    background-color: $status-cancelled-bg;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: $status-cancelled-border;
+      color: white;
+    }
+  }
+}
