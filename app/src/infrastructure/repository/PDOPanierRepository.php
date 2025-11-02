@@ -271,3 +271,5 @@ public function clearPanier(string $userId): void
 }
 
 }
+
+?>

@@ -38,3 +38,5 @@ return function (\Slim\App $app): \Slim\App {
 
     return $app;
 };
+
+?>

@@ -112,3 +112,4 @@ class PanierAction
         return $response->withHeader('Content-Type', 'text/html');
     }
 }
+?>

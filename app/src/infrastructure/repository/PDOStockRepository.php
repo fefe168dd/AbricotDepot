@@ -242,3 +242,5 @@ class PDOStockRepository implements StockRepository
         }
     }
 }
+
+?>

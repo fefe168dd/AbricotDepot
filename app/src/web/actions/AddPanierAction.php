@@ -62,3 +62,5 @@ class AddPanierAction
         return $response->withHeader('Location', '/panier')->withStatus(302);
     }
 }
+
+?>

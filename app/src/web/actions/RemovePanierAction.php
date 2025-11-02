@@ -37,3 +37,4 @@ class RemovePanierAction
         return $response->withHeader('Location', '/panier')->withStatus(302);
     }
 }
+?>
