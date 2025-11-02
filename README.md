@@ -6,6 +6,12 @@ API RESTful développée avec PHP/Slim pour la gestion des locations d'outils.
 
 [https://github.com/fefe168dd/AbricotDepot]
 
+## Lien vers les maquettes FIGMA
+
+[https://www.figma.com/design/P8keJtN8ZSxD5xoi2tyyQG/AbricotD%C3%A9po?node-id=0-1&t=nYe7mkZAVSljAuu6-1]
+
+
+
 ## 🚀 Installation et Lancement
 
 ### Prérequis
