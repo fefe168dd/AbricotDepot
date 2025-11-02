@@ -99,7 +99,7 @@ Le JWT Secret est configuré dans `app/config/.env`.
 | Authentification JWT, Middlewares | **Félicien, Léo** |
 | API RESTful, Validation des données, HATEOAS, Docker | **Félicien, Léo, Doryann, Ryad** |
 | Structure de base de données | **Félicien, Léo** | 
-| Catalogue des outils |**Doryann, Léo**
+| Catalogue des outils |**Doryann, Léo**|
 | Détail d'un outil | **Léo** |
 | Ajouter outil dans panier | **Léo** |
 | Panier | **Ryad** |

@@ -1,0 +1,37 @@
+<?php
+namespace abricotdepot\web\actions;
+
+use abricotdepot\core\application\ports\spi\repositoryInterface\PanierRepository;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+
+class DeleteOutilPanierAction
+{
+    private PanierRepository $panierRepository;
+
+    public function __construct(PanierRepository $panierRepository)
+    {
+        $this->panierRepository = $panierRepository;
+    }
+
+    public function __invoke(Request $request, Response $response, array $args): Response
+    {
+        $cookies = $request->getCookieParams();
+        $userId = $cookies['user_id'] ?? null;
+        $outilId = $args['outil_id'] ?? null;
+
+        if (!$userId || !$outilId) {
+            return $response
+                ->withHeader('Location', '/connexion')
+                ->withStatus(302);
+        }
+
+        // Supprime complètement l’outil du panier
+        $this->panierRepository->deleteItem($userId, $outilId);
+
+        // Redirection vers le panier
+        return $response
+            ->withHeader('Location', '/panier')
+            ->withStatus(302);
+    }
+}

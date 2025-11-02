@@ -45,48 +45,43 @@ class PanierAction
                 $datefin   = urlencode($item['datefin']);
 
                 $itemsHtml .= '
-    <div class="panier-item">
-        <img src="' . htmlspecialchars($item['image_url'] ?? '') . '" 
-             alt="Image de ' . htmlspecialchars($item['name']) . '" 
-             style="width:80px;height:80px;">
-        <div class="info">
-            <h3>' . htmlspecialchars($item['name']) . '</h3>
-            <p>' . htmlspecialchars($item['description']) . '</p>
-            <p>Du : ' . htmlspecialchars($item['datedebut']) . ' au ' . htmlspecialchars($item['datefin']) . '</p>
-            <p>Prix unitaire : ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>
-            <p>Quantité : ' . intval($item['quantity']) . '</p>
+                <div class="panier-item">
+                    <img src="' . htmlspecialchars($item['image_url'] ?? '') . '" 
+                        alt="Image de ' . htmlspecialchars($item['name']) . '" 
+                        style="width:80px;height:80px;">
+                    <div class="info">
+                        <h3>' . htmlspecialchars($item['name']) . '</h3>
+                        <p>' . htmlspecialchars($item['description']) . '</p>
+                        <p>Du : ' . htmlspecialchars($item['datedebut']) . ' au ' . htmlspecialchars($item['datefin']) . '</p>
+                        <p>Prix unitaire : ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>
+                        <p>Quantité : ' . intval($item['quantity']) . '</p>
 
-            <div class="actions" style="display:flex;gap:5px;align-items:center;">
-                <!-- Bouton Ajouter -->
-                <form method="POST" 
-                      action="/panier/add/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '" 
-                      style="display:inline;">
-                    <button type="submit" class="btn-add" style="background:none;border:none;cursor:pointer;font-size:1.2em;">➕</button>
-                </form>
+                        <div class="actions" style="display:flex;gap:10px;align-items:center;">
+                            <!-- Ajouter -->
+                            <form method="POST" action="/panier/add/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '">
+                                <button type="submit" class="btn-add" style="background:none;border:none;cursor:pointer;font-size:1.2em;">➕</button>
+                            </form>
 
-                <!-- Bouton Retirer -->
-                <form method="POST" 
-                      action="/panier/remove/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '" 
-                      style="display:inline;">
-                    <button type="submit" class="btn-remove" style="background:none;border:none;cursor:pointer;font-size:1.2em;">➖</button>
-                </form>
-            </div>
+                            <!-- Retirer -->
+                            <form method="POST" action="/panier/remove/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '">
+                                <button type="submit" class="btn-remove" style="background:none;border:none;cursor:pointer;font-size:1.2em;">➖</button>
+                            </form>
 
-            <p>Sous-total : ' . number_format($sub, 2, ',', ' ') . ' €</p>
-        </div>
-    </div>';
-            }
+                            <!-- Supprimer complètement cet outil -->
+                            <form method="POST" action="/panier/delete/' . htmlspecialchars($item['outil_id']) . '" 
+                                onsubmit="return confirm(\'Supprimer cet article du panier ?\');">
+                                <button type="submit" class="btn-delete" 
+                                        style="background:none;border:none;color:red;cursor:pointer;font-size:1.2em;">🗑️</button>
+                            </form>
+                        </div>
 
-            $itemsHtml .= '
-                <div class="panier-footer">
-                    <p class="total">Total : ' . number_format($total, 2, ',', ' ') . ' €</p>
-                    <form method="POST" action="/panier/reserver">
-                        <button type="submit" class="btn-reserver">Réserver</button>
-                    </form>
+                        <p>Sous-total : ' . number_format($sub, 2, ',', ' ') . ' €</p>
+                    </div>
                 </div>';
-        } else {
-            $itemsHtml = '<p>Votre panier est vide.</p>';
+            }
         }
+
+
 
         // Injection dans le template principal (index.html)
         $file = __DIR__ . '/../../../public/html/accueil.html';
