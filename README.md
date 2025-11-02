@@ -30,7 +30,6 @@ curl http://localhost:11000/
 ## 🧪 Tests
 
 ### Comptes de Test
-**Patients (role=1):**
 - Email: `Denis.Teixeira@hotmail.fr` / Mot de passe: `Denis.Teixeira`
 - Email: `Bertrand.Caron@yahoo.fr` / Mot de passe: `Bertrand.Caron`
 
