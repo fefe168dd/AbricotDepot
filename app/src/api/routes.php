@@ -22,7 +22,6 @@ return function(\Slim\App $app): \Slim\App {
     $app->post('/auth/logout', \abricotdepot\api\actions\LogoutAction::class);
     $app->post('/panier/ajoutProduit', \abricotdepot\api\actions\AddToPanierAction::class)
         ->add(\abricotdepot\api\middlewares\AuthnMiddleware::class);
-    $app->get('/maxDispo/{id}/{date_debut}/{date_fin}', \abricotdepot\api\actions\GetMaxQuantiteOutilByDate::class);
 
     return $app;
 };
