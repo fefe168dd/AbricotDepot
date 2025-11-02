@@ -69,7 +69,7 @@ class HomeAction
             $url = htmlspecialchars($outil['imageUrl']);
             $nom = htmlspecialchars($outil['nom']);
             $prix = htmlspecialchars($outil['prix']);
-            
+
             // Gérer le cas où categorie est un tableau ou une chaîne
             $categorieRaw = $outil['categorie'] ?? '';
             if (is_array($categorieRaw)) {
@@ -78,34 +78,39 @@ class HomeAction
                 $categorie = htmlspecialchars($categorieRaw);
             }
 
-            $stock = htmlspecialchars(getMaxQuantite($outil['id']));
+            $today = date('Y-m-d');
 
-            $outilHTML .= "<div class=\"article\" data-category=\"$categorie\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p><p class='stock'>Stock Disponible Aujourd'hui: $stock</p></a></div>" ;
+            $apiUrl = "http://apicot:80/maxDispo/$id/$today/$today";
+
+            $json = file_get_contents($apiUrl);
+            $stock = (int) $json;;
+
+            $outilHTML .= "<div class=\"article\" data-category=\"$categorie\"><a href=\"/$id\"><img src=\"$url\" alt=\"\"><p class='nom'>$nom</p><p class='prix'>$prix €</p><p class='stock'>Stock Disponible Aujourd'hui: $stock</p></a></div>";
         }
 
-        $outilHTML .= '</div>' ;
-        
+        $outilHTML .= '</div>';
+
         // Ajouter la pagination
         if ($totalPages > 1) {
             $categoryParam = !empty($selectedCategory) ? '&category=' . urlencode($selectedCategory) : '';
             $outilHTML .= '<div class="pagination">';
             $outilHTML .= '<p>Page ' . $page . ' sur ' . $totalPages . ' (' . $totalItems . ' outils au total)</p>';
             $outilHTML .= '<div class="nav-buttons">';
-            
+
             // Bouton Précédent
             if ($page > 1) {
                 $outilHTML .= '<a href="/?page=' . ($page - 1) . $categoryParam . '" class="btn-nav">« Précédent</a>';
             }
-            
+
             // Bouton Suivant
             if ($page < $totalPages) {
                 $outilHTML .= '<a href="/?page=' . ($page + 1) . $categoryParam . '" class="btn-nav">Suivant »</a>';
             }
-            
+
             $outilHTML .= '</div>'; // Fermeture nav-buttons
             $outilHTML .= '</div>'; // Fermeture pagination
         }
-        
+
         // Ajouter le script JavaScript pour le filtrage
         $outilHTML .= '<script>
         document.getElementById("category-filter").addEventListener("change", function() {
@@ -135,51 +140,4 @@ class HomeAction
         $response->getBody()->write($html);
         return $response->withHeader('Content-Type', 'text/html');
     }
-}
-
-function getMaxQuantite(string $outilId): int //Récupère la quantité disponible pour aujourd'hui
-{
-    $today = date('Y-m-d');
-    $reservationUrl = "http://apicot:80/reservations/{$outilId}/{$today}/{$today}";
-    $stockUrl       = "http://apicot:80/outils/{$outilId}/stocks";
-    
-
-    // --- Récupération des réservations ---
-    $ch1 = curl_init($reservationUrl);
-    curl_setopt_array($ch1, [
-        CURLOPT_RETURNTRANSFER => true,
-    ]);
-    $resReservations = curl_exec($ch1);
-    curl_close($ch1);
-
-    $reservations = json_decode($resReservations, true) ?? [];
-
-    // --- Récupération du stock ---
-    $ch2 = curl_init($stockUrl);
-    curl_setopt_array($ch2, [
-        CURLOPT_RETURNTRANSFER => true,
-    ]);
-    $resStock = curl_exec($ch2);
-    curl_close($ch2);
-
-    $stockData = json_decode($resStock, true) ?? [];
-
-    // --- Calcul total réservé ---
-    $totalReserve = 0;
-    if (is_array($reservations)) {
-        if (array_keys($reservations) === range(0, count($reservations) - 1)) {
-            // Tableau de réservations
-            foreach ($reservations as $res) {
-                $totalReserve += $res['quantity'] ?? 0;
-            }
-        } else {
-            // Une seule réservation
-            $totalReserve = $reservations['quantity'] ?? 0;
-        }
-    }
-
-    $stockTotal  = $stockData['quantity'] ?? 0;
-    $maxQuantite = max($stockTotal - $totalReserve, 0);
-
-    return $maxQuantite;
 }
