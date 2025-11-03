@@ -1,0 +1,30 @@
+@use "Logo" as *;
+
+.panier-item {
+  background-color: #F1D5BB;
+  padding : 3em;
+  border : 2px grey solid ;
+  border-radius: 2em;
+  margin-bottom: 2em;
+
+  img {
+    width: 15em;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 1em;
+
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+
+    .btn-delete {
+      color: red;
+    }
+  }
+}

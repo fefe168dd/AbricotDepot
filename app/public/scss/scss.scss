@@ -2,6 +2,8 @@
 @use "Logo" as * ;
 @use "Mixin" as *;
 @use "ArticleDetaille" as * ;
+@use "panier" as * ;
+
 
 .article {
   @include taille(1 , 0 , 2 , 2% , 40%) ;

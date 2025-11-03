@@ -3,6 +3,31 @@
   text-decoration: none;
 }
 
+.panier-item {
+  background-color: #F1D5BB;
+  padding: 3em;
+  border: 2px grey solid;
+  border-radius: 2em;
+  margin-bottom: 2em;
+}
+.panier-item img {
+  width: 15em;
+}
+.panier-item .actions {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 1em;
+}
+.panier-item .actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+.panier-item .actions .btn-delete {
+  color: red;
+}
+
 .article {
   width: 40%;
   margin-left: 2%;

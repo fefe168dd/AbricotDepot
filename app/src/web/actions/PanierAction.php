@@ -47,8 +47,7 @@ class PanierAction
                 $itemsHtml .= '
                 <div class="panier-item">
                     <img src="' . htmlspecialchars($item['image_url'] ?? '') . '" 
-                        alt="Image de ' . htmlspecialchars($item['name']) . '" 
-                        style="width:80px;height:80px;">
+                        alt="Image de ' . htmlspecialchars($item['name']) . '">
                     <div class="info">
                         <h3>' . htmlspecialchars($item['name']) . '</h3>
                         <p>' . htmlspecialchars($item['description']) . '</p>
@@ -56,22 +55,21 @@ class PanierAction
                         <p>Prix unitaire : ' . number_format($item['prix'], 2, ',', ' ') . ' €</p>
                         <p>Quantité : ' . intval($item['quantity']) . '</p>
 
-                        <div class="actions" style="display:flex;gap:10px;align-items:center;">
+                        <div class="actions" >
                             <!-- Ajouter -->
                             <form method="POST" action="/panier/add/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '">
-                                <button type="submit" class="btn-add" style="background:none;border:none;cursor:pointer;font-size:1.2em;">➕</button>
+                                <button type="submit" class="btn-add">➕</button>
                             </form>
 
                             <!-- Retirer -->
                             <form method="POST" action="/panier/remove/' . htmlspecialchars($item['outil_id']) . '/' . $datedebut . '/' . $datefin . '">
-                                <button type="submit" class="btn-remove" style="background:none;border:none;cursor:pointer;font-size:1.2em;">➖</button>
+                                <button type="submit" class="btn-remove" >➖</button>
                             </form>
 
                             <!-- Supprimer complètement cet outil -->
                             <form method="POST" action="/panier/delete/' . htmlspecialchars($item['outil_id']) . '" 
                                 onsubmit="return confirm(\'Supprimer cet article du panier ?\');">
-                                <button type="submit" class="btn-delete" 
-                                        style="background:none;border:none;color:red;cursor:pointer;font-size:1.2em;">🗑️</button>
+                                <button type="submit" class="btn-delete">🗑️</button>
                             </form>
                         </div>
 
