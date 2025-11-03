@@ -5,7 +5,7 @@ API RESTful développée avec PHP/Slim pour la gestion des locations d'outils.
 
 ## Lien docketu
 
-[http://docketu.iutnc.univ-lorraine.fr:11000/panier]
+[http://docketu.iutnc.univ-lorraine.fr:11000]
 
 ## Lien vers le dépôt git
 
