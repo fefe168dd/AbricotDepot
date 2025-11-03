@@ -22,7 +22,7 @@ class HomeAction
         $queryParams = $request->getQueryParams();
         $page = isset($queryParams['page']) ? max(1, intval($queryParams['page'])) : 1;
         $selectedCategory = isset($queryParams['category']) ? $queryParams['category'] : '';
-        $itemsPerPage = 5;
+        $itemsPerPage = 25;
         
         // Filtrer par catégorie si sélectionnée
         if (!empty($selectedCategory)) {
